@@ -59,6 +59,7 @@ class _WelcomePageState extends State<WelcomePage> {
               // Flexible container for image and page indicator
               Flexible(
                 child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 16.0),
                   height: 400, // Constrain height to prevent overflow
                   child: PageView.builder(
                     controller: _pageController,
@@ -122,25 +123,8 @@ class _WelcomePageState extends State<WelcomePage> {
                   mainAxisAlignment: MainAxisAlignment.start, // Center buttons
                   children: [
                     // Hide the Previous button when on the first page
-                    if (_currentPage != 0 && _currentPage != _pages.length - 1)
-                      ElevatedButton(
-                        onPressed: _previousPage,
-                        child: Text('Previous',
-                            style:
-                                TextStyle(color: Colors.white, fontSize: 20)),
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                Color(0xff930BFF)), // Button background color
-                            shape: MaterialStateProperty.all(
-                              RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    10), // Apply border radius
-                              ),
-                            ),
-                            minimumSize:
-                                MaterialStateProperty.all(Size(107, 45))),
-                      ),
-                    SizedBox(width: 10), // Add some space between the buttons
+
+                    // Add some space between the buttons
                     // Make the Next button larger on the last page
                     ElevatedButton(
                       onPressed: _currentPage == _pages.length - 1
@@ -153,24 +137,46 @@ class _WelcomePageState extends State<WelcomePage> {
                         'Next',
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            Color(0xff930BFF)), // Button background color
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            Color(0xff930BFF), // Button background color
 
-                        shape: MaterialStateProperty.all(
-                          RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(
-                                10), // Apply border radius
-                          ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(10), // Apply border radius
                         ),
-                        minimumSize: MaterialStateProperty.all(
-                          _currentPage == _pages.length - 1
-                              ? Size(200, 60)
-                              : Size(107, 45),
-                        ),
-// Make button bigger on last page), // Default size
+                        minimumSize: _currentPage == _pages.length - 1
+                            ? Size(200, 60)
+                            : Size(107, 45),
                       ),
                     ),
+                    SizedBox(width: 10),
+                    if (_currentPage != _pages.length - 1)
+                      OutlinedButton(
+                        onPressed: () {
+                          // Navigate to signup page
+                          Navigator.pushNamed(context, '/signup');
+                        },
+                        child: Text(
+                          'Skip',
+                          style: TextStyle(
+                            color: Color(
+                                0xff930BFF), // Text color to match the border color
+                            fontSize: 20,
+                          ),
+                        ),
+                        style: OutlinedButton.styleFrom(
+                            side: BorderSide(
+                              color: Color(0xff930BFF), // Border color
+                              width: 1, // Border width
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  10), // Apply border radius
+                            ),
+                            minimumSize: Size(107, 45) // Button size
+                            ),
+                      )
                   ],
                 ),
               ),

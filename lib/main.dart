@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'pages/signup.dart' as signup;
 import 'pages/login.dart' as login;
 import "pages/welcomepage.dart" as welcomepage;
+import "pages/forgotpassword.dart" as forgotpassword;
 
 void main() {
   runApp(const MyApp());
@@ -27,7 +28,8 @@ class MyApp extends StatelessWidget {
             const signup.SignUpPage(), // Use alias to call SignUpPage
         '/login': (context) =>
             const login.LoginPage(), // Use alias to call LoginPage
-            '/welcome': (context) => welcomepage.WelcomePage()
+        '/welcome': (context) => welcomepage.WelcomePage(),
+        '/forgotpassword': (context) => forgotpassword.ForgotPasswordPage()
       },
       home: welcomepage.WelcomePage(), // Use alias for SignUpPage
     );

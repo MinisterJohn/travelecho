@@ -1,28 +1,5 @@
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Sign Up Page',
-      theme: ThemeData(
-        primarySwatch: Colors.purple,
-      ),
-      // Define the routes for navigation
-      routes: {
-        '/login': (context) => const LoginPage(),
-      },
-      home: const SignUpPage(),
-    );
-  }
-}
-
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
@@ -36,10 +13,13 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
+  bool _isPasswordVisible = false; // Track password visibility
+  bool _isConfirmPasswordVisible = false; // Track confirm password visibility
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView (
+      body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
@@ -50,7 +30,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 style: TextStyle(
                   fontSize: 32.0,
                   fontWeight: FontWeight.bold,
-                  color: Colors.purple,
+                  color: Color(0xff930BFF),
                 ),
               ),
               const SizedBox(height: 8.0),
@@ -62,7 +42,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               const SizedBox(height: 32.0),
-        
+
               // Full Name Field
               TextField(
                 controller: _fullNameController,
@@ -72,7 +52,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               const SizedBox(height: 16.0),
-        
+
               // Email Address Field
               TextField(
                 controller: _emailController,
@@ -83,29 +63,51 @@ class _SignUpPageState extends State<SignUpPage> {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 16.0),
-        
+
               // Password Field
               TextField(
                 controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: !_isPasswordVisible, // Toggle password visibility
+                decoration: InputDecoration(
                   labelText: 'Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                      });
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 16.0),
-        
+
               // Confirm Password Field
               TextField(
                 controller: _confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(
+                obscureText: !_isConfirmPasswordVisible, // Toggle confirm password visibility
+                decoration: InputDecoration(
                   labelText: 'Confirm Password',
-                  border: OutlineInputBorder(),
+                  border: const OutlineInputBorder(),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      color: Colors.grey,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible; // Toggle visibility
+                      });
+                    },
+                  ),
                 ),
               ),
               const SizedBox(height: 32.0),
-        
+
               // Sign Up Button
               ElevatedButton(
                 onPressed: () {
@@ -116,8 +118,11 @@ class _SignUpPageState extends State<SignUpPage> {
                   }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
+                  backgroundColor: Color(0xff930BFF),
                   minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
                 ),
                 child: const Text(
                   'Sign Up',
@@ -128,7 +133,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               ),
               const SizedBox(height: 20.0),
-        
+
               // Footer with Login link
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -152,20 +157,6 @@ class _SignUpPageState extends State<SignUpPage> {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Login Page')),
-      body: const Center(
-        child: Text('Login Page Content'),
       ),
     );
   }
