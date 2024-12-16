@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 // Import the signup and login pages with aliases to avoid ambiguity
 import 'pages/signup.dart' as signup;
 import 'pages/login.dart' as login;
+import "pages/welcomepage.dart" as welcomepage;
+import "pages/forgotpassword.dart" as forgotpassword;
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Travel Echo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -21,10 +24,14 @@ class MyApp extends StatelessWidget {
       ),
       // Define routes for navigation using aliases
       routes: {
-        '/signup': (context) => signup.SignUpPage(),  // Use alias to call SignUpPage
-        '/login': (context) => login.LoginPage(),     // Use alias to call LoginPage
+        '/signup': (context) =>
+            const signup.SignUpPage(), // Use alias to call SignUpPage
+        '/login': (context) =>
+            const login.LoginPage(), // Use alias to call LoginPage
+        '/welcome': (context) => welcomepage.WelcomePage(),
+        '/forgotpassword': (context) => forgotpassword.ForgotPasswordPage()
       },
-      home: const signup.SignUpPage(), // Use alias for SignUpPage
+      home: welcomepage.WelcomePage(), // Use alias for SignUpPage
     );
   }
 }
