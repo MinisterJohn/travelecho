@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:travelecho/pages/homescreen.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -202,8 +205,7 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  // Login logic
-  void _login() {
+    void _login() {
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -214,6 +216,13 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       // Implement login logic here
       print('Logging in with $email and $password');
+
+      // Navigate to HomeScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     }
   }
+
 }
