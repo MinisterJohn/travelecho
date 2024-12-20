@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:travelecho/pages/homescreen.dart';
+
+
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -13,6 +16,22 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
+<<<<<<< HEAD
+=======
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool _isPasswordVisible = false; // Track password visibility
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+>>>>>>> ccd6d7f91c3c40ce1fff29d7650789958a273024
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -202,8 +221,12 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
+<<<<<<< HEAD
+    void _login() {
+=======
   // Login logic
   void _login() {
+>>>>>>> ccd6d7f91c3c40ce1fff29d7650789958a273024
     String email = _emailController.text;
     String password = _passwordController.text;
 
@@ -214,6 +237,18 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       // Implement login logic here
       print('Logging in with $email and $password');
+<<<<<<< HEAD
+
+      // Navigate to HomeScreen
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomeScreen()),
+      );
     }
   }
+
+=======
+    }
+  }
+>>>>>>> ccd6d7f91c3c40ce1fff29d7650789958a273024
 }
