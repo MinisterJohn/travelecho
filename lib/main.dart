@@ -5,6 +5,9 @@ import 'pages/signup.dart' as signup;
 import 'pages/login.dart' as login;
 import "pages/welcomepage.dart" as welcomepage;
 import "pages/forgotpassword.dart" as forgotpassword;
+import "pages/verificationcodepage.dart" as verificationcodepage;
+import "pages/resetpassword.dart" as resetpassword;
+import "pages/passwordresetnotification.dart" as passwordresetnotification;
 
 void main() {
   runApp(const MyApp());
@@ -29,7 +32,12 @@ class MyApp extends StatelessWidget {
         '/login': (context) =>
             const login.LoginPage(), // Use alias to call LoginPage
         '/welcome': (context) => welcomepage.WelcomePage(),
-        '/forgotpassword': (context) => forgotpassword.ForgotPasswordPage()
+        '/forgotpassword': (context) =>
+            const forgotpassword.ForgotPasswordPage(),
+        '/verificationcode': (context) => const verificationcodepage.OtpForm(),
+        '/resetpassword': (context) => const resetpassword.ResetPassword(),
+        '/passwordresetsuccess': (context) =>
+            const passwordresetnotification.PasswordResetFeedback(),
       },
       home: welcomepage.WelcomePage(), // Use alias for SignUpPage
     );

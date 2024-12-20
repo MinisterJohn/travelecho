@@ -38,7 +38,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: _fullNameController,
                 decoration: const InputDecoration(
-                  hintText: 'Full Name',
+                  labelText: 'Full Name',
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.name,
@@ -49,7 +49,7 @@ class _LoginPageState extends State<LoginPage> {
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
-                  hintText: 'Email Address',
+                  labelText: 'Email Address',
                   border: OutlineInputBorder(),
                 ),
                 keyboardType: TextInputType.emailAddress,
@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                 controller: _passwordController,
                 obscureText: !_isPasswordVisible, // Toggle password visibility
                 decoration: InputDecoration(
-                  hintText: 'Password',
+                  labelText: 'Password',
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(
