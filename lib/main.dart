@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import "package:travelecho/pages/homescreen.dart";
+import "package:travelecho/pages/splashscreen.dart";
 
 // Import the signup and login pages with aliases to avoid ambiguity
 import 'pages/signup.dart' as signup;
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       title: 'Travel Echo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -38,8 +40,10 @@ class MyApp extends StatelessWidget {
         '/resetpassword': (context) => const resetpassword.ResetPassword(),
         '/passwordresetsuccess': (context) =>
             const passwordresetnotification.PasswordResetFeedback(),
+        '/homescreen': (context) => HomeScreen(),
+        '/splashscreen': (context) => ExpandingPictureScreen(),
       },
-      home: welcomepage.WelcomePage(), // Use alias for SignUpPage
+      home: ExpandingPictureScreen(), // Use alias for SignUpPage
     );
   }
 }
