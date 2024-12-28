@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class AnimatedTextWithImageAndSpinner extends StatefulWidget {
   const AnimatedTextWithImageAndSpinner({Key? key}) : super(key: key);
 

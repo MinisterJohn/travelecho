@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import "package:travelecho/pages/homescreen.dart";
+import "package:travelecho/pages/authorizedPages/root_page.dart";
 import "package:travelecho/pages/splashscreen.dart";
 
 // Import the signup and login pages with aliases to avoid ambiguity
@@ -40,10 +40,10 @@ class MyApp extends StatelessWidget {
         '/resetpassword': (context) => const resetpassword.ResetPassword(),
         '/passwordresetsuccess': (context) =>
             const passwordresetnotification.PasswordResetFeedback(),
-        '/homescreen': (context) => HomeScreen(),
-        '/splashscreen': (context) => ExpandingPictureScreen(),
+        // '/homescreen': (context) => HomeScreen(),
+        '/splashscreen': (context) => AnimatedTextWithImageAndSpinner(),
       },
-      home: ExpandingPictureScreen(), // Use alias for SignUpPage
+      home: AnimatedTextWithImageAndSpinner(), // Use alias for SignUpPage
     );
   }
 }

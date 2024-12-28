@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:travelecho/pages/authorizedPages/homescreen.dart';
+import 'package:travelecho/pages/budget.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
