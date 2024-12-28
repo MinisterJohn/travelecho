@@ -1,42 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:travelecho/pages/welcomepage.dart';
 
-class ExpandingPictureScreen extends StatefulWidget {
+class AnimatedTextWithImageAndSpinner extends StatefulWidget {
+  const AnimatedTextWithImageAndSpinner({Key? key}) : super(key: key);
+
   @override
-  _ExpandingPictureScreenState createState() => _ExpandingPictureScreenState();
+  _AnimatedTextWithImageAndSpinnerState createState() =>
+      _AnimatedTextWithImageAndSpinnerState();
 }
 
-class _ExpandingPictureScreenState extends State<ExpandingPictureScreen> {
-  double _containerWidth = 0.0; // Initial width of the container
-  final double _imageWidth = 300.0; // Full width of the image
-  bool _showFirstImage = true; // Toggle between images
-  double _secondImageOpacity = 0.0; // Initial opacity for the second image
+class _AnimatedTextWithImageAndSpinnerState
+    extends State<AnimatedTextWithImageAndSpinner> {
+  late List<bool> _textVisible; // Tracks visibility of each letter
+  bool _showSecondText = false; // Tracks visibility of second text and image
+  bool _showSpinner = false; // Tracks visibility of the loading spinner
 
   @override
   void initState() {
     super.initState();
+    _textVisible = List.generate("Travel echo".length, (_) => false);
+    _animateFirstText();
+  }
 
-    // Start the animation when the widget loads
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+  Future<void> _animateFirstText() async {
+    for (int i = 0; i < _textVisible.length; i++) {
+      await Future.delayed(Duration(milliseconds: 200));
       setState(() {
-        _containerWidth = _imageWidth;
+        _textVisible[i] = true;
       });
+    }
 
-      // Trigger the second image fade-in after the animation duration
-      Future.delayed(Duration(seconds: 3), () {
-        setState(() {
-          _secondImageOpacity = 1.0; // Fade in the second image
-          _showFirstImage = false; // Hide the first image container
-        });
+    // After the first text animation, show the second text with image
+    await Future.delayed(Duration(seconds: 1));
+    setState(() {
+      _showSecondText = true;
+    });
 
-        // Navigate to another page after 5 seconds
-        Future.delayed(Duration(seconds: 5), () {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => WelcomePage()),
-          );
-        });
-      });
+    // After the second text and image, show the spinner
+    await Future.delayed(Duration(seconds: 2));
+    setState(() {
+      _showSpinner = true;
+    });
+    await Future.delayed(Duration(seconds: 3));
+    setState(() {
+      Navigator.pushNamed(context, "/welcome");
     });
   }
 
@@ -47,34 +53,58 @@ class _ExpandingPictureScreenState extends State<ExpandingPictureScreen> {
         child: Stack(
           alignment: Alignment.center,
           children: [
-            // First image with expanding container animation
-            if (_showFirstImage)
-              AnimatedContainer(
-                width: _containerWidth, // Animate the width
-                height: 200, // Fixed height for the container
-                duration: Duration(seconds: 2), // Animation duration
-                curve: Curves.easeInOut, // Smooth easing effect
-                child: ClipRect(
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: Image.asset(
-                      'assets/travel_echo_lettering.png',
-                      width: _imageWidth,
-                      fit: BoxFit.cover,
+            // First Text Animation
+            if (!_showSecondText && !_showSpinner)
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: List.generate("Travel echo".length, (index) {
+                  return AnimatedOpacity(
+                    opacity: _textVisible[index] ? 1.0 : 0.0,
+                    duration: Duration(milliseconds: 500),
+                    child: Text(
+                      "Travel echo"[index],
+                      style: TextStyle(
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff930BFF),
+                          fontFamily: "vaio_con_dios"),
                     ),
-                  ),
+                  );
+                }),
+              ),
+
+            // Second Text and Image Animation
+            if (!_showSpinner)
+              AnimatedOpacity(
+                opacity: _showSecondText ? 1.0 : 0.0,
+                duration: Duration(milliseconds: 800),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Image.asset(
+                      "assets/travel_echo_logo.png", // Replace with your image URL
+                      height: 100,
+                    ),
+                    SizedBox(height: 8),
+                    Text(
+                      "Travel echo",
+                      style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xff930BFF),
+                          fontFamily: "vaio_con_dios"),
+                    ),
+                  ],
                 ),
               ),
-            // Second image with fade-in animation
-            AnimatedOpacity(
-              opacity: _secondImageOpacity, // Control visibility
-              duration: Duration(seconds: 2), // Fade-in duration
-              child: Image.asset(
-                'assets/travel_echo_logo.png',
-                width: _imageWidth,
-                fit: BoxFit.cover,
-              ),
-            ),
+
+            // Loading Spinner
+            if (_showSpinner)
+              AnimatedOpacity(
+                opacity: _showSpinner ? 1.0 : 0.0,
+                duration: Duration(milliseconds: 1000),
+                child: CircularProgressIndicator(),
+              )
           ],
         ),
       ),

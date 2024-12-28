@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:travelecho/pages/homescreen.dart';
+import 'package:travelecho/pages/authorizedPages/homescreen.dart';
 
 
 
