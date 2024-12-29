@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'setbudget.dart';
+import 'package:line_icons/line_icons.dart';
 
 class BudgetScreen extends StatefulWidget {
   @override
@@ -7,101 +8,12 @@ class BudgetScreen extends StatefulWidget {
 }
 
 class _BudgetScreenState extends State<BudgetScreen> {
-  int _selectedIndex = 2; // Initial index set to Budget screen
-
-  // Function to handle navigation item tap
-  void _onNavItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    // Handle navigation based on selected index
-    switch (index) {
-      case 0:
-        Navigator.pushNamed(context, '/explore');
-        break;
-      case 1:
-        Navigator.pushNamed(context, '/trip');
-        break;
-      case 2:
-        // Stay on current screen
-        break;
-      case 3:
-        Navigator.pushNamed(context, '/memories');
-        break;
-
-      case 4:
-        Navigator.pushNamed(context, '/profile');
-        break;
-    }
-  }
-
-  // Function for customizing bottom navigation items
-  Widget _bottomNavItem(String imagePath, String label, int index) {
-    bool isSelected = _selectedIndex == index;
-    return GestureDetector(
-      onTap: () => _onNavItemTapped(index),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            padding: EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: isSelected ? Colors.black : Colors.white,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Image.asset(
-              imagePath, // Use the image asset path
-              color: isSelected
-                  ? Colors.white
-                  : Colors.black, // Change image color based on selection
-              width: 24, // Adjust width and height as needed
-              height: 24,
-            ),
-          ),
-          SizedBox(height: 4),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 9,
-              color: isSelected ? Colors.white : Colors.black,
-              backgroundColor: Colors
-                  .transparent, // Keep text visible even when icon color changes
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
+  String currentBudgetTool = "Budget Overview";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Container(
-            width: 24, // Circle width
-            height: 24, // Circle height
-            padding:
-                EdgeInsets.all(4), // Padding inside the circle for the icon
-            decoration: BoxDecoration(
-              color: Colors.white, // Background color of the circle (white)
-              shape: BoxShape.circle, // Make the container circular
-              border: Border.all(
-                color: Color(0xFF8C8C8C), // Border color (#8C8C8C)
-                width: 1, // Border width
-              ),
-            ),
-            child: Icon(
-              Icons.arrow_back,
-              color: Colors.black, // Icon color inside the circle (black)
-              size: 8.06, // Set the size of the arrow icon
-            ),
-          ),
-          onPressed: () {
-            // Navigate back to the home page
-            Navigator.pop(context);
-          },
-        ),
+        automaticallyImplyLeading: false,
         title: Text(
           'Travel Budget',
           style: TextStyle(
@@ -123,20 +35,27 @@ class _BudgetScreenState extends State<BudgetScreen> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _budgetImage("assets/BudgetOverview.png"),
-                  _budgetImage("assets/ExpenseTracker.png"),
+                  _budgetTools(
+                    LineIcons.piggyBank,
+                    "Budget Overview",
+                  ),
+                  SizedBox(
+                    width: 8.0,
+                  ),
+                  _budgetTools(
+                    LineIcons.clipboardList,
+                    "Expense Tracker",
+                  ),
                 ],
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 60),
 
               // "Set your Budget here" text centered
-              Center(
-                child: Text(
-                  'Set your Budget here',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
+              Text(
+                'Set your Budget here',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
 
               // Image centered
               Center(
@@ -145,7 +64,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   height: 100, // Adjust the height as needed
                 ),
               ),
-              SizedBox(height: 10),
+              SizedBox(height: 20),
 
               // "Nothing to see here!" text centered and bold
               Center(
@@ -182,7 +101,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    // primary: Color(0xFF930BFF), // Button background color
+                    backgroundColor:
+                        Color(0xFF930BFF), // Button background color
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 12),
                     textStyle: TextStyle(fontSize: 16),
                     shape: RoundedRectangleBorder(
@@ -240,16 +160,47 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 
   // Widget for Budget Overview and Expense Tracker images
-  Widget _budgetImage(String imagePath) {
-    return Container(
-      width: 150,
-      child: Center(child: Column(children: [Icon(Icons.home)])
-          // Image.asset(
-          //   imagePath,
-          //   height: 150, // Adjust height as needed
-          //   width: 150, // Adjust width as needed
-          // ),
+  Widget _budgetTools(IconData icon, String label) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            currentBudgetTool = label;
+          });
+        },
+        child: Container(
+          decoration: BoxDecoration(
+            border: currentBudgetTool != label
+                ? Border.all(color: Color.fromRGBO(0, 0, 0, 0.1))
+                : null,
+            color: currentBudgetTool == label
+                ? Color(0xff930BFF)
+                : Colors.transparent,
+            borderRadius: BorderRadius.all(Radius.circular(10)),
           ),
+          padding: EdgeInsets.all(8.0),
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon,
+                    color: currentBudgetTool == label
+                        ? Colors.white
+                        : Colors.black,
+                    size: 50),
+                SizedBox(height: 10),
+                Text(
+                  label,
+                  style: TextStyle(
+                      color: currentBudgetTool == label
+                          ? Colors.white
+                          : Colors.black),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:travelecho/pages/authorizedPages/root_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -11,7 +12,8 @@ class _SignUpPageState extends State<SignUpPage> {
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   bool _isPasswordVisible = false; // Track password visibility
   bool _isConfirmPasswordVisible = false; // Track confirm password visibility
@@ -73,12 +75,15 @@ class _SignUpPageState extends State<SignUpPage> {
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      _isPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: Colors.grey,
                     ),
                     onPressed: () {
                       setState(() {
-                        _isPasswordVisible = !_isPasswordVisible; // Toggle visibility
+                        _isPasswordVisible =
+                            !_isPasswordVisible; // Toggle visibility
                       });
                     },
                   ),
@@ -89,18 +94,22 @@ class _SignUpPageState extends State<SignUpPage> {
               // Confirm Password Field
               TextField(
                 controller: _confirmPasswordController,
-                obscureText: !_isConfirmPasswordVisible, // Toggle confirm password visibility
+                obscureText:
+                    !_isConfirmPasswordVisible, // Toggle confirm password visibility
                 decoration: InputDecoration(
                   labelText: 'Confirm Password',
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
                     icon: Icon(
-                      _isConfirmPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                      _isConfirmPasswordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
                       color: Colors.grey,
                     ),
                     onPressed: () {
                       setState(() {
-                        _isConfirmPasswordVisible = !_isConfirmPasswordVisible; // Toggle visibility
+                        _isConfirmPasswordVisible =
+                            !_isConfirmPasswordVisible; // Toggle visibility
                       });
                     },
                   ),
@@ -111,8 +120,11 @@ class _SignUpPageState extends State<SignUpPage> {
               // Sign Up Button
               ElevatedButton(
                 onPressed: () {
-                  if (_passwordController.text == _confirmPasswordController.text) {
+                  if (_passwordController.text ==
+                      _confirmPasswordController.text) {
                     print('User signed up');
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => RootPage()));
                   } else {
                     print('Passwords do not match');
                   }

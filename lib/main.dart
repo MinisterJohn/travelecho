@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:travelecho/pages/authorizedPages/root_page.dart";
+import "package:travelecho/pages/authorizedPages/trip/set_flight_date.dart";
 import "package:travelecho/pages/splashscreen.dart";
 
 // Import the signup and login pages with aliases to avoid ambiguity
@@ -26,6 +27,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
+        fontFamily: 'Segoe UI',
       ),
       // Define routes for navigation using aliases
       routes: {

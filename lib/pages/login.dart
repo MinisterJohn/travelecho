@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:travelecho/pages/authorizedPages/homescreen.dart';
+import 'package:travelecho/pages/authorizedPages/root_page.dart';
 
 
 class LoginPage extends StatefulWidget {
@@ -217,9 +218,9 @@ class _LoginPageState extends State<LoginPage> {
       print('Logging in with $email and $password');
 
       // Navigate to HomeScreen
-      Navigator.pushReplacement(
+      Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
+        MaterialPageRoute(builder: (context) => RootPage()),
       );
     }
   }

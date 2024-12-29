@@ -1,5 +1,8 @@
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:line_icons/line_icons.dart';
+
 
 
 class HomeScreen extends StatefulWidget {
@@ -51,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                       Spacer(), // Pushes the next icon to the far right
-                      Icon(Icons.tune, color: Colors.black), // Tune icon
+                      Icon(LineIcons.horizontalSliders), // Tune icon
                     ],
                   ),
                 ),
@@ -64,8 +67,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 children: [
                   _featureCard(
                       Icons.currency_exchange_outlined, "Currency Converter"),
-                  _featureCard(Icons.emoji_events_outlined, "Milestones"),
-                  _featureCard(Icons.maps_home_work_outlined, "Travel Guide"),
+                  _featureCard(LineIcons.trophy, "Milestones"),
+                  _featureCard(LineIcons.globe, "Travel Guide"),
                 ],
               ),
               SizedBox(height: 20),
