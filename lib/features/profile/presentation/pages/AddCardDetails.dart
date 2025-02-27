@@ -2,19 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:travelecho/core/constants/appbar.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       home: AddCardDetailsPage(),
     );
   }
 }
 
 class AddCardDetailsPage extends StatefulWidget {
+  const AddCardDetailsPage({super.key});
+
   @override
   _AddCardDetailsPageState createState() => _AddCardDetailsPageState();
 }

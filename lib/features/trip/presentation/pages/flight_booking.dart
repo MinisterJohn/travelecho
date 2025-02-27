@@ -113,7 +113,7 @@ class _FlightBookingState extends State<FlightBooking> {
 
               ElevatedButton(
                 onPressed: () {
-                  AppNavigator.push(context, TripNotification());
+                  AppNavigator.push(context, const TripNotification());
                 },
                 // ignore: sort_child_properties_last
                 child: const Text(
@@ -129,7 +129,7 @@ class _FlightBookingState extends State<FlightBooking> {
     );
   }
 
-  Widget _setofpeople(String category, String category_description, int value,
+  Widget _setofpeople(String category, String categoryDescription, int value,
       VoidCallback onIncrement, VoidCallback onDecrement) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -144,7 +144,7 @@ class _FlightBookingState extends State<FlightBooking> {
                     style: const TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 1),
                 Text(
-                  category_description,
+                  categoryDescription,
                   style: const TextStyle(
                       fontSize: 12, color: Color.fromRGBO(0, 0, 0, .5)),
                 ),

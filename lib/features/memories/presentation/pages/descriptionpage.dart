@@ -6,7 +6,7 @@ import 'package:travelecho/core/constants/app_navigation.dart';
 import 'package:travelecho/core/constants/appbar.dart';
 import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/constants/font_size_constants.dart';
-import 'package:travelecho/core/hoc/bottomModalDraggable.dart';
+import 'package:travelecho/features/profile/presentation/widgets/bottomModalDraggable.dart';
 import 'package:travelecho/features/memories/presentation/pages/addtags.dart';
 import 'package:travelecho/features/memories/presentation/pages/collections.dart';
 import 'package:travelecho/features/memories/presentation/pages/tagbutton.dart';
@@ -19,6 +19,8 @@ class DescriptionPage extends StatelessWidget {
     'assets/images/memories/image4.png',
     'assets/images/memories/image2.png',
   ];
+
+  DescriptionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -126,7 +128,7 @@ class DescriptionPage extends StatelessWidget {
               ),
               WidgetsSpacer.verticalSpacer8,
 
-              Wrap(
+              const Wrap(
                 spacing: 10.0,
                 runSpacing: 10.0,
                 children: [
@@ -139,7 +141,7 @@ class DescriptionPage extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // Navigate to AddTag page
-                  DraggableBottomModal(context, AddTagPage());
+                  DraggableBottomModal(context, const AddTagPage());
                 },
                 style: ElevatedButton.styleFrom(
                   elevation: 0,
@@ -202,7 +204,7 @@ class DescriptionPage extends StatelessWidget {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       AppNavigator.push(
-                                          context, CollectionPage());
+                                          context, const CollectionPage());
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: AppColors.primaryColor,

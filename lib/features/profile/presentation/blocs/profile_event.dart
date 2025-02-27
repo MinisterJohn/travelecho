@@ -1,9 +1,20 @@
-abstract class ProfileEvent {}
+part of "profile_bloc.dart";
 
-class ProfileRequested extends ProfileEvent {}
+abstract class ProfileEvent extends Equatable {}
+
+class ProfileRequested extends ProfileEvent {
+  // final Profile profile;
+  ProfileRequested();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class ProfileUpdateRequested extends ProfileEvent {
-  final String key;
-  final String value;
-  ProfileUpdateRequested(this.key, this.value);
+  final dynamic updateValue;
+  final ProfileUpdateKey updateKey;
+  ProfileUpdateRequested(this.updateValue, this.updateKey);
+
+  @override
+  List<Object?> get props => [updateValue, updateKey];
 }

@@ -8,6 +8,8 @@ import '../../../travel_guide/presentation/pages/urbanexplorer.dart';
 import 'nomilestones.dart';
 
 class MilestonesPage extends StatelessWidget {
+  const MilestonesPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -82,7 +84,7 @@ class MilestonesPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => NoMileStonePage(),
+                        builder: (context) => const NoMileStonePage(),
                       ),
                     );
                   },
@@ -133,7 +135,7 @@ class MilestonesPage extends StatelessWidget {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => NoMileStonePage(),
+                      builder: (context) => const NoMileStonePage(),
                     ),
                   );
                 },
@@ -156,7 +158,7 @@ class MilestonesPage extends StatelessWidget {
       BuildContext context, String badgeImageUrl, String badgeTitle) {
     return GestureDetector(
       onTap: () {
-        AppNavigator.push(context, UrbanExplorerPage());
+        AppNavigator.push(context, const UrbanExplorerPage());
       },
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,

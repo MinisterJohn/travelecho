@@ -10,12 +10,14 @@ import 'package:travelecho/features/milestones/presentation/pages/milestones.dar
 import 'package:travelecho/features/travel_guide/presentation/pages/travelguide.dart';
 
 class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _selectedIndex = 0; // Track the selected index
+  final int _selectedIndex = 0; // Track the selected index
 
   @override
   Widget build(BuildContext context) {
@@ -72,9 +74,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       context,
                       const CurrencyConverterPage()),
                   _featureCard(LineIcons.trophy, "Milestones", context,
-                      MilestonesPage()),
+                      const MilestonesPage()),
                   _featureCard(LineIcons.globe, "Travel Guide", context,
-                      TravelGuidePage()),
+                      const TravelGuidePage()),
                 ],
               ),
               WidgetsSpacer.verticalSpacer16,

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/core/constants/appbar.dart';
@@ -169,10 +168,10 @@ class _PricingState extends State<Pricing> {
       WidgetsSpacer.verticalSpacer8,
       if (isYearly())
         Text.rich(
-          TextSpan(children: [
+          const TextSpan(children: [
             TextSpan(
                 text: "Save 10%",
-                style: const TextStyle(color: AppColors.primaryColor)),
+                style: TextStyle(color: AppColors.primaryColor)),
             TextSpan(text: "on yearly subscription")
           ]),
           style: TextStyle(
@@ -221,7 +220,7 @@ class _PricingState extends State<Pricing> {
   Widget _planCard(String planTitle, double planPrice, bool planIsActive,
       List planFeatures) {
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 32, horizontal: 24),
+      padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
       decoration: BoxDecoration(
           color: AppColors.white,
           boxShadow: [
@@ -243,22 +242,22 @@ class _PricingState extends State<Pricing> {
           Text.rich(TextSpan(children: [
             TextSpan(text: "\$$planPrice/${isMonthly() ? "month" : "year"} "),
             planTitle == "Premium" && isYearly()
-                ? TextSpan(
+                ? const TextSpan(
                     text: "(10% discount)",
                     style: TextStyle(color: AppColors.primaryColor))
-                : TextSpan()
-          ], style: TextStyle(fontWeight: FontWeight.bold))),
+                : const TextSpan()
+          ], style: const TextStyle(fontWeight: FontWeight.bold))),
           WidgetsSpacer.verticalSpacer16,
           Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: planFeatures.map((feature) {
                 return ListTile(
                     contentPadding: EdgeInsets.zero,
-                    leading: Icon(LineIcons.check, size: 16),
+                    leading: const Icon(LineIcons.check, size: 16),
                     title: Text(feature["title"] ?? "",
-                        style: TextStyle(fontWeight: FontWeight.bold)),
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
                     subtitle: Text(feature["description"] ?? "",
-                        style: TextStyle(color: AppColors.secondaryColor)));
+                        style: const TextStyle(color: AppColors.secondaryColor)));
               }).toList()),
           WidgetsSpacer.verticalSpacer16,
           GestureDetector(
@@ -269,7 +268,7 @@ class _PricingState extends State<Pricing> {
                   color: planIsActive
                       ? Colors.transparent
                       : AppColors.primaryColor,
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
+                  borderRadius: const BorderRadius.all(Radius.circular(20))),
               child: Text(
                 planIsActive ? "Currently in use" : "Choose plan",
                 style: TextStyle(

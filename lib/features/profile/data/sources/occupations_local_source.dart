@@ -8,8 +8,8 @@ abstract class OccupationsLocalSource {
 }
 
 class OccupationsLocalSourceImpl extends OccupationsLocalSource {
-  OccupationsModel allOccupations = OccupationsModel(occupations: []);
-  OccupationsModel sortedOccupations = OccupationsModel(occupations: []);
+  OccupationsModel allOccupations = const OccupationsModel(occupations: []);
+  OccupationsModel sortedOccupations = const OccupationsModel(occupations: []);
 
   @override
   Future<OccupationsModel> fetchOccupations(String occupationHint) async {

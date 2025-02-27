@@ -4,6 +4,8 @@ import 'package:travelecho/core/constants/app_navigation.dart';
 import 'package:travelecho/features/community/presentation/pages/profile_id.dart';
 
 class CommunityPage extends StatelessWidget {
+  const CommunityPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,7 +61,7 @@ class CommunityPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
               onPressed: () {
-                AppNavigator.push(context, ProfileIDPage());
+                AppNavigator.push(context, const ProfileIDPage());
               },
               style: ElevatedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),

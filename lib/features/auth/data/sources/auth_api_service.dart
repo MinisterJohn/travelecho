@@ -1,10 +1,8 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:travelecho/core/constants/api_url.dart';
-import 'package:travelecho/core/network/dio_client.dart';
 import 'package:travelecho/features/auth/data/models/signin_req_params.dart';
 import 'package:travelecho/features/auth/data/models/signup_req_params.dart';
-import 'package:travelecho/service_locator.dart';
 
 abstract class AuthApiService {
   Future<Either> signin(SigninReqParams params);

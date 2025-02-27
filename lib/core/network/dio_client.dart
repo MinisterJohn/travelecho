@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:travelecho/core/constants/api_url.dart';
 // import 'package:movie/core/constants/api_url.dart';
 
 import 'interceptors.dart';

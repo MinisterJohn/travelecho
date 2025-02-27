@@ -12,15 +12,15 @@ class PostComment extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(
+          const SizedBox(
             width: 25,
-            child: const CircleAvatar(
+            child: CircleAvatar(
               radius: 25,
               backgroundImage:
                   AssetImage('assets/images/community/profile_pic3.jpeg'),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             width: 5,
           ),
           Column(
@@ -30,7 +30,7 @@ class PostComment extends StatelessWidget {
                 style: TextStyle(
                     fontSize: FontSize.size14, fontWeight: FontWeight.bold),
               ),
-              Text(
+              const Text(
                 "#STS678923",
                 style: TextStyle(fontSize: 12),
               )

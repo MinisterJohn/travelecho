@@ -12,12 +12,14 @@ import 'package:travelecho/features/travel_guide/presentation/pages/travelguide.
 // import 'package:travelecho/pages/authorizedPages/budgetboss.dart';
 
 class HomeScreen2 extends StatefulWidget {
+  const HomeScreen2({super.key});
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen2> {
-  int _selectedIndex = 0; // Track the selected index
+  final int _selectedIndex = 0; // Track the selected index
   bool _showMilestoneDialog =
       true; // Control the visibility of the milestone dialog
 
@@ -87,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen2> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          AppNavigator.push(context, MilestonesPage());
+                          AppNavigator.push(context, const MilestonesPage());
                         },
                         child: _featureCard(
                           LineIcons.trophy,
@@ -96,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen2> {
                       ),
                       GestureDetector(
                         onTap: () {
-                          AppNavigator.push(context, TravelGuidePage());
+                          AppNavigator.push(context, const TravelGuidePage());
                         },
                         child: _featureCard(
                           LineIcons.globe,
@@ -189,7 +191,7 @@ class _HomeScreenState extends State<HomeScreen2> {
                               onPressed: () {
                                 // Navigate to BudgetBossPage
                                 AppNavigator.push(
-                                    context, BudgetBossPage());
+                                    context, const BudgetBossPage());
                               },
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: AppColors.white,

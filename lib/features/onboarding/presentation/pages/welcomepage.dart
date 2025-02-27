@@ -13,6 +13,8 @@ import 'package:travelecho/features/onboarding/presentation/blocs/onboardingpage
 import 'package:travelecho/features/onboarding/presentation/blocs/onboardingpage_state.dart';
 
 class WelcomePage extends StatefulWidget {
+  const WelcomePage({super.key});
+
   @override
   _WelcomePageState createState() => _WelcomePageState();
 }

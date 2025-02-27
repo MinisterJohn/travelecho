@@ -6,7 +6,6 @@ import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/errors/display_error_message.dart';
 import 'package:travelecho/features/auth/domain/usecases/auth_usecases.dart';
 import 'package:travelecho/features/auth/presentation/pages/forgotpassword.dart';
-import 'package:travelecho/features/auth/presentation/pages/resetpassword.dart';
 import 'package:travelecho/features/auth/presentation/pages/signup.dart';
 import 'package:travelecho/features/auth/data/models/signin_req_params.dart';
 

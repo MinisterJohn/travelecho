@@ -21,16 +21,10 @@ class ExpenseCategorySelected extends ExpenseCategory {
   }
 
   ExpenseCategorySelected(
-      {required String title,
-      required String description,
-      required String imagePath,
-      required bool expenseIsAdded,
+      {required super.title,
+      required super.description,
+      required super.imagePath,
+      required super.expenseIsAdded,
       required this.amount,
-      required this.showExpenseDropdown})
-      : super(
-          title: title,
-          description: description,
-          imagePath: imagePath,
-          expenseIsAdded: expenseIsAdded,
-        );
+      required this.showExpenseDropdown});
 }

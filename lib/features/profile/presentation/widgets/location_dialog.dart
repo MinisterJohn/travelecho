@@ -3,7 +3,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/constants/font_size_constants.dart';
-import 'package:travelecho/core/hoc/bottomModalDraggable.dart';
+import 'package:travelecho/features/profile/presentation/widgets/bottomModalDraggable.dart';
 
 // ignore: unused_element
 void showWhereILiveDialog(BuildContext context) {

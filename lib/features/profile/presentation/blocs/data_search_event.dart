@@ -1,15 +1,53 @@
-abstract class DataSearchEvent {}
+part of "data_search_bloc.dart";
 
+
+abstract class DataSearchEvent extends Equatable {
+  const DataSearchEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+// 🔹 Request Events
 class SchoolListRequested extends DataSearchEvent {
   final String schoolHint;
-  SchoolListRequested({required this.schoolHint});
+  const SchoolListRequested({required this.schoolHint});
+  
+  @override
+  List<Object?> get props => [schoolHint];
 }
 
 class OccupationsRequested extends DataSearchEvent {
   final String occupationHint;
-  OccupationsRequested({required this.occupationHint});
+  const OccupationsRequested({required this.occupationHint});
+
+  @override
+  List<Object?> get props => [occupationHint];
 }
 
-class ClearSchoolList extends DataSearchEvent {}
+class LanguagesRequested extends DataSearchEvent {
+  final String languageHint;
+  const LanguagesRequested({required this.languageHint});
 
-class ClearOccupationList extends DataSearchEvent {}
+  @override
+  List<Object?> get props => [languageHint];
+}
+
+class InterestsRequested extends DataSearchEvent {
+  final String interestHint;
+  const InterestsRequested({required this.interestHint});
+
+  @override
+  List<Object?> get props => [interestHint];
+}
+
+// 🔹 Generalized Clear Event
+enum SearchType { school, occupation, language, interest }
+
+class ClearSearchResults extends DataSearchEvent {
+  final SearchType type;
+  const ClearSearchResults({required this.type});
+
+  @override
+  List<Object?> get props => [type];
+}

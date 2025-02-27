@@ -4,15 +4,17 @@ import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/core/constants/app_navigation.dart';
 import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/constants/font_size_constants.dart';
+import 'package:travelecho/features/auth/presentation/bloc/user_bloc.dart';
 import 'package:travelecho/features/auth/presentation/pages/signup.dart';
 import 'package:travelecho/features/onboarding/presentation/blocs/onboardingpage_cubit.dart';
 import 'package:travelecho/features/onboarding/presentation/pages/welcomepage.dart';
 import 'package:travelecho/features/splashscreen/presentation/bloc/splash_cubit.dart';
 import 'package:travelecho/features/splashscreen/presentation/bloc/splash_state.dart';
 import 'package:travelecho/navigation_menu/presentation/root_page.dart';
+import 'package:travelecho/service_locator.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  const SplashScreen({super.key});
 
   @override
   SplashScreenState createState() => SplashScreenState();
@@ -71,7 +73,12 @@ class SplashScreenState extends State<SplashScreen> {
       body: BlocListener<SplashCubit, SplashState>(
         listener: (context, state) {
           if (state is UnAuthenticated) {
-            AppNavigator.pushReplacement(context, const SignUpPage());
+            AppNavigator.pushReplacement(
+                context,
+                BlocProvider.value(
+                  value: sl<AuthBloc>(),
+                  child: const SignUpPage(),
+                ));
           } else if (state is Authenticated) {
             AppNavigator.pushReplacement(context, const RootPage());
           } else if (state is FirstLaunch) {
@@ -79,7 +86,7 @@ class SplashScreenState extends State<SplashScreen> {
                 context,
                 BlocProvider(
                   create: (context) => OnboardingPageCubit(),
-                  child: WelcomePage(),
+                  child: const WelcomePage(),
                 ));
           }
         },
@@ -119,7 +126,7 @@ class SplashScreenState extends State<SplashScreen> {
                         "assets/travel_echo_logo.png", // Replace with your image URL
                         height: 100,
                       ),
-                     WidgetsSpacer.verticalSpacer8,
+                      WidgetsSpacer.verticalSpacer8,
                       Text(
                         "Travel echo",
                         style: TextStyle(

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:travelecho/core/constants/appbar.dart';
 
 class BudgetBossPage extends StatefulWidget {
+  const BudgetBossPage({super.key});
+
   // const BudgetBossPage({super.key});
 
   @override

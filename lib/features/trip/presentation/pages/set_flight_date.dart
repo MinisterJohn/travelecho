@@ -17,7 +17,7 @@ class FlightDate extends StatefulWidget {
 }
 
 class _FlightDateState extends State<FlightDate> {
-  String _tripDurationBy = "date";
+  final String _tripDurationBy = "date";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,7 +74,7 @@ class _FlightDateState extends State<FlightDate> {
               //     print("months");
               //   },
               // ),
-              TripDaysSelection(),
+              const TripDaysSelection(),
               // _nextTravelPlan(),
               WidgetsSpacer.verticalSpacer16,
 
@@ -97,10 +97,6 @@ class _FlightDateState extends State<FlightDate> {
                       onPressed: () {
                        AppNavigator.push(context, const FlightBooking());
                       },
-                      child: const Text(
-                        "Next",
-                        style: TextStyle(color: Colors.white),
-                      ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xff930BFF),
                         // minimumSize: Size(double.infinity, 50),
@@ -108,6 +104,10 @@ class _FlightDateState extends State<FlightDate> {
                           borderRadius: BorderRadius.circular(
                               8), // Set your desired border radius
                         ),
+                      ),
+                      child: const Text(
+                        "Next",
+                        style: TextStyle(color: Colors.white),
                       )),
                 ],
               )
@@ -133,7 +133,6 @@ class _FlightDateState extends State<FlightDate> {
           Expanded(
             child: TextButton(
               onPressed: () {},
-              child: const Text("Date", style: TextStyle(color: Colors.white)),
               style: TextButton.styleFrom(
                 backgroundColor: const Color(0xff930BFF),
                 minimumSize: const Size(double.infinity, 50),
@@ -141,6 +140,7 @@ class _FlightDateState extends State<FlightDate> {
                   borderRadius: BorderRadius.circular(6), // Rounded corners
                 ),
               ),
+              child: const Text("Date", style: TextStyle(color: Colors.white)),
             ),
           ),
           const SizedBox(
@@ -149,7 +149,6 @@ class _FlightDateState extends State<FlightDate> {
           Expanded(
             child: TextButton(
               onPressed: () {},
-              child: const Text("Month", style: TextStyle(color: Colors.black)),
               style: TextButton.styleFrom(
                 backgroundColor: Colors.white,
                 minimumSize: const Size(double.infinity, 50),
@@ -159,6 +158,7 @@ class _FlightDateState extends State<FlightDate> {
                   borderRadius: BorderRadius.circular(6), // Rounded corners
                 ),
               ),
+              child: const Text("Month", style: TextStyle(color: Colors.black)),
             ),
           ),
         ],
@@ -214,6 +214,8 @@ class _FlightDateState extends State<FlightDate> {
 }
 
 class TripDaysSelection extends StatefulWidget {
+  const TripDaysSelection({super.key});
+
   @override
   _TripDaysSelectionState createState() => _TripDaysSelectionState();
 }
@@ -263,7 +265,6 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
           Expanded(
             child: TextButton(
               onPressed: () {},
-              child: const Text("Date", style: TextStyle(color: Colors.white)),
               style: TextButton.styleFrom(
                 backgroundColor: const Color(0xff930BFF),
                 minimumSize: const Size(double.infinity, 50),
@@ -271,6 +272,7 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
+              child: const Text("Date", style: TextStyle(color: Colors.white)),
             ),
           ),
           const SizedBox(
@@ -279,7 +281,6 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
           Expanded(
             child: TextButton(
               onPressed: () {},
-              child: const Text("Month", style: TextStyle(color: Colors.black)),
               style: TextButton.styleFrom(
                 backgroundColor: Colors.white,
                 minimumSize: const Size(double.infinity, 50),
@@ -289,6 +290,7 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
                   borderRadius: BorderRadius.circular(6),
                 ),
               ),
+              child: const Text("Month", style: TextStyle(color: Colors.black)),
             ),
           ),
         ],
@@ -362,11 +364,11 @@ class CircularMonthSelector extends StatefulWidget {
   final Function(int months) onMonthsChanged;
 
   const CircularMonthSelector({
-    Key? key,
+    super.key,
     required this.maxMonths,
     this.initialMonths = 1,
     required this.onMonthsChanged,
-  }) : super(key: key);
+  });
 
   @override
   _CircularMonthSelectorState createState() => _CircularMonthSelectorState();

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/features/budget/data/models/budget_model.dart';
 import 'package:travelecho/features/budget/data/models/expense_model.dart';
@@ -8,14 +7,14 @@ import 'package:travelecho/features/budget/data/models/expense_model.dart';
 
 class AddCategoriesScreen extends StatefulWidget {
   final Budget budget;
-  AddCategoriesScreen({Key? key, required this.budget}) : super(key: key);
+  const AddCategoriesScreen({super.key, required this.budget});
 
   @override
   _AddCategoriesScreenState createState() => _AddCategoriesScreenState();
 }
 
 class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
-  List<ExpenseCategory> _expenseCategories = [
+  final List<ExpenseCategory> _expenseCategories = [
     ExpenseCategory(
         title: "Cruise",
         description: "Travels on ship and boats cruise",
@@ -58,8 +57,8 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
         expenseIsAdded: false),
   ];
 
-  TextEditingController _customExpenseCategoryName = TextEditingController();
-  TextEditingController _customExpenseCategoryDescription =
+  final TextEditingController _customExpenseCategoryName = TextEditingController();
+  final TextEditingController _customExpenseCategoryDescription =
       TextEditingController();
   String _searchExpenseQuery = "";
 
@@ -146,7 +145,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                 );
               }).toList(),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // TextField(controller: _custom,),
             TextButton(
                 onPressed: () {
@@ -162,7 +161,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                     Icon(Icons.add, color: AppColors.primaryColor),
                   ],
                 )),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [

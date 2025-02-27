@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/core/constants/app_navigation.dart';
-import 'package:travelecho/features/memories/presentation/pages/addtags.dart';
-import 'package:travelecho/features/memories/presentation/pages/collections.dart';
 import 'package:travelecho/features/memories/presentation/pages/creatememory.dart';
 
 class MemoryPage extends StatelessWidget {
@@ -12,6 +10,8 @@ class MemoryPage extends StatelessWidget {
     'assets/images/memories/image4.png',
     'assets/images/memories/image2.png',
   ];
+
+  MemoryPage({super.key});
 
   @override
   Widget build(BuildContext context) {

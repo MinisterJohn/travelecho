@@ -10,7 +10,6 @@ import 'package:travelecho/features/auth/presentation/bloc/user_bloc.dart';
 import 'package:travelecho/features/auth/presentation/bloc/user_state.dart';
 import 'package:travelecho/features/auth/presentation/pages/login.dart';
 import 'package:travelecho/features/auth/presentation/pages/new_user_welcome.dart';
-import 'package:travelecho/navigation_menu/presentation/root_page.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/service_locator.dart';
 
@@ -40,8 +39,10 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: WidgetsSpacer.pagePadding,
           child: BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
-              if (state is AuthLoading){
-                 return const Center(child: CircularProgressIndicator());
+              if (state is AuthLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else if (state is AuthSuccess) {
+                
               }
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

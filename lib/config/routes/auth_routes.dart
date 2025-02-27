@@ -8,8 +8,8 @@ class AuthRoutes {
   static const String forgotPassword = '/forgot-password';
 
   static Map<String, WidgetBuilder> routes = {
-    login: (context) => LoginPage(),
-    signup: (context) => SignUpPage(),
+    login: (context) => const LoginPage(),
+    signup: (context) => const SignUpPage(),
     // forgotPassword: (context) => ForgotPasswordPage(),
   };
 }

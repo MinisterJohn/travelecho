@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import 'package:travelecho/core/network/dio_client.dart';
 import 'package:travelecho/features/currency_converter/data/models/currencies_list_model.dart';
-import 'package:travelecho/service_locator.dart';
 import '../models/currency_model.dart';
 
 abstract class CurrencyRemoteSource {

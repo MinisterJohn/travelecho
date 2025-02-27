@@ -4,10 +4,12 @@ import 'package:travelecho/core/constants/appbar.dart';
 import 'package:travelecho/features/community/presentation/pages/user_dashboard.dart';
 
 class UserProfilePage extends StatelessWidget {
+  const UserProfilePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 2), () {
-      AppNavigator.pushReplacement(context, UserDashboard());
+      AppNavigator.pushReplacement(context, const UserDashboard());
     });
 
     return Scaffold(

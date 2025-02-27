@@ -13,6 +13,8 @@ class CreateMemoryPage extends StatelessWidget {
     'assets/images/memories/image2.png',
   ];
 
+  CreateMemoryPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

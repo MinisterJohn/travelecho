@@ -4,11 +4,11 @@ import 'package:travelecho/features/profile/domain/repository/languages_reposito
 import 'package:travelecho/service_locator.dart';
 
 class LanguagesRepositoryImpl extends LanguagesRepository {
-  final LanguageLocalSource occupationsLocalSource = sl<LanguageLocalSource>();
+  final LanguageLocalSource languageLocalSource = sl<LanguageLocalSource>();
   @override
   Future<LanguagesModel> getLanguages(String languageHint) async {
     final languagesModel =
-        await occupationsLocalSource.fetchLanguages(languageHint);
+        await languageLocalSource.fetchLanguages(languageHint);
     return LanguagesModel(languages: languagesModel.toList());
   }
 }

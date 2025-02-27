@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:travelecho/config/theme/colors.dart';
-import 'setbudget.dart';
 import 'package:line_icons/line_icons.dart';
 import 'budget_screen.dart';
 
 class BudgetTracker extends StatefulWidget {
+  const BudgetTracker({super.key});
+
   @override
   _BudgetTrackerState createState() => _BudgetTrackerState();
 }
@@ -16,7 +17,7 @@ class _BudgetTrackerState extends State<BudgetTracker> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
+        title: const Text(
           'Travel Budget',
           style: TextStyle(
             fontSize: 20,
@@ -53,7 +54,7 @@ class _BudgetTrackerState extends State<BudgetTracker> {
               const SizedBox(height: 30),
 
               currentBudgetTool == "Budget Overview"
-                  ? BudgetScreen()
+                  ? const BudgetScreen()
                   : Container()
             ],
           ),
@@ -88,14 +89,14 @@ class _BudgetTrackerState extends State<BudgetTracker> {
         child: Container(
           decoration: BoxDecoration(
             border: currentBudgetTool != label
-                ? Border.all(color: Color.fromRGBO(0, 0, 0, 0.1))
+                ? Border.all(color: const Color.fromRGBO(0, 0, 0, 0.1))
                 : null,
             color: currentBudgetTool == label
                 ?  AppColors.primaryColor
                 : Colors.transparent,
-            borderRadius: BorderRadius.all(Radius.circular(10)),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8.0),
           child: Center(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -105,7 +106,7 @@ class _BudgetTrackerState extends State<BudgetTracker> {
                         ? Colors.white
                         : Colors.black,
                     size: 50),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   label,
                   style: TextStyle(

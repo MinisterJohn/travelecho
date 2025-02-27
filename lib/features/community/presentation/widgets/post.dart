@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/constants/font_size_constants.dart';
 import 'package:travelecho/features/community/presentation/widgets/comment.dart';
 import 'package:travelecho/features/community/presentation/widgets/share.dart';
@@ -37,13 +35,13 @@ class _PostState extends State<Post> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start, // Align to the edge
             children: [
-              CircleAvatar(
+              const CircleAvatar(
                 radius: 30, // Reduced size of the image
                 backgroundImage:
                     AssetImage('assets/images/community/profile_pic2.jpeg'),
               ),
-              SizedBox(width: 10),
-              Column(
+              const SizedBox(width: 10),
+              const Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
@@ -71,7 +69,7 @@ class _PostState extends State<Post> {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               GestureDetector(
                 onTap: () {
                   setState(() {
@@ -127,7 +125,7 @@ class _PostState extends State<Post> {
                         color: _isLiked
                             ? AppColors.primaryColor
                             : AppColors.defaultColor400),
-                    Text('Like'),
+                    const Text('Like'),
                   ],
                 ),
               ),
@@ -157,13 +155,13 @@ class _PostState extends State<Post> {
                   children: [
                     Icon(LineIcons.shareSquare,
                         color: AppColors.defaultColor400),
-                    Text('Share'),
+                    const Text('Share'),
                   ],
                 ),
               ),
             ],
           ),
-          if (_wantsToShare) SharePost(),
+          if (_wantsToShare) const SharePost(),
           if (_showComments)
             Column(
               children: [

@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 
 class TakePhotoPage extends StatelessWidget {
+  const TakePhotoPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Take a Photo'),
+        title: const Text('Take a Photo'),
       ),
-      body: Center(
+      body: const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

@@ -10,6 +10,8 @@ import 'package:travelecho/features/currency_converter/presentation/blocs/curren
 import 'package:travelecho/features/currency_converter/presentation/blocs/currency_state.dart';
 
 class ConverterPage extends StatefulWidget {
+  const ConverterPage({super.key});
+
   @override
   _ConverterPageState createState() => _ConverterPageState();
 }
@@ -145,13 +147,13 @@ class _ConverterPageState extends State<ConverterPage> {
                   onPressed: () {
                     _convertCurrency();
                   },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
                   child: Text(
                     "Convert",
                     style: TextStyle(
                         color: AppColors.white, fontSize: FontSize.size16),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
                   ),
                 ),
                 WidgetsSpacer.verticalSpacer16,

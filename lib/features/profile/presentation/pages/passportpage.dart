@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'dart:io';
 
@@ -10,6 +9,8 @@ import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/constants/font_size_constants.dart';
 
 class PassportDetailsPage extends StatefulWidget {
+  const PassportDetailsPage({super.key});
+
   @override
   _PassportDetailsPageState createState() => _PassportDetailsPageState();
 }
@@ -19,8 +20,8 @@ class _PassportDetailsPageState extends State<PassportDetailsPage> {
 
   // Function to pick an image from the gallery or camera
   Future<void> _pickImage() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
       source: ImageSource.gallery, // Use ImageSource.camera for camera
       imageQuality: 85, // Optional: quality of the image
     );

@@ -1,7 +1,9 @@
-class OccupationsModel {
+import 'package:equatable/equatable.dart';
+
+class OccupationsModel extends Equatable {
   final List<dynamic> occupations;
 
-  OccupationsModel({required this.occupations});
+  const OccupationsModel({required this.occupations});
 
   factory OccupationsModel.fromJson(Map<String, dynamic> json) {
     return OccupationsModel(occupations: json["occupations"] ?? []);
@@ -18,4 +20,7 @@ class OccupationsModel {
   List<dynamic> toList() {
     return occupations;
   }
+  
+  @override
+  List<Object?> get props => [occupations];
 }

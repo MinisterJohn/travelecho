@@ -44,7 +44,7 @@ dependencies:
     # Being able to compare objects in Dart
   equatable: ^2.0.7
   logger: ^2.5.0
-  shared_preferences: 
+  shared_preferences: ^2.3.0
   # note: A flutter plugin for adapting screen and font size.Let your UI display a reasonable layout on different screen sizes!
   flutter_screenutil: ^5.9.3
   flutter_launcher_icons:
@@ -68,7 +68,9 @@ flutter:
   assets:
     - assets/
     - assets/icons/
-    - assets/json/
+    - assets/json/occupations.json
+    - assets/json/language-list-json.json
+    - assets/json/hobbies.json
     - assets/images/
     - assets/images/auth/
     - assets/images/home_images/

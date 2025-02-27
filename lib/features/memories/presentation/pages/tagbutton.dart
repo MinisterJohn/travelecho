@@ -5,7 +5,7 @@ import 'package:travelecho/config/theme/colors.dart';
 class TagButton extends StatefulWidget {
   final String tag;
 
-  TagButton({required this.tag});
+  const TagButton({super.key, required this.tag});
 
   @override
   _TagButtonState createState() => _TagButtonState();

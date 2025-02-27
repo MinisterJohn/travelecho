@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/navigation_menu/presentation/root_page.dart';
-import 'package:travelecho/features/trip/presentation/pages/trip_screen.dart';
 
 class TripNotification extends StatelessWidget {
+  const TripNotification({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
           icon: Container(
-            padding: EdgeInsets.all(8), // Padding inside the circle
-            decoration: BoxDecoration(
+            padding: const EdgeInsets.all(8), // Padding inside the circle
+            decoration: const BoxDecoration(
               color: Color.fromRGBO(248, 239, 255, 1),
               shape: BoxShape.circle,
             ),
-            child: Icon(
+            child: const Icon(
               LineIcons.arrowCircleLeft,
               color: Colors.black,
               size: 20, // Adjusted icon size for better fit
@@ -36,15 +37,15 @@ class TripNotification extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
+            const Center(
               child: Icon(
                 LineIcons.checkCircle,
                 size: 100,
                 color: Color(0xFF930BFF),
               ),
             ),
-            SizedBox(height: 20),
-            Text(
+            const SizedBox(height: 20),
+            const Text(
               'You have booked your first trip!!',
               style: TextStyle(
                 fontSize: 18,
@@ -53,8 +54,8 @@ class TripNotification extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               'Starting from September 14th',
               style: TextStyle(
                 fontSize: 16,
@@ -62,24 +63,24 @@ class TripNotification extends StatelessWidget {
               ),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) =>
-                            RootPage())); // Go back to the budget screen
+                            const RootPage())); // Go back to the budget screen
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: Color(0xFF930BFF),
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                textStyle: TextStyle(fontSize: 16),
+                backgroundColor: const Color(0xFF930BFF),
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                textStyle: const TextStyle(fontSize: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
                 ),
               ),
-              child: Text(
+              child: const Text(
                 'Track your trip here!',
                 style: TextStyle(color: Colors.white),
               ),

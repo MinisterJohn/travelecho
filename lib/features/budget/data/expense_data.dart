@@ -1,5 +1,4 @@
 import 'package:travelecho/features/budget/data/models/expense_model.dart';
-import 'package:travelecho/features/budget/setbudget.dart';
 
 class ExpenseData {
   //list of  all expenses

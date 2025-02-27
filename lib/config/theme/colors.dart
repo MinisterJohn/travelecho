@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 class AppColors {
   static const Color primaryColor = Color(0xff930BFF); // Example color code
   static final Color primaryColor300 =
-      Color.fromARGB(102, 145, 11, 255).withOpacity(0.3); // Example color code
+      const Color.fromARGB(102, 145, 11, 255).withOpacity(0.3); // Example color code
   static final Color primaryColor100 =
-      Color.fromARGB(26, 145, 11, 255).withOpacity(0.1); // Example color code
+      const Color.fromARGB(26, 145, 11, 255).withOpacity(0.1); // Example color code
   static const Color secondaryColor = Color.fromARGB(255, 150, 150, 150);
   static const Color errorColor = Colors.red;
   static final Color errorColor300 = Colors.red.shade300;

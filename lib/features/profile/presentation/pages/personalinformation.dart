@@ -3,10 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart'; // For image picking
 import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/core/constants/app_navigation.dart';
 import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/hoc/containerWidget.dart';
-import 'package:travelecho/features/profile/presentation/blocs/data_search_bloc.dart';
+import 'package:travelecho/features/profile/presentation/blocs/profile_bloc.dart';
 import 'package:travelecho/features/profile/presentation/widgets/interests_dialog.dart';
 import "package:travelecho/features/profile/presentation/widgets/location_dialog.dart";
 import "package:travelecho/features/profile/presentation/widgets/work_location_dialog.dart";
@@ -14,7 +13,6 @@ import "package:travelecho/features/profile/presentation/widgets/school_location
 import "package:travelecho/features/profile/presentation/widgets/date_dialog.dart";
 import "package:travelecho/features/profile/presentation/widgets/language_dialog.dart";
 import 'dart:io'; // For file handling
-import 'package:travelecho/features/profile/presentation/pages/saveinterest.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -29,8 +27,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   // Function to pick an image from the camera
   Future<void> _takePicture() async {
-    final ImagePicker _picker = ImagePicker();
-    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.camera);
 
     if (image != null) {
       setState(() {
@@ -195,7 +193,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   ),
                                 ],
                               ),
-                              child: Row(
+                              child: const Row(
                                 // Keep the camera icon and text together
                                 children: [
                                   SizedBox(
@@ -209,7 +207,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                   ),
                                   WidgetsSpacer
                                       .horinzontalSpacer8, // Space between camera icon and "Add" text
-                                  const Text(
+                                  Text(
                                     "Add", // Add text next to the camera icon
                                     style: TextStyle(
                                       color: Colors.black,
@@ -236,38 +234,59 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 }, // Show dialog for location
               ),
               Divider(color: AppColors.defaultColor100),
-              _buildEditableField(
-                icon: LineIcons.briefcase,
-                title: "My work",
-                onTap: () {
-                  showWhereIWorkDialog(context);
-                }, // Show dialog for work location
-              ),
-              Divider(color: AppColors.defaultColor100),
-              BlocProvider(
-                create: (context) => DataSearchBloc(),
-                child: _buildEditableField(
-                  icon: LineIcons.graduationCap,
-                  title: "Where I schooled",
-                  onTap: () {
-                    showWhereISchooledDialog(context);
-                  }, // Show dialog for school location
-                ),
-              ),
-              Divider(color: AppColors.defaultColor100),
-              _buildEditableField(
-                icon: LineIcons.birthdayCake,
-                title: "Date of Birth",
-                onTap: () {
-                  showDateDialog(context);
+              BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, state) {
+                  return _buildEditableField(
+                    icon: LineIcons.briefcase,
+                    title: state.profile.occupation.isEmpty
+                        ? "My occupation"
+                        : state.profile.occupation,
+                    onTap: () {
+                      showWhereIWorkDialog(context);
+                    }, // Show dialog for work location
+                  );
                 },
               ),
               Divider(color: AppColors.defaultColor100),
-              _buildEditableField(
-                icon: LineIcons.language,
-                title: "Language I speak",
-                onTap: () {
-                  showLanguageDialog(context);
+              BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, state) {
+                  return _buildEditableField(
+                    icon: LineIcons.graduationCap,
+                    title: state.profile.school.name.isEmpty
+                        ? "Where I schooled"
+                        : "${state.profile.school.name} - ${state.profile.school.country}",
+                    onTap: () {
+                      showWhereISchooledDialog(context);
+                    }, // Show dialog for school location
+                  );
+                },
+              ),
+              Divider(color: AppColors.defaultColor100),
+              BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, state) {
+                  return _buildEditableField(
+                    icon: LineIcons.birthdayCake,
+                    title: "Date of Birth",
+                    onTap: () {
+                      showDateDialog(context);
+                    },
+                  );
+                },
+              ),
+              Divider(color: AppColors.defaultColor100),
+              BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, state) {
+                  return _buildEditableField(
+                    icon: LineIcons.language,
+                    title: state.profile.languages.isEmpty
+                        ? "Language I speak"
+                        : state.profile.languages
+                            .map((lang) => lang.language)
+                            .join(", "),
+                    onTap: () {
+                      showLanguageDialog(context);
+                    },
+                  );
                 },
               ),
               Divider(color: AppColors.defaultColor100),

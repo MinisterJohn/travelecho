@@ -1,13 +1,12 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/core/constants/appbar.dart';
 import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/features/community/presentation/widgets/post.dart';
 
 class UserDashboard extends StatefulWidget {
+  const UserDashboard({super.key});
+
   @override
   _UserDashboardState createState() => _UserDashboardState();
 }
@@ -26,9 +25,9 @@ class _UserDashboardState extends State<UserDashboard> {
             children: [
               Row(
                 children: [
-                  SizedBox(
+                  const SizedBox(
                     width: 40,
-                    child: const CircleAvatar(
+                    child: CircleAvatar(
                       radius: 25,
                       backgroundImage: AssetImage(
                           'assets/images/community/profile_pic2.jpeg'),
@@ -49,9 +48,9 @@ class _UserDashboardState extends State<UserDashboard> {
                 ],
               ),
               const SizedBox(height: 20),
-              Post(),
-              WidgetsSpacer.verticalSpacer32,
-              Post()
+              const Post(),
+              WidgetsSpacer.verticalSpacer48,
+              const Post()
             ],
           ),
         ),

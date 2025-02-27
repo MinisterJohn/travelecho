@@ -123,7 +123,7 @@ class _CurrencyConverterBodyState extends State<CurrencyConverterBody>
                     context,
                     BlocProvider(
                       create: (context) => CurrencyBloc(),
-                      child: ConverterPage(),
+                      child: const ConverterPage(),
                     ));
               },
               style: ElevatedButton.styleFrom(

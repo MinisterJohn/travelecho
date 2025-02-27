@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:travelecho/core/constants/appbar.dart';
 
 void main() {
-  runApp(MaterialApp(
+  runApp(const MaterialApp(
     home: ChangePasswordPage(),
   ));
 }
 
 class ChangePasswordPage extends StatelessWidget {
+  const ChangePasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -18,7 +20,7 @@ class ChangePasswordPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => NewPasswordPage(),
+              builder: (context) => const NewPasswordPage(),
             ),
           );
         },
@@ -28,17 +30,19 @@ class ChangePasswordPage extends StatelessWidget {
 }
 
 class NewPasswordPage extends StatelessWidget {
+  const NewPasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Change Password'),
+        title: const Text('Change Password'),
       ),
       body: PasswordInputPage(
         title: "Please Enter New Password",
@@ -46,7 +50,7 @@ class NewPasswordPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => ConfirmPasswordPage(),
+              builder: (context) => const ConfirmPasswordPage(),
             ),
           );
         },
@@ -56,17 +60,19 @@ class NewPasswordPage extends StatelessWidget {
 }
 
 class ConfirmPasswordPage extends StatelessWidget {
+  const ConfirmPasswordPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Change Password'),
+        title: const Text('Change Password'),
       ),
       body: PasswordInputPage(
         title: "Confirm Password",
@@ -74,7 +80,7 @@ class ConfirmPasswordPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PasswordChangedPage(),
+              builder: (context) => const PasswordChangedPage(),
             ),
           );
         },
@@ -84,48 +90,50 @@ class ConfirmPasswordPage extends StatelessWidget {
 }
 
 class PasswordChangedPage extends StatelessWidget {
+  const PasswordChangedPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Password Changed'),
+        title: const Text('Password Changed'),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
+            const Icon(
               Icons.check_circle,
               size: 100,
               color: Colors.purple,
             ),
-            SizedBox(height: 16),
-            Text(
+            const SizedBox(height: 16),
+            const Text(
               'Password Changed',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
                 showDialog(
                   context: context,
                   builder: (context) => AlertDialog(
-                    title: Text('Are you sure you want to exit?'),
+                    title: const Text('Are you sure you want to exit?'),
                     actions: [
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text('No'),
+                        child: const Text('No'),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.popUntil(context, (route) => route.isFirst);
                         },
-                        child: Text('Yes'),
+                        child: const Text('Yes'),
                       ),
                     ],
                   ),
@@ -134,7 +142,7 @@ class PasswordChangedPage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
               ),
-              child: Text(
+              child: const Text(
                 'Go Back',
                 style: TextStyle(color: Colors.white),
               ),
@@ -150,7 +158,7 @@ class PasswordInputPage extends StatefulWidget {
   final String title;
   final VoidCallback onConfirm;
 
-  PasswordInputPage({required this.title, required this.onConfirm});
+  const PasswordInputPage({super.key, required this.title, required this.onConfirm});
 
   @override
   _PasswordInputPageState createState() => _PasswordInputPageState();
@@ -168,12 +176,12 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
           children: [
             Text(
               widget.title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: List.generate(
@@ -187,7 +195,7 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
                 ),
               ),
             ),
-            SizedBox(height: 32),
+            const SizedBox(height: 32),
             Center(
               child: ElevatedButton(
                 onPressed: () {
@@ -197,9 +205,9 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
-                  minimumSize: Size(300, 50), // Increase width and height here
+                  minimumSize: const Size(300, 50), // Increase width and height here
                 ),
-                child: Text(
+                child: const Text(
                   'Confirm',
                   style: TextStyle(color: Colors.white),
                 ),
@@ -215,7 +223,7 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
 class CircleInputField extends StatelessWidget {
   final ValueChanged<String> onChanged;
 
-  CircleInputField({required this.onChanged});
+  const CircleInputField({super.key, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -231,7 +239,7 @@ class CircleInputField extends StatelessWidget {
         textAlign: TextAlign.center,
         keyboardType: TextInputType.number,
         maxLength: 1,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           counterText: '',
           border: InputBorder.none,
         ),

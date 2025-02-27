@@ -29,7 +29,7 @@ class AppTheme {
       // onPrimary: AppColors.defaultColor,
       // secondary: AppColors.defaultColor,
       // onSecondary: AppColors.defaultColor,
-      background: AppColors.white,
+      surface: AppColors.white,
       // surface: AppColors.defaultColor,
       // onSurface: AppColors.defaultColor,
       error: Colors.red,
@@ -87,16 +87,16 @@ class AppTheme {
     ),
     navigationBarTheme: NavigationBarThemeData(
       indicatorColor: AppColors.white, // Remove the background
-      iconTheme: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      iconTheme: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return const IconThemeData(
               color: AppColors.primaryColor, size: 30); // Active icon color
         }
         return const IconThemeData(
             color: AppColors.defaultColor, size: 25); // Inactive icon color
       }),
-      labelTextStyle: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      labelTextStyle: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return const TextStyle(
               color: AppColors.primaryColor,
               fontSize: 10); // Active label style

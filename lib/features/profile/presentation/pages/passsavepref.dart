@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PasswordSavingPreferencePage extends StatefulWidget {
+  const PasswordSavingPreferencePage({super.key});
+
   @override
   _PasswordSavingPreferencePageState createState() =>
       _PasswordSavingPreferencePageState();
@@ -18,12 +20,12 @@ class _PasswordSavingPreferencePageState
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text(
+        title: const Text(
           'Password Saving Preference',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
@@ -48,7 +50,7 @@ class _PasswordSavingPreferencePageState
               },
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // 60-Minute Password Free Login Section
             _buildOptionCard(
@@ -64,7 +66,7 @@ class _PasswordSavingPreferencePageState
               },
             ),
 
-            SizedBox(height: 16),
+            const SizedBox(height: 16),
 
             // Password Always Needed Section
             _buildOptionCard(
@@ -97,7 +99,7 @@ class _PasswordSavingPreferencePageState
         onChanged(!value);
       },
       child: Container(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
           border: Border.all(
@@ -115,15 +117,15 @@ class _PasswordSavingPreferencePageState
               children: [
                 Text(
                   title,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                SizedBox(height: 8),
+                const SizedBox(height: 8),
                 Text(
                   description,
-                  style: TextStyle(
+                  style: const TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
                   ),

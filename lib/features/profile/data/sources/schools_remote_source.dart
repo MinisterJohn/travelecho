@@ -1,8 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
-import 'package:travelecho/core/network/dio_client.dart';
 import 'package:travelecho/features/profile/data/models/schools_list_model.dart';
-import 'package:travelecho/service_locator.dart';
 
 abstract class SchoolRemoteSource {
   Future<SchoolListModel> fetchSchoolList(String schoolHint);

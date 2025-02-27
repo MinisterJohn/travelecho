@@ -10,7 +10,7 @@ Widget userHeader() {
         children: [
           CircleAvatar(
             backgroundColor: AppColors.defaultColor100,
-            child: Icon(LineIcons.user),
+            child: const Icon(LineIcons.user),
           ),
           WidgetsSpacer.horinzontalSpacer8,
           Column(

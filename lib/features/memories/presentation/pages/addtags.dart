@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:travelecho/config/theme/colors.dart';
 
 class AddTagPage extends StatefulWidget {
+  const AddTagPage({super.key});
+
   @override
   _AddTagPageState createState() => _AddTagPageState();
 }

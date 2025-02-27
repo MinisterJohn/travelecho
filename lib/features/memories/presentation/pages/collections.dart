@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/core/constants/appbar.dart';
-import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/constants/font_size_constants.dart';
 import 'package:travelecho/features/memories/presentation/widgets/upgrade_to_pro.dart';
 
 class CollectionPage extends StatelessWidget {
+  const CollectionPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     // Define your specific image paths here
@@ -25,7 +24,7 @@ class CollectionPage extends StatelessWidget {
         context,
         actions: [
           Container(
-            margin: EdgeInsets.only(right: 16),
+            margin: const EdgeInsets.only(right: 16),
             child: ElevatedButton.icon(
               onPressed: () {
                 upgradeToPro(context);

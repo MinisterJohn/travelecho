@@ -23,7 +23,7 @@ class BudgetController {
 
 class _BudgetScreenState extends State<BudgetScreen> {
   final TextEditingController _budgetNameController = TextEditingController();
-  BudgetController _budget =
+  final BudgetController _budget =
       BudgetController(name: "", tripIsToMultipleDestinations: false);
   Budget _selectedBudget = Budget(amount: 0.0, name: "");
 
@@ -181,7 +181,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        bool _dialogIsChecked = _budget.tripIsToMultipleDestinations;
+        bool dialogIsChecked = _budget.tripIsToMultipleDestinations;
 
         return StatefulBuilder(
           builder: (BuildContext context, StateSetter setDialogState) {
@@ -217,10 +217,10 @@ class _BudgetScreenState extends State<BudgetScreen> {
                   Row(
                     children: [
                       Checkbox(
-                        value: _dialogIsChecked,
+                        value: dialogIsChecked,
                         onChanged: (bool? value) {
                           setDialogState(() {
-                            _dialogIsChecked = value ?? false;
+                            dialogIsChecked = value ?? false;
                           });
                         },
                         activeColor: AppColors.primaryColor,
@@ -228,7 +228,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       GestureDetector(
                         onTap: () {
                           setDialogState(() {
-                            _dialogIsChecked = !_dialogIsChecked;
+                            dialogIsChecked = !dialogIsChecked;
                           });
                         },
                         child: const Text(
@@ -255,7 +255,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SetBudgetScreen(),
+                        builder: (context) => const SetBudgetScreen(),
                         settings: RouteSettings(arguments: _selectedBudget),
                       ),
                     );
@@ -299,13 +299,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
           ),
         ),
         IconButton(
-          icon: Icon(Icons.settings_outlined, weight: 1, grade: 1),
+          icon: const Icon(Icons.settings_outlined, weight: 1, grade: 1),
           onPressed: () {
             _selectedBudget = budget;
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => SetBudgetScreen(),
+                builder: (context) => const SetBudgetScreen(),
                 settings: RouteSettings(arguments: _selectedBudget),
               ),
             );

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:travelecho/core/constants/appbar.dart';
 
 class NoMileStonePage extends StatelessWidget {
+  const NoMileStonePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,10 +21,10 @@ class NoMileStonePage extends StatelessWidget {
                 height: 200,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // "Nothing to see here!" text in bold
-            Text(
+            const Text(
               "Nothing to see here!",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -30,10 +32,10 @@ class NoMileStonePage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
 
             // Message at the center of the page
-            Center(
+            const Center(
               child: Text(
                 "You do not have any milestones or\n achievements yet",
                 textAlign: TextAlign.center, // Ensures the text itself is centered

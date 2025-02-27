@@ -11,7 +11,6 @@ import 'package:travelecho/features/profile/presentation/pages/profile.dart';
 import 'package:travelecho/features/trip/presentation/pages/trip_screen.dart';
 import 'package:travelecho/features/budget/budget_tracker.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:travelecho/pages/homescreen.dart';
 
 class RootPage extends StatefulWidget {
   const RootPage({super.key});
@@ -24,21 +23,21 @@ class _RootPageState extends State<RootPage> {
   int currentPage = 0;
   final List<Widget> pages = [
     // Container(),
-    HomeScreen(),
+    const HomeScreen(),
     // Container(),
     const TripScreen(), // Replace with your Trip page widget
     // Container(),
     ChangeNotifierProvider(
       create: (context) => BudgetsData(), // No semicolon here
-      child: BudgetTracker(), // Your Budget page widget
+      child: const BudgetTracker(), // Your Budget page widget
     ), // Replace with your Budget page widget
     // Container(),
     MemoryPage(),
     // Container(),
-    CommunityPage(),
+    const CommunityPage(),
     // Container(),
 
-    ProfilePage(), // Replace with your Profile page widget
+    const ProfilePage(), // Replace with your Profile page widget
   ];
   @override
   Widget build(BuildContext context) {

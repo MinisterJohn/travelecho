@@ -8,12 +8,12 @@ class PasswordResetFeedback extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
           child: Padding(
-        padding: EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
+            const Center(
                 child: Text(
               "Password Reset Successful",
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),

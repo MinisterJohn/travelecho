@@ -10,6 +10,8 @@ import 'addcategories.dart';
 import 'savebudget.dart';
 
 class SetBudgetScreen extends StatefulWidget {
+  const SetBudgetScreen({super.key});
+
   @override
   // ignore: library_private_types_in_public_api
   _SetBudgetScreenState createState() => _SetBudgetScreenState();
@@ -30,7 +32,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
     });
   }
 
-  TextEditingController _budgetAmountController = TextEditingController();
+  final TextEditingController _budgetAmountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -169,7 +171,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => SaveBudgetScreen()),
+                              builder: (context) => const SaveBudgetScreen()),
                         );
                       },
                       style: ElevatedButton.styleFrom(
@@ -195,12 +197,12 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
         floatingActionButton: _budget.expenseList.isNotEmpty
             ? FloatingActionButton(
                 backgroundColor: AppColors.primaryColor,
-                shape: RoundedRectangleBorder(
+                shape: const RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(50))),
                 onPressed: () {
                   _showModal(context);
                 },
-                child: Icon(Icons.add, color: Colors.white),
+                child: const Icon(Icons.add, color: Colors.white),
               )
             : null);
   }
@@ -277,7 +279,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
                     _budget.removeExpense(expense.title);
                   });
                 },
-                icon: Icon(
+                icon: const Icon(
                   Icons.delete_outlined,
                   color: Colors.red,
                 ))
@@ -293,7 +295,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
           ),
           const SizedBox(height: 5),
           TextField(
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Enter your budget',
               border: OutlineInputBorder(),
             ),

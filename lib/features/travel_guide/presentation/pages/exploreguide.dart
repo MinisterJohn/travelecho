@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ExploreGuide extends StatefulWidget {
+  const ExploreGuide({super.key});
+
   @override
   _ExploreGuideState createState() => _ExploreGuideState();
 }
@@ -25,12 +27,12 @@ class _ExploreGuideState extends State<ExploreGuide> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.black),
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text(
+        title: const Text(
           "Culture Guide",
           style: TextStyle(color: Colors.black),
         ),
@@ -42,13 +44,13 @@ class _ExploreGuideState extends State<ExploreGuide> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Divider(thickness: 1),
-            SizedBox(height: 20),
-            Text(
+            const Divider(thickness: 1),
+            const SizedBox(height: 20),
+            const Text(
               "Where are you travelling to?",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
             ),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             // Input field with image on the left
             TextField(
               decoration: InputDecoration(
@@ -67,7 +69,7 @@ class _ExploreGuideState extends State<ExploreGuide> {
               ),
               onSubmitted: handleUserInput, // Handle input submission
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Rectangle box with corner radius
             Container(
@@ -89,8 +91,8 @@ class _ExploreGuideState extends State<ExploreGuide> {
                         width: 40,
                         height: 40,
                       ),
-                      SizedBox(width: 10),
-                      Expanded(
+                      const SizedBox(width: 10),
+                      const Expanded(
                         child: Text(
                           "Hello! I'm your culture guide. How can I help you understand the local culture better?",
                           style: TextStyle(fontSize: 12),
@@ -98,7 +100,7 @@ class _ExploreGuideState extends State<ExploreGuide> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Field for user to ask a question
                   TextField(
                     decoration: InputDecoration(
@@ -117,12 +119,12 @@ class _ExploreGuideState extends State<ExploreGuide> {
                     ),
                     onSubmitted: handleUserInput, // Handle input submission
                   ),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   // Display response
                   if (response.isNotEmpty)
                     Text(
                       response,
-                      style: TextStyle(fontSize: 14, color: Colors.black),
+                      style: const TextStyle(fontSize: 14, color: Colors.black),
                     ),
                 ],
               ),

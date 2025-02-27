@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 
 class UrbanExplorerPage extends StatelessWidget {
+  const UrbanExplorerPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context); // Navigate back
           },
         ),
-        title: Text(""),
+        title: const Text(""),
         elevation: 0, // Remove AppBar shadow for a cleaner look
         backgroundColor: Colors.transparent, // Make AppBar background transparent
       ),
@@ -21,7 +23,7 @@ class UrbanExplorerPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Milestones header
-            Text(
+            const Text(
               "Milestones",
               style: TextStyle(
                 fontSize: 20,
@@ -29,7 +31,7 @@ class UrbanExplorerPage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Depth3 image with sharearrow beside it
           Center(
@@ -45,10 +47,10 @@ class UrbanExplorerPage extends StatelessWidget {
               ],
             ),
           ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Congratulations section
-            Text(
+            const Text(
               "Congratulations on earning the Urban Explorer badge!",
               style: TextStyle(
                 fontSize: 16,
@@ -56,10 +58,10 @@ class UrbanExplorerPage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 15),
+            const SizedBox(height: 15),
 
             // Milestone achieved
-            Text(
+            const Text(
               "Milestone Achieved:",
               style: TextStyle(
                 fontSize: 14,
@@ -67,18 +69,18 @@ class UrbanExplorerPage extends StatelessWidget {
                 color: Colors.purple,
               ),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "Complete 5 trips to urban cities and unlock exclusive rewards!",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Badge Details
-            Text(
+            const Text(
               "Badge Details:",
               style: TextStyle(
                 fontSize: 14,
@@ -86,34 +88,34 @@ class UrbanExplorerPage extends StatelessWidget {
                 color: Colors.purple,
               ),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "Name: Urban Explorer",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               "Type: Travel Milestone",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               "Description: Awarded to travelers who explore multiple urban cities.",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Requirements
-            Text(
+            const Text(
               "Requirements:",
               style: TextStyle(
                 fontSize: 14,
@@ -121,34 +123,34 @@ class UrbanExplorerPage extends StatelessWidget {
                 color: Colors.purple,
               ),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "1. Complete 5 trips to urban cities.",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               "2. Visit 2 unique cities.",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               "3. Share 2 travel stories.",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
             // Badge Levels
-            Text(
+            const Text(
               "Badge Levels:",
               style: TextStyle(
                 fontSize: 14,
@@ -156,32 +158,32 @@ class UrbanExplorerPage extends StatelessWidget {
                 color: Colors.purple,
               ),
             ),
-            SizedBox(height: 10),
-            Text(
+            const SizedBox(height: 10),
+            const Text(
               "1. Bronze: 5 urban cities.",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               "2. Silver: 10 urban cities.",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               "3. Gold: 20 urban cities.",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 5),
-            Text(
+            const SizedBox(height: 5),
+            const Text(
               "4. Platinum: 50 urban cities.",
               style: TextStyle(
                 fontSize: 14,

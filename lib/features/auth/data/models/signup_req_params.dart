@@ -1,12 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:convert';
 
 import 'package:travelecho/features/auth/domain/entities/user_entity.dart';
 
 class UserModel extends User {
   UserModel(
-      {required String id, required String email, required String fullname})
-      : super(id: id, email: email, fullname: fullname);
+      {required super.id, required super.email, required super.fullname});
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
     return UserModel(

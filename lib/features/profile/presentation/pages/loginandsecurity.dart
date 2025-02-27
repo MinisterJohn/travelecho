@@ -5,69 +5,71 @@ import 'package:travelecho/features/profile/presentation/pages/changepassword.da
 import 'package:travelecho/features/profile/presentation/pages/passsavepref.dart';
 
 class LoginAndSecurityPage extends StatelessWidget {
+  const LoginAndSecurityPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
           },
         ),
-        title: Text('Login and Security'),
+        title: const Text('Login and Security'),
       ),
       body: ListView(
-        padding: EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16.0),
         children: [
           // Password Section
-          Text(
+          const Text(
             'Password',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ListTile(
-            title: Text('Change Password'),
-            trailing: Icon(Icons.chevron_right),
+            title: const Text('Change Password'),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () {
               // Navigate to the InterestSelectionPage when tapped
-              AppNavigator.push(context, ChangePasswordPage());
+              AppNavigator.push(context, const ChangePasswordPage());
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            title: Text('Forgot Password'),
-            trailing: Icon(Icons.chevron_right),
+            title: const Text('Forgot Password'),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () {
               // Add navigation logic here later
-              AppNavigator.push(context, ForgotPasswordPage());
+              AppNavigator.push(context, const ForgotPasswordPage());
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            title: Text('Password Saving Preference'),
-            trailing: Icon(Icons.chevron_right),
+            title: const Text('Password Saving Preference'),
+            trailing: const Icon(Icons.chevron_right),
             onTap: () {
               // Add navigation logic here
-             AppNavigator.push(context, PasswordSavingPreferencePage());
+             AppNavigator.push(context, const PasswordSavingPreferencePage());
             },
           ),
-          SizedBox(height: 24),
+          const SizedBox(height: 24),
 
           // Biometrics Section
-          Text(
+          const Text(
             'Biometrics',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           ListTile(
-            title: Text('Login with Fingerprint'),
+            title: const Text('Login with Fingerprint'),
             trailing: Switch(
               value: true, // Default value
               onChanged: (bool value) {
