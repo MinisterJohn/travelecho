@@ -15,12 +15,12 @@ class CurrencyRemoteSourceImpl extends CurrencyRemoteSource {
     final response = await dio.get(
         "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/$baseCurrency.json");
 
-    if (response.statusCode == 200) {
-    Logger().d("COnvert API Response: ${response.data}");
+    try{
+    Logger().d("Convert API Response: ${response.data}");
 
       return CurrencyModel.fromJson(response.data, baseCurrency);
-    } else {
-      throw Exception("Failed to load exchange rates");
+    } catch(e) {
+      throw Exception("Failed to load exchange rates ${e.toString()}");
     }
   }
 

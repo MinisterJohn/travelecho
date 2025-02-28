@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:travelecho/core/constants/api_url.dart';
 // import 'package:movie/core/constants/api_url.dart';
 
 import 'interceptors.dart';
@@ -8,7 +9,7 @@ class DioClient {
   late final Dio _dio;
   DioClient(): _dio = Dio(
     BaseOptions(
-      // baseUrl: ApiUrl.baseURL,
+      baseUrl: ApiUrl.baseURL,
       headers: {
         'Content-Type': 'application/json; charset=UTF-8'
       },

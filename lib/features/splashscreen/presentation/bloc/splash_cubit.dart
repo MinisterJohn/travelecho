@@ -12,7 +12,7 @@ class SplashCubit extends Cubit<SplashState> {
     var isNotNewUser = await sl<IsNotNewUserUseCase>().call();
 
     if (isNotNewUser) {
-      emit(UnAuthenticated());
+      emit(Authenticated());
       // emit(FirstLaunch());
       return;
     }
