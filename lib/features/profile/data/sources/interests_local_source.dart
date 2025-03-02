@@ -14,12 +14,13 @@ class InterestLocalSourceImpl extends InterestLocalSource {
   Future<InterestsModel> fetchInterests(String interestHint) async {
     if (allInterests.interests.isEmpty) {
       try {
-        final String response = await rootBundle.loadString('assets/json/hobbies.json');
-        
+        final String response =
+            await rootBundle.loadString('assets/json/interests.json');
+
         if (response.isEmpty) {
           throw Exception('Empty response from hobbies.json');
         }
-        
+
         final List<dynamic> interestsJsonData = json.decode(response);
 
         allInterests = InterestsModel.fromJson(interestsJsonData);
@@ -27,7 +28,7 @@ class InterestLocalSourceImpl extends InterestLocalSource {
         throw Exception('Error loading interests: $e');
       }
     }
-    
+
     sortedInterests = InterestsModel.sort(allInterests, interestHint);
     return sortedInterests;
   }

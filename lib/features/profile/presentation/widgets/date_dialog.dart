@@ -49,9 +49,11 @@ void showDateDialog(BuildContext context) {
 
                     return Expanded(
                       child: CalendarDatePicker(
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
+                        initialDate: DateTime.now()
+                            .subtract(Duration(days: (5 * 365.25).round())),
+                        firstDate: DateTime(1900),
+                        lastDate: DateTime.now()
+                            .subtract(Duration(days: (5 * 365.25).round())),
                         onDateChanged: (DateTime selectedDate) {
                           context.read<ProfileBloc>().add(
                               ProfileUpdateRequested(

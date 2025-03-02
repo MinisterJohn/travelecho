@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/features/budget/addcategories.dart';
 import 'package:travelecho/features/budget/data/budget_data.dart';
 import 'package:travelecho/features/budget/data/models/budget_model.dart';
 import 'package:travelecho/features/budget/setbudget.dart';

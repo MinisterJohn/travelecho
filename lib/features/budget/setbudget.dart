@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:provider/provider.dart';
 import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/features/budget/budget_screen.dart';
-import 'package:travelecho/features/budget/data/budget_data.dart';
 import 'package:travelecho/features/budget/data/models/budget_model.dart';
 import 'package:travelecho/features/budget/data/models/expense_model.dart';
 import 'addcategories.dart';

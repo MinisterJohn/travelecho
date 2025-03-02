@@ -5,6 +5,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/hoc/containerWidget.dart';
+import 'package:travelecho/core/utils/validators/date_formatter.dart';
 import 'package:travelecho/features/profile/presentation/blocs/profile_bloc.dart';
 import 'package:travelecho/features/profile/presentation/widgets/interests_dialog.dart';
 import "package:travelecho/features/profile/presentation/widgets/location_dialog.dart";
@@ -266,7 +267,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 builder: (context, state) {
                   return _buildEditableField(
                     icon: LineIcons.birthdayCake,
-                    title: "Date of Birth",
+                    title: state.profile.dob.isBefore(DateTime.now()
+                            .subtract(Duration(days: (5 * 365.25).round())))
+                        ? formatDate(state.profile.dob)
+                        : "Date of Birth",
                     onTap: () {
                       showDateDialog(context);
                     },
@@ -290,14 +294,22 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 },
               ),
               Divider(color: AppColors.defaultColor100),
-              _buildEditableField(
-                icon: LineIcons.shapes,
-                title: "Interests",
-                onTap: () {
-                  // Navigate to the InterestSelectionPage when tapped
-                  showInterestsDialog(context);
+              BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, state) {
+                  return _buildEditableField(
+                    icon: LineIcons.shapes,
+                    title: state.profile.interests.isEmpty
+                        ? "Interests"
+                        : state.profile.interests
+                            .map((interest) => interest.interest)
+                            .join(", "),
+                    onTap: () {
+                      // Navigate to the InterestSelectionPage when tapped
+                      showInterestsDialog(context);
+                    },
+                    hasArrow: true,
+                  );
                 },
-                hasArrow: true,
               ),
             ],
           ),
