@@ -1,0 +1,38 @@
+/* Home.css */
+
+/* Background image for hero section */
+.hero-section {
+  background-image: url('https://img.freepik.com/free-vector/realistic-background-futuristic-style_23-2149129125.jpg');
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  padding: 100px 0;
+  text-align: center;
+}
+
+.features-section {
+  padding: 60px 0;
+}
+
+.feature {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.feature.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.feature-icon i {
+  font-size: 3rem;
+  color: #007bff; /* Customize icon color */
+}
+
+.footer {
+  background-color: #343a40;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}

@@ -1,0 +1,38 @@
+/* Questionnaire.css */
+
+.background {
+  background-image: url('https://cdn1.expresscomputer.in/wp-content/uploads/2023/09/29161851/EC_Fintech_02_Technology_750.jpg'); /* Replace with your background image path */
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+.questionnaire-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.question-container {
+  background: rgba(255, 255, 255, 0.8); /* Slightly transparent white background */
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 600px;
+  width: 100%;
+}
+
+.question label {
+  font-weight: bold;
+}
+
+.button-container button {
+  margin: 5px;
+}
