@@ -6,8 +6,8 @@ import 'package:travelecho/core/constants/app_navigation.dart';
 import 'package:travelecho/core/constants/constants.dart';
 import 'package:travelecho/core/hoc/containerWidget.dart';
 import 'package:travelecho/features/currency_converter/presentation/currencyconverter.dart';
-import 'package:travelecho/features/milestones/presentation/pages/milestones.dart';
 import 'package:travelecho/features/travel_guide/presentation/pages/travelguide.dart';
+import 'package:travelecho/features/visa_and_immigration/presentation/pages/visaandimmigration.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -64,7 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               const SizedBox(height: 20),
 
-              // Currency Converter, Milestones, Travel Guide
+              // Currency Converter, Visa & Immigration, Travel Guide
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -73,8 +73,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       "Currency Converter",
                       context,
                       const CurrencyConverterPage()),
-                  _featureCard(LineIcons.trophy, "Milestones", context,
-                      const MilestonesPage()),
+                  _featureCard(LineIcons.passport, "Visa & Immigration", context,
+                      const VisaImmigrationPage()),
                   _featureCard(LineIcons.globe, "Travel Guide", context,
                       const TravelGuidePage()),
                 ],

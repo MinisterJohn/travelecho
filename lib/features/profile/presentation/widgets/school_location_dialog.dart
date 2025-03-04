@@ -103,7 +103,7 @@ Widget _buildSearchField(
       fillColor: AppColors.primaryColor100,
       filled: true,
       prefixIcon: const Icon(Icons.search, color: AppColors.primaryColor),
-      hintText: "Type the name of your school",
+      hintText: "Start typing to search the name of your school",
       helperText: "Enter at least two characters in your school's name",
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(50),

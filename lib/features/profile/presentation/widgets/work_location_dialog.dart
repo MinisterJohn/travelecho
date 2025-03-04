@@ -128,7 +128,7 @@ Widget _buildSearchField(
       fillColor: AppColors.primaryColor100,
       filled: true,
       prefixIcon: const Icon(Icons.search, color: AppColors.primaryColor),
-      hintText: "Type your current occupation",
+      hintText: "Start typing to search for your occupation",
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(50),
         borderSide: const BorderSide(color: AppColors.primaryColor),

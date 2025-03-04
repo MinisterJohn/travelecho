@@ -52,7 +52,7 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
                 child: TextField(
                   controller: interestController,
                   decoration: InputDecoration(
-                    hintText: "Add your interest",
+                    hintText: "Search for interests",
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(8.0),
                     ),
@@ -98,7 +98,6 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
                     : <InterestModel>[];
             return BlocBuilder<DataSearchBloc, DataSearchState>(
                 builder: (context, state) {
-              
               List<InterestModel> relatedInterests = state is InterestsLoaded
                   ? state.interests
                   : <InterestModel>[];
@@ -129,11 +128,12 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
 
   Widget _relatedInterestsWidget(List<InterestModel> relatedInterests,
       List<InterestModel> selectedInterests, BuildContext context) {
-        if (relatedInterests.isEmpty)
-                return Center(
-                    child: CircularProgressIndicator(
-                  color: AppColors.primaryColor,
-                ));
+    if (relatedInterests.isEmpty) {
+      return const Center(
+          child: CircularProgressIndicator(
+        color: AppColors.primaryColor,
+      ));
+    }
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       decoration: BoxDecoration(
@@ -167,10 +167,11 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
 
   Widget _selectedInterestsWidget(
       List<InterestModel> selectedInterests, BuildContext context) {
-    if (selectedInterests.isEmpty)
-      return Center(
+    if (selectedInterests.isEmpty) {
+      return const Center(
           child: Text(
               "No interest selected. Start searching to select 3 interests"));
+    }
     return Container(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         constraints: const BoxConstraints(maxHeight: 200),
@@ -203,9 +204,9 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
             .add(ProfileUpdateRequested(interest, ProfileUpdateKey.interests));
       },
       style: ElevatedButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         elevation: 0,
-        minimumSize: Size(0, 0),
+        minimumSize: const Size(0, 0),
         backgroundColor: AppColors.primaryColor100,
         side: BorderSide(
             color: isSelected ? AppColors.primaryColor : Colors.transparent),
