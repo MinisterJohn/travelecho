@@ -1,0 +1,4 @@
+Inspired by VAIO's logo. Use underscore for VA ligature (or enable discretionary ligatures feature). Supports cyrillic.
+Free for all use, but you can support me either by donating any amount you like or by purchasing one of my commercial fonts from http://www.myfonts.com/foundry/Architaraz/.
+Enjoy!
+
