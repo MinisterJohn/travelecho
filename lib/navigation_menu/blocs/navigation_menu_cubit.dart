@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:travelecho/navigation_menu/blocs/navigation_menu_state.dart';
+
+part 'navigation_menu_state.dart';
 
 class NavigationMenuCubit extends Cubit<NavigationMenuState> {
   NavigationMenuCubit() : super(InitNavigationMenuState());

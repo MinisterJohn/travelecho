@@ -9,10 +9,7 @@ class AuthRepositoryImpl implements AuthRepository {
 
     return data.fold((error) {
       return Left(error);
-    }, (data) async {
-      SharedPreferences sharedPreferences =
-          await SharedPreferences.getInstance();
-      sharedPreferences.setString('token', data['token']);
+    }, (data) {
       return Right(data);
     });
   }
@@ -27,7 +24,7 @@ class AuthRepositoryImpl implements AuthRepository {
       SharedPreferences sharedPreferences =
           await SharedPreferences.getInstance();
       sharedPreferences.setString('token', data['token']);
-      sharedPreferences.setBool('is_not_new_user', false);
+      sharedPreferences.setBool('is_not_new_user', true);
       return Right(data);
     });
   }
@@ -47,8 +44,8 @@ class AuthRepositoryImpl implements AuthRepository {
 
     sharedPreferences = await SharedPreferences.getInstance();
     bool? isNotNewUser = sharedPreferences.getBool('is_not_new_user');
-    if (isNotNewUser == null) return true;
-    return false;
+    if (isNotNewUser == null) return false;
+    return isNotNewUser;
   }
 
   // @override

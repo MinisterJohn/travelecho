@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
+import "../../features/features_exports.dart";
 
 IconButton appBarIconButton(BuildContext context) {
   return IconButton(
@@ -16,23 +17,28 @@ IconButton appBarIconButton(BuildContext context) {
       ),
     ),
     onPressed: () {
-      Navigator.pop(context);
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      } else {
+        // If we can't pop, go to the root page
+        AppNavigator.pushAndRemove(context, const RootPage());
+      }
     },
   );
 }
 
-AppBar setAppBar(String titleText, BuildContext context, {List<Widget> actions = const []}) {
+AppBar setAppBar(String titleText, BuildContext context,
+    {List<Widget> actions = const []}) {
   return AppBar(
-    leading: appBarIconButton(context),
-    centerTitle: true,
-    title: Text(
-      titleText,
-      style: const TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        fontFamily: 'Segoe UI',
+      leading: appBarIconButton(context),
+      centerTitle: true,
+      title: Text(
+        titleText,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          fontFamily: 'Segoe UI',
+        ),
       ),
-    ),
-    actions:  actions
-  );
+      actions: actions);
 }

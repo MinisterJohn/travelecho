@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../profile_exports.dart';
 
-
 void showLanguageDialog(BuildContext context) {
   TextEditingController searchController = TextEditingController();
   Timer? debounce;
@@ -37,17 +36,13 @@ void showLanguageDialog(BuildContext context) {
           WidgetsSpacer.verticalSpacer16,
           BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, state) {
-              final List<LanguageModel> selectedLanguages =
-                  state is ProfileLoaded
-                      ? state.profile.languages
-                      : <LanguageModel>[];
+              final List<String> selectedLanguages =
+                  state is ProfileLoaded ? state.profile.languages : <String>[];
 
               return BlocBuilder<DataSearchBloc, DataSearchState>(
                 builder: (context, state) {
-                  final List<LanguageModel> relatedLanguages =
-                      state is LanguagesLoaded
-                          ? state.languages
-                          : <LanguageModel>[];
+                  final List<String> relatedLanguages =
+                      state is LanguagesLoaded ? state.languages : <String>[];
                   return _buildLanguageList(
                       relatedLanguages, selectedLanguages, context);
                 },
@@ -102,8 +97,8 @@ Widget _buildSearchField(
   );
 }
 
-Widget _buildLanguageList(List<LanguageModel> relatedLanguages,
-    List<LanguageModel> selectedLanguages, BuildContext context) {
+Widget _buildLanguageList(List<String> relatedLanguages,
+    List<String> selectedLanguages, BuildContext context) {
   if (relatedLanguages.isNotEmpty) {
     return _relatedLanguagesWidget(
         relatedLanguages, selectedLanguages, context);
@@ -111,8 +106,8 @@ Widget _buildLanguageList(List<LanguageModel> relatedLanguages,
   return _selectedLanguagesWidget(selectedLanguages, context);
 }
 
-Widget _relatedLanguagesWidget(List<LanguageModel> relatedLanguages,
-    List<LanguageModel> selectedLanguages, BuildContext context) {
+Widget _relatedLanguagesWidget(List<String> relatedLanguages,
+    List<String> selectedLanguages, BuildContext context) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
     decoration: BoxDecoration(
@@ -132,11 +127,10 @@ Widget _relatedLanguagesWidget(List<LanguageModel> relatedLanguages,
         itemCount: relatedLanguages.length,
         itemBuilder: (context, index) {
           final language = relatedLanguages[index];
-          final isSelected = selectedLanguages
-              .any((lang) => lang.language == language.language);
+          final isSelected = selectedLanguages.any((lang) => lang == language);
 
           return CheckboxListTile(
-            title: Text(language.language),
+            title: Text(language),
             value: isSelected,
             onChanged: (bool? isSelected) {
               context.read<ProfileBloc>().add(
@@ -150,7 +144,7 @@ Widget _relatedLanguagesWidget(List<LanguageModel> relatedLanguages,
 }
 
 Widget _selectedLanguagesWidget(
-    List<LanguageModel> selectedLanguages, BuildContext context) {
+    List<String> selectedLanguages, BuildContext context) {
   if (selectedLanguages.isEmpty) {
     return const Center(
         child: Text("No languages selected. Start typing to search."));
@@ -161,7 +155,7 @@ Widget _selectedLanguagesWidget(
     itemBuilder: (context, index) {
       final language = selectedLanguages[index];
       return CheckboxListTile(
-        title: Text(language.language),
+        title: Text(language),
         value: true,
         onChanged: (bool? isSelected) {
           context.read<ProfileBloc>().add(

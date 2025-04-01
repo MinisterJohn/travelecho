@@ -9,7 +9,7 @@ export 'data/models/languages_model.dart';
 export 'data/models/occupations_model.dart';
 
 // Domain Failures
-export 'domain/failures/failure.dart';
+// export 'domain/failures/failure.dart';
 
 // Data Sources
 export 'data/sources/profile_api_service.dart';

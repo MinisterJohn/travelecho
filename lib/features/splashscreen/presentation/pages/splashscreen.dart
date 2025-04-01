@@ -70,7 +70,12 @@ class SplashScreenState extends State<SplashScreen> {
                   child: const SignUpPage(),
                 ));
           } else if (state is Authenticated) {
-            AppNavigator.pushReplacement(context, const RootPage());
+            AppNavigator.pushReplacement(
+                context,
+                BlocProvider.value(
+                  value: sl<AuthBloc>()..add(CheckAuthStatus()),
+                  child: const RootPage(),
+                ));
           } else if (state is FirstLaunch) {
             AppNavigator.pushReplacement(
                 context,

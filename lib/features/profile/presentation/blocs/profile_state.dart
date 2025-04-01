@@ -12,17 +12,26 @@ class ProfileInitial extends ProfileState {
   ProfileInitial()
       : super(
           profile: Profile(
+            image: "",
             dob: DateTime.now(),
-            interests: const <InterestModel>[],
+            interests: const <String>[],
             location: "",
             school: const SchoolModel(name: "", country: ""),
             occupation: "",
-            languages: const <LanguageModel>[],
+            languages: const <String>[],
           ),
         );
 }
 
-enum ProfileUpdateKey { location, dob, school, occupation, interests, languages }
+enum ProfileUpdateKey {
+  location,
+  dob,
+  school,
+  occupation,
+  interests,
+  languages,
+  image
+}
 
 class ProfileLoading extends ProfileState {
   const ProfileLoading({required super.profile});
@@ -34,8 +43,27 @@ class ProfileLoaded extends ProfileState {
 
 class ProfileUpdated extends ProfileState {
   final ProfileUpdateKey updateKey;
-  
+
   const ProfileUpdated({required super.profile, required this.updateKey});
   @override
   List<Object?> get props => [profile, updateKey];
+}
+
+class ProfileFailure extends ProfileState {
+  final String error;
+
+  ProfileFailure(this.error)
+      : super(
+            profile: Profile(
+          image: "",
+          dob: DateTime.now(),
+          interests: const <String>[],
+          location: "",
+          school: const SchoolModel(name: "", country: ""),
+          occupation: "",
+          languages: const <String>[],
+        ));
+
+  @override
+  List<Object?> get props => [profile, error];
 }

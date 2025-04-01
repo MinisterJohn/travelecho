@@ -275,7 +275,12 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  AppNavigator.push(context, const LoginPage());
+                  AppNavigator.push(context, 
+                  BlocProvider.value(
+                    value: sl<AuthBloc>(),
+                    child: const LoginPage(),
+                  )
+                  );
                 },
               text: 'Login',
             ),

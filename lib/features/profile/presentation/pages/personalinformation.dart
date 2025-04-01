@@ -217,12 +217,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
               ),
               const SizedBox(height: 32),
-              _buildEditableField(
-                icon: LineIcons.home,
-                title: "Where I live",
-                onTap: () {
-                  showWhereILiveDialog(context);
-                }, // Show dialog for location
+              BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, state) {
+                  return _buildEditableField(
+                    icon: LineIcons.home,
+                    title: state.profile.location.isEmpty
+                        ? "Where I live"
+                        : state.profile.location,
+                    onTap: () {
+                      showWhereILiveDialog(context);
+                    }, // Show dialog for location
+                  );
+                },
               ),
               Divider(color: AppColors.defaultColor100),
               BlocBuilder<ProfileBloc, ProfileState>(
@@ -275,7 +281,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     title: state.profile.languages.isEmpty
                         ? "Language I speak"
                         : state.profile.languages
-                            .map((lang) => lang.language)
+                            .map((lang) => lang)
                             .join(", "),
                     onTap: () {
                       showLanguageDialog(context);
@@ -291,7 +297,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     title: state.profile.interests.isEmpty
                         ? "Interests"
                         : state.profile.interests
-                            .map((interest) => interest.interest)
+                            .map((interest) => interest)
                             .join(", "),
                     onTap: () {
                       // Navigate to the InterestSelectionPage when tapped

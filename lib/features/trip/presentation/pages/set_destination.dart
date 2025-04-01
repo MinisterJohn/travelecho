@@ -1,16 +1,47 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
+import '../widgets/trip_progress_display.dart';
+import '../widgets/destination_bottom_bar.dart';
+import '../widgets/airport_search_section.dart';
 
-class SetDestination extends StatefulWidget {
+class SetDestination extends StatelessWidget {
   const SetDestination({super.key});
 
-  @override
-  State<SetDestination> createState() => _SetDestinationState();
-}
+  void _onDestinationAirportSelected(BuildContext context, Airport airport,
+      TextEditingController searchController) {
+    // Update flight booking with destination airport
+    final flightBookingBloc = context.read<FlightBookingBloc>();
+    final currentBooking = flightBookingBloc.flightBooking;
 
-class _SetDestinationState extends State<SetDestination> {
+    searchController.text = airport.name;
+
+    if (currentBooking.originDestinations.isNotEmpty) {
+      final originDestination = currentBooking.originDestinations.first;
+      final updatedOriginDestination = OriginDestination(
+        id: originDestination.id,
+        originLocationCode: originDestination.originLocationCode,
+        originLocationName: originDestination.originLocationName,
+        destinationLocationCode: airport.iata,
+        destinationLocationName: airport.name,
+        departureDateTimeRange: originDestination.departureDateTimeRange,
+      );
+
+      flightBookingBloc.add(UpdateFlightBooking(
+        updateKey: FlightBookingUpdateKey.originDestination,
+        updateValue: updatedOriginDestination,
+      ));
+    }
+
+    context.read<AirportBloc>().add(ClearAirportSearch());
+  }
+
   @override
   Widget build(BuildContext context) {
+    final TextEditingController _destinationAirportSearchController =
+        TextEditingController();
+
     return Scaffold(
       appBar: setAppBar("Trip Destination", context),
       body: SingleChildScrollView(
@@ -19,105 +50,48 @@ class _SetDestinationState extends State<SetDestination> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              BlocBuilder<FlightBookingBloc, FlightBookingState>(
+                  builder: (context, state) {
+                if (state is FlightBookingSuccess) {
+                  final originDestination =
+                      state.flightBooking.originDestinations.first;
+                  return TripProgressDisplay(
+                      progressKey: "Origin Airport",
+                      progressValue: originDestination.originLocationName,
+                      onPressed: () {
+                        AppNavigator.push(
+                            context,
+                            BlocProvider.value(
+                                value: sl<FlightBookingBloc>(),
+                                child: const TripScreen()));
+                      });
+                }
+                return const SizedBox.shrink();
+              }),
               WidgetsSpacer.verticalSpacer16,
-              const Text(
-                "Where to?",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-              WidgetsSpacer.verticalSpacer8,
-
-              const TextField(
-                // controller: _currentLocation,
-                decoration: InputDecoration(
-                  prefixIcon: Center(
-                    child: Padding(
-                      padding: EdgeInsets.only(left: 8.0, right: 8.0),
-                      child: Icon(Icons.search, size: 18),
-                    ),
-                  ),
-                  prefixIconConstraints: BoxConstraints(maxWidth: 40),
-                  contentPadding: EdgeInsets.symmetric(
-                      vertical: 14), // Adjusts internal padding
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(
-                        Radius.circular(8)), // Optional: Adds rounded corners
-                  ),
-                  hintText: "Enter your location",
+              BlocProvider.value(
+                value: sl<AirportBloc>(),
+                child: AirportSearchSection(
+                  onAirportSelected: (airport) => _onDestinationAirportSelected(
+                      context, airport, _destinationAirportSearchController),
+                  title: "Where to?",
+                  hintText: "Enter your destination",
+                  isDestination: true,
+                  searchController: _destinationAirportSearchController,
                 ),
-                textAlignVertical: TextAlignVertical.center,
-                textAlign: TextAlign.center,
-              ),
-
-              // _nextTravelPlan(),
-              WidgetsSpacer.verticalSpacer16,
-
-              _recommendedDestinations(),
-              WidgetsSpacer.verticalSpacer16,
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                      onPressed: () {}, child: const Text("Clear all")),
-                  ElevatedButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Save",
-                        style: TextStyle(color: Colors.white),
-                      )),
-                ],
               )
-              // _location()
             ],
           ),
         ),
       ),
-    );
-  }
-
-  Widget _recommendedDestinations() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          "Recommended Destinations",
-          style: TextStyle(fontSize: 12, color: Color.fromRGBO(0, 0, 0, .6)),
-        ),
-        WidgetsSpacer.verticalSpacer16,
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            _recommendedDestination("Italy"),
-            _recommendedDestination("Germany"),
-            _recommendedDestination("United States of America"),
-            _recommendedDestination("London"),
-          ],
-        )
-      ],
-    );
-  }
-
-  Widget _recommendedDestination(String location) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        GestureDetector(
-          onTap: () {
-            AppNavigator.push(context, const FlightDate());
-          },
-          child: Row(
-            children: [
-              const Icon(Icons.location_on),
-              WidgetsSpacer.horinzontalSpacer8,
-              Text(location)
-            ],
-          ),
-        ),
-        WidgetsSpacer.verticalSpacer8,
-        const Divider(height: 2, color: AppColors.secondaryColor),
-        WidgetsSpacer.verticalSpacer8,
-      ],
+      bottomNavigationBar: DestinationBottomBar(onClear: () {
+        context.read<AirportBloc>().add(ClearAirportSearch());
+      }, onNext: () {
+        AppNavigator.push(
+            context,
+            BlocProvider.value(
+                value: sl<FlightBookingBloc>(), child: const FlightDate()));
+      }),
     );
   }
 }

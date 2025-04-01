@@ -1,3 +1,5 @@
+part of 'navigation_menu_cubit.dart';
+
 abstract class NavigationMenuState {
   final int currentPageIndex;
 

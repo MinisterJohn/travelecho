@@ -14,9 +14,6 @@ class SigninReqParams {
     };
   }
 
-
-
   @override
   String toString() => 'SignupReqParams(email: $email, password: $password)';
-
 }

@@ -12,15 +12,22 @@ class SplashCubit extends Cubit<SplashState> {
     var isNotNewUser = await sl<IsNotNewUserUseCase>().call();
 
     if (isNotNewUser) {
-      emit(Authenticated());
-      // emit(FirstLaunch());
-      return;
-    }
-
-    if (isLoggedIn) {
-      emit(Authenticated());
+      if (isLoggedIn) {
+        emit(Authenticated());
+      } else {
+        emit(UnAuthenticated());
+      }
     } else {
-      emit(UnAuthenticated());
+      emit(FirstLaunch());
     }
   }
+
+  // void checkAuthStatus() async {
+  //   var isLoggedIn = await sl<IsLoggedInUseCase>().call();
+  //   if (isLoggedIn) {
+  //     emit(Authenticated());
+  //   } else {
+  //     emit(UnAuthenticated());
+  //   }
+  // }
 }

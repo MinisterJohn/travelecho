@@ -27,14 +27,14 @@ class OccupationsLoaded extends DataSearchState {
 }
 
 class LanguagesLoaded extends DataSearchState {
-  final List<LanguageModel> languages;
+  final List<String> languages;
   LanguagesLoaded(this.languages);
   @override
   List<Object?> get props => [languages];
 }
 
 class InterestsLoaded extends DataSearchState {
-  final List<InterestModel> interests;
+  final List<String> interests;
   InterestsLoaded(this.interests);
   @override
   List<Object?> get props => [interests];

@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../trip_exports.dart';
+
+class FlightDateSection extends StatelessWidget {
+  const FlightDateSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<FlightBookingBloc, FlightBookingState>(
+      builder: (context, state) {
+        if (state is FlightBookingSuccess) {
+          final originDestination =
+              state.flightBooking.originDestinations.first;
+          return ElevatedButton(
+            onPressed: () {
+              // TODO: Implement date picker
+              AppNavigator.push(context, const FlightDate());
+            },
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 70),
+              backgroundColor: Colors.white,
+              foregroundColor: Colors.black,
+              elevation: 1.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(6),
+              ),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  "Flight Date",
+                  style: TextStyle(color: Colors.black),
+                ),
+                WidgetsSpacer.horinzontalSpacer8,
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.calendar_today_outlined,
+                      size: 14,
+                    ),
+                    Text(
+                      "${originDestination.departureDateTimeRange.date} ${originDestination.departureDateTimeRange.time}",
+                      style: const TextStyle(color: Colors.black),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          );
+        }
+        return const SizedBox.shrink();
+      },
+    );
+  }
+}

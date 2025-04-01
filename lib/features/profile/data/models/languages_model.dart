@@ -14,27 +14,23 @@ class LanguageModel extends Equatable {
 }
 
 class LanguagesModel extends Equatable {
-  final List<LanguageModel> languages;
+  final List<String> languages;
 
   const LanguagesModel({required this.languages});
 
   factory LanguagesModel.fromJson(Map<String, dynamic> json) {
     return LanguagesModel(
-        languages: json.values
-            .map((language) => LanguageModel.fromJson(language))
-            .toList());
+        languages: json.values.map((language) => language.toString()).toList());
   }
 
   factory LanguagesModel.sort(
       LanguagesModel allLanguages, String languageHint) {
     return LanguagesModel(
         languages: allLanguages.languages
-            .where((languageModel) => languageModel.language
-                .toLowerCase()
-                .contains(languageHint.toLowerCase()))
+            .where((language) => language.toLowerCase().contains(languageHint.toLowerCase()))
             .toList());
   }
-  List<LanguageModel> toList() {
+  List<String> toList() {
     return languages;
   }
 

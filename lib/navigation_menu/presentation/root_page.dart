@@ -2,13 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:travelecho/features/budget/data/budget_data.dart';
-import 'package:travelecho/features/community/presentation/pages/community.dart';
-import 'package:travelecho/features/memories/presentation/pages/memory.dart';
+import "../../features/features_exports.dart";
 import 'package:travelecho/navigation_menu/blocs/navigation_menu_cubit.dart';
-import 'package:travelecho/navigation_menu/blocs/navigation_menu_state.dart';
 import 'package:travelecho/features/home/presentation/pages/homescreen.dart';
-import 'package:travelecho/features/profile/presentation/pages/profile.dart';
-import 'package:travelecho/features/trip/presentation/pages/trip_screen.dart';
 import 'package:travelecho/features/budget/budget_tracker.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -25,7 +21,12 @@ class _RootPageState extends State<RootPage> {
     // Container(),
     const HomeScreen(),
     // Container(),
-    const TripScreen(), // Replace with your Trip page widget
+    MultiBlocProvider(providers: [
+      BlocProvider(
+          create: (context) => sl<TokenAuthBloc>()..add(FetchTokenAuthToken())),
+      BlocProvider(create: (context) => sl<AirportBloc>()),
+      BlocProvider(create: (context) => sl<FlightBookingBloc>()),
+    ], child: const TripScreen()),
     // Container(),
     ChangeNotifierProvider(
       create: (context) => BudgetsData(), // No semicolon here

@@ -87,15 +87,15 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
           // Interest buttons in a grid
 
           BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-            final List<InterestModel> selectedInterests =
+            final List<String> selectedInterests =
                 state is InterestsLoaded
                     ? state.profile.interests
-                    : <InterestModel>[];
+                    : <String>[];
             return BlocBuilder<DataSearchBloc, DataSearchState>(
                 builder: (context, state) {
-              List<InterestModel> relatedInterests = state is InterestsLoaded
+              List<String> relatedInterests = state is InterestsLoaded
                   ? state.interests
-                  : <InterestModel>[];
+                  : <String>[];
               return _buildInterestsList(
                   relatedInterests, selectedInterests, context);
             });
@@ -112,8 +112,8 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
     );
   }
 
-  Widget _buildInterestsList(List<InterestModel> relatedInterests,
-      List<InterestModel> selectedInterests, BuildContext context) {
+  Widget _buildInterestsList(List<String> relatedInterests,
+      List<String> selectedInterests, BuildContext context) {
     if (relatedInterests.isNotEmpty) {
       return _relatedInterestsWidget(
           relatedInterests, selectedInterests, context);
@@ -121,8 +121,8 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
     return _selectedInterestsWidget(selectedInterests, context);
   }
 
-  Widget _relatedInterestsWidget(List<InterestModel> relatedInterests,
-      List<InterestModel> selectedInterests, BuildContext context) {
+  Widget _relatedInterestsWidget(List<String> relatedInterests,
+      List<String> selectedInterests, BuildContext context) {
     if (relatedInterests.isEmpty) {
       return const Center(
           child: CircularProgressIndicator(
@@ -161,7 +161,7 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
   }
 
   Widget _selectedInterestsWidget(
-      List<InterestModel> selectedInterests, BuildContext context) {
+      List<String> selectedInterests, BuildContext context) {
     if (selectedInterests.isEmpty) {
       return const Center(
           child: Text(
@@ -187,11 +187,11 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
                     }))));
   }
 
-  Widget _interestsListWidget(List<InterestModel> interests,
-      List<InterestModel> selectedInterests, int index) {
-    InterestModel interest = interests[index];
+  Widget _interestsListWidget(List<String> interests,
+      List<String> selectedInterests, int index) {
+    String interest = interests[index];
     bool isSelected = selectedInterests.any(
-        (selectedInterest) => selectedInterest.interest == interest.interest);
+        (selectedInterest) => selectedInterest == interest);
     return ElevatedButton(
       onPressed: () {
         context
@@ -210,7 +210,7 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
         ),
       ),
       child: Text(
-        interest.interest,
+        interest,
         textAlign: TextAlign.center,
         style: TextStyle(
           fontSize: 12.0, // Reduced font size for smaller buttons

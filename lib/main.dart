@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
             create: (context) => SplashCubit()..appStarted(),
           ),
           BlocProvider(
-            create: (context) => sl<AuthBloc>(),
+            create: (context) => sl<AuthBloc>()..add(CheckAuthStatus()),
           ),
         ],
         child: ScreenUtilInit(

@@ -1,5 +1,6 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import 'dart:math';
 import '../../trip_exports.dart';
@@ -13,6 +14,34 @@ class FlightDate extends StatefulWidget {
 
 class _FlightDateState extends State<FlightDate> {
   final String _tripDurationBy = "date";
+
+  void _onDateRangeSelected(BuildContext context, DateTimeRange range) {
+    final flightBookingBloc = context.read<FlightBookingBloc>();
+    final currentBooking = flightBookingBloc.flightBooking;
+
+    if (currentBooking.originDestinations.isNotEmpty) {
+      final originDestination = currentBooking.originDestinations.first;
+      final updatedOriginDestination = OriginDestination(
+        id: originDestination.id,
+        originLocationCode: originDestination.originLocationCode,
+        originLocationName: originDestination.originLocationName,
+        destinationLocationCode: originDestination.destinationLocationCode,
+        destinationLocationName: originDestination.destinationLocationName,
+        departureDateTimeRange: DepartureDateTimeRange(
+          date:
+              "${range.start.year}-${range.start.month.toString().padLeft(2, '0')}-${range.start.day.toString().padLeft(2, '0')}",
+          time:
+              "${range.start.hour.toString().padLeft(2, '0')}:${range.start.minute.toString().padLeft(2, '0')}",
+        ),
+      );
+
+      flightBookingBloc.add(UpdateFlightBooking(
+        updateKey: FlightBookingUpdateKey.originDestination,
+        updateValue: updatedOriginDestination,
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,188 +52,77 @@ class _FlightDateState extends State<FlightDate> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              BlocBuilder<FlightBookingBloc, FlightBookingState>(
+                  builder: (context, state) {
+                if (state is FlightBookingSuccess) {
+                  final originDestination =
+                      state.flightBooking.originDestinations.first;
+                  return Column(children: [
+                    TripProgressDisplay(
+                        progressKey: "Origin Airport",
+                        progressValue: originDestination.originLocationName,
+                        onPressed: () {
+                          AppNavigator.push(
+                              context,
+                              BlocProvider.value(
+                                  value: sl<FlightBookingBloc>(),
+                                  child: const TripScreen()));
+                        }),
+                    WidgetsSpacer.verticalSpacer8,
+                    TripProgressDisplay(
+                        progressKey: "Destination Airport",
+                        progressValue:
+                            originDestination.destinationLocationName,
+                        onPressed: () {
+                          AppNavigator.push(
+                              context,
+                              BlocProvider.value(
+                                  value: sl<FlightBookingBloc>(),
+                                  child: const SetDestination()));
+                        }),
+                  ]);
+                }
+                return const SizedBox.shrink();
+              }),
               WidgetsSpacer.verticalSpacer16,
-
-              ElevatedButton(
-                onPressed: () {
-                  AppNavigator.push(context, const SetDestination());
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 70),
-                  backgroundColor:
-                      Colors.white, // Ensure a strong white background
-                  foregroundColor: Colors.black, // Text and icon color
-                  elevation: 1.0, // Shadow intdow effect
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6), // Rounded corners
-                  ),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Next destination",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 14,
-                        ),
-                        Text(
-                          "Germany, Munich",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              WidgetsSpacer.verticalSpacer32,
-
-              // CircularMonthSelector(
-              //   maxMonths: 12,
-              //   onMonthsChanged: (months) {
-              //     print("months");
-              //   },
-              // ),
               const TripDaysSelection(),
-              // _nextTravelPlan(),
               WidgetsSpacer.verticalSpacer16,
-
-              // _recommendedDestinations(),
-                         WidgetsSpacer.verticalSpacer16,
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
-                      onPressed: () {},
-                      style: ElevatedButton.styleFrom(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              8), // Set your desired border radius
-                        ),
+                    onPressed: () {
+                      context.read<FlightBookingBloc>().clearBooking();
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text("Clear all")),
+                    ),
+                    child: const Text("Clear all"),
+                  ),
                   ElevatedButton(
-                      onPressed: () {
-                       AppNavigator.push(context, const FlightBooking());
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xff930BFF),
-                        // minimumSize: Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(
-                              8), // Set your desired border radius
-                        ),
+                    onPressed: () {
+                      AppNavigator.push(context, const FlightBooking());
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff930BFF),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      child: const Text(
-                        "Next",
-                        style: TextStyle(color: Colors.white),
-                      )),
+                    ),
+                    child: const Text(
+                      "Next",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ],
               )
-              // _location()
             ],
           ),
         ),
       ),
     );
-  }
-
-  Widget _tripDaysSelection() {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text(
-        "When is your trip?",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(
-        height: 14,
-      ),
-      Row(
-        children: [
-          Expanded(
-            child: TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                backgroundColor: const Color(0xff930BFF),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6), // Rounded corners
-                ),
-              ),
-              child: const Text("Date", style: TextStyle(color: Colors.white)),
-            ),
-          ),
-          const SizedBox(
-            width: 8,
-          ),
-          Expanded(
-            child: TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(
-                      width: 1, color: Color.fromRGBO(200, 200, 200, 1)),
-                  borderRadius: BorderRadius.circular(6), // Rounded corners
-                ),
-              ),
-              child: const Text("Month", style: TextStyle(color: Colors.black)),
-            ),
-          ),
-        ],
-      ),
-      SizedBox(
-        width: double.infinity,
-        height: 400,
-        child: RangeDatePicker(
-          centerLeadingDate: true,
-          currentDate: DateTime.now(), // Set to today's date
-          minDate: DateTime.now(), // Minimum selectable date is today
-          maxDate: DateTime(2050, 10, 30),
-          currentDateDecoration: BoxDecoration(
-              shape: BoxShape.rectangle, // Square shape
-              borderRadius:
-                  BorderRadius.circular(6), // Optional for rounded square
-              border: Border.all(width: 1, color: AppColors.primaryColor)),
-          singleSelectedCellDecoration: BoxDecoration(
-            color: AppColors.primaryColor, // Highlight color
-            shape: BoxShape.rectangle, // Square shape
-            borderRadius:
-                BorderRadius.circular(6), // Optional for rounded square
-          ), // Maximum selectable date
-          onRangeSelected: (value) {
-            // Handle selected range
-            print("Selected range: ${value.start} - ${value.end}");
-          },
-        ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text("How many days will you like to stay"),
-          Row(
-            children: [
-              IconButton(
-                  onPressed: () {}, icon: const Icon(LineIcons.minusSquare)),
-              const SizedBox(
-                width: 8,
-              ),
-              const Text("01"),
-              const SizedBox(
-                width: 8,
-              ),
-              IconButton(
-                  onPressed: () {}, icon: const Icon(LineIcons.plusSquare))
-            ],
-          )
-        ],
-      )
-    ]);
   }
 }
 
@@ -231,6 +149,7 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
         start: selectedRange.start,
         end: selectedRange.end.add(const Duration(days: 1)),
       );
+      _onDateRangeSelected(selectedRange);
     });
   }
 
@@ -241,7 +160,37 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
           start: selectedRange.start,
           end: selectedRange.end.subtract(const Duration(days: 1)),
         );
+        _onDateRangeSelected(selectedRange);
       });
+    }
+  }
+
+  void _onDateRangeSelected(DateTimeRange range) {
+    if (context.mounted) {
+      final flightBookingBloc = context.read<FlightBookingBloc>();
+      final currentBooking = flightBookingBloc.flightBooking;
+
+      if (currentBooking.originDestinations.isNotEmpty) {
+        final originDestination = currentBooking.originDestinations.first;
+        final updatedOriginDestination = OriginDestination(
+          id: originDestination.id,
+          originLocationCode: originDestination.originLocationCode,
+          originLocationName: originDestination.originLocationName,
+          destinationLocationCode: originDestination.destinationLocationCode,
+          destinationLocationName: originDestination.destinationLocationName,
+          departureDateTimeRange: DepartureDateTimeRange(
+            date:
+                "${range.start.year}-${range.start.month.toString().padLeft(2, '0')}-${range.start.day.toString().padLeft(2, '0')}",
+            time:
+                "${range.start.hour.toString().padLeft(2, '0')}:${range.start.minute.toString().padLeft(2, '0')}",
+          ),
+        );
+
+        flightBookingBloc.add(UpdateFlightBooking(
+          updateKey: FlightBookingUpdateKey.originDestination,
+          updateValue: updatedOriginDestination,
+        ));
+      }
     }
   }
 
@@ -252,9 +201,7 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
         "When is your trip?",
         style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
       ),
-      const SizedBox(
-        height: 14,
-      ),
+      const SizedBox(height: 14),
       Row(
         children: [
           Expanded(
@@ -270,9 +217,7 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
               child: const Text("Date", style: TextStyle(color: Colors.white)),
             ),
           ),
-          const SizedBox(
-            width: 8,
-          ),
+          const SizedBox(width: 8),
           Expanded(
             child: TextButton(
               onPressed: () {},
@@ -303,9 +248,7 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
               const TextStyle(fontSize: 14, color: AppColors.primaryColor),
           singleSelectedCellTextStyle:
               const TextStyle(fontSize: 14, color: Colors.white),
-          selectedCellsTextStyle: const TextStyle(
-            fontSize: 14,
-          ),
+          selectedCellsTextStyle: const TextStyle(fontSize: 14),
           disabledCellsTextStyle: const TextStyle(
               fontSize: 14, color: Color.fromRGBO(200, 200, 200, 1)),
           currentDateDecoration: BoxDecoration(
@@ -320,8 +263,9 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
           ),
           onRangeSelected: (value) {
             setState(() {
-              selectedRange = value; // Update the selected range
+              selectedRange = value;
             });
+            _onDateRangeSelected(value);
           },
         ),
       ),

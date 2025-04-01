@@ -1,11 +1,14 @@
 import "package:dio/dio.dart";
 import "package:get_it/get_it.dart";
 import 'features/features_exports.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
-void setupServiceLocator() {
+Future<void> setupServiceLocator() async {
+  final prefs = await SharedPreferences.getInstance();
+  sl.registerSingleton<SharedPreferences>(prefs);
+
   sl.registerSingleton<DioClient>(DioClient());
   sl.registerSingleton<Dio>(Dio());
 
@@ -22,6 +25,8 @@ void setupServiceLocator() {
       () => LanguageLocalSourceImpl());
   sl.registerLazySingleton<InterestLocalSource>(
       () => InterestLocalSourceImpl());
+  sl.registerLazySingleton<TokenApiService>(() => TokenApiService());
+  sl.registerLazySingleton<AirportApiService>(() => AirportApiService());
 
 //Repository
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
@@ -34,6 +39,8 @@ void setupServiceLocator() {
       () => LanguagesRepositoryImpl());
   sl.registerLazySingleton<InterestsRepository>(
       () => InterestsRepositoryImpl());
+  sl.registerLazySingleton<TokenAuthRepository>(
+      () => TokenAuthRepository(sl<TokenApiService>()));
 
 //usecases
   sl.registerLazySingleton<SignupUseCase>(() => SignupUseCase());
@@ -52,5 +59,13 @@ void setupServiceLocator() {
   sl.registerLazySingleton<AuthBloc>(() => AuthBloc());
   sl.registerLazySingleton<CurrencyBloc>(() => CurrencyBloc());
   sl.registerLazySingleton<DataSearchBloc>(() => DataSearchBloc());
-  sl.registerLazySingleton<ProfileBloc>(() => ProfileBloc());
+  sl.registerLazySingleton<ProfileBloc>(
+      () => ProfileBloc(sl<ProfileApiService>(), sl<SharedPreferences>()));
+  sl.registerLazySingleton<TokenAuthBloc>(
+      () => TokenAuthBloc(sl<TokenAuthRepository>()));
+  sl.registerLazySingleton<AirportBloc>(
+      () => AirportBloc(sl<AirportApiService>()));
+  sl.registerLazySingleton<FlightBookingBloc>(() => FlightBookingBloc());
+  sl.registerLazySingleton<ProfileApiService>(
+      () => ProfileApiServiceImpl(sl<Dio>(), sl<SharedPreferences>()));
 }

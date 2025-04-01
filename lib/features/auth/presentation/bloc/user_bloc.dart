@@ -22,14 +22,29 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
 
-        result.fold(
-          (error) => emit(AuthFailure(error)),
-          (data) => emit(AuthSuccess(User(
-            id: data['user']['id'],
-            email: data['user']['email'],
-            fullname: data['user']['fullname'],
-            token: data['user']['token'],
-          ))),
+        await result.fold(
+          (error) async {
+            emit(AuthFailure(error));
+          },
+          (data) async {
+            final Map userData = data['user'];
+            // Store user data in SharedPreferences
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('user_id', userData['_id']);
+            await prefs.setString('user_name', userData['name']);
+            await prefs.setString('user_email', userData['email']);
+            await prefs.setString('token', userData['token']);
+            await prefs.setString('profile_id', userData['profile']);
+            await prefs.setBool('is_not_new_user', true);
+
+            emit(AuthSuccess(User(
+              id: userData['_id'],
+              email: userData['email'],
+              fullname: userData['name'],
+              profileId: userData['profile'],
+              token: userData['token'],
+            )));
+          },
         );
       } catch (e) {
         print("Login event error: $e"); // Debug log
@@ -48,14 +63,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           ),
         );
 
-        result.fold(
-          (error) => emit(AuthFailure(error)),
-          (data) => emit(AuthSuccess(User(
-            id: data['user']['id'],
-            email: data['user']['email'],
-            fullname: data['user']['fullname'],
-            token: data['user']['token'],
-          ))),
+        await result.fold(
+          (error) async {
+            emit(AuthFailure(error));
+          },
+          (data) async {
+            final Map userData = data['user'];
+
+            // Store user data in SharedPreferences
+            final prefs = await SharedPreferences.getInstance();
+            await prefs.setString('user_id', userData['id']);
+            await prefs.setString('user_name', userData['fullname']);
+            await prefs.setString('user_email', userData['email']);
+            await prefs.setString('token', userData['token']);
+            await prefs.setString('profile_id', userData['profile']);
+            await prefs.setBool('is_not_new_user', false);
+
+            emit(AuthSuccess(User(
+              id: userData['id'],
+              email: userData['email'],
+              fullname: userData['fullname'],
+              token: userData['token'],
+              profileId: userData['profile'],
+            )));
+          },
         );
       } catch (e) {
         print("Signup event error: $e"); // Debug log
@@ -66,31 +97,33 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<CheckAuthStatus>((event, emit) async {
       emit(AuthLoading());
       try {
-        final isLoggedIn = await isLoggedInUseCase();
+        var isLoggedIn = await sl<IsLoggedInUseCase>().call();
+        final prefs = await SharedPreferences.getInstance();
+        // print("token $token");
+
         if (isLoggedIn) {
-          // Get stored user data
-          final prefs = await SharedPreferences.getInstance();
+          final token = prefs.getString('token');
           final userId = prefs.getString('user_id');
           final userName = prefs.getString('user_name');
           final userEmail = prefs.getString('user_email');
-          final token = prefs.getString('token');
+          final profileId = prefs.getString('profile_id');
 
           if (userId != null &&
               userName != null &&
               userEmail != null &&
+              profileId != null &&
               token != null) {
-            emit(
-              AuthSuccess(
-                User(
-                  id: userId,
-                  email: userEmail,
-                  fullname: userName,
-                  token: token,
-                ),
-              ),
-            );
+            emit(AuthSuccess(User(
+              id: userId,
+              email: userEmail,
+              fullname: userName,
+              token: token,
+              profileId: profileId,
+            )));
           } else {
-            emit(AuthFailure("Stored authentication data is incomplete"));
+            // If we have a token but missing other data, clear everything and start fresh
+            await prefs.clear();
+            emit(AuthInitial());
           }
         } else {
           emit(AuthInitial());

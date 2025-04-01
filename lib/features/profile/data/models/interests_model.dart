@@ -16,27 +16,25 @@ class InterestModel extends Equatable {
 }
 
 class InterestsModel extends Equatable {
-  final List<InterestModel> interests;
+  final List<String> interests;
 
   const InterestsModel({required this.interests});
 
   factory InterestsModel.fromJson(List<dynamic> json) {
     return InterestsModel(
-      interests: json.map((interest) => InterestModel.fromJson(interest)).toList(),
+      interests: json.map((interest) => interest.toString()).toList(),
     );
   }
 
   factory InterestsModel.sort(InterestsModel allInterests, String interestHint) {
     return InterestsModel(
       interests: allInterests.interests
-          .where((interestModel) => interestModel.interest
-              .toLowerCase()
-              .contains(interestHint.toLowerCase()))
+          .where((interest) => interest.toLowerCase().contains(interestHint.toLowerCase()))
           .toList(),
     );
   }
 
-  List<InterestModel> toList() {
+  List<String> toList() {
     return interests;
   }
 
