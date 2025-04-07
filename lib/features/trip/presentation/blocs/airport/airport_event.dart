@@ -5,14 +5,13 @@ abstract class AirportEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class FetchAirports extends AirportEvent {
-  final String keyword;
-  final String country;
+class SearchAirportEvent extends AirportEvent {
+  final String query;
 
-  FetchAirports(this.keyword, this.country);
+  SearchAirportEvent(this.query);
 
   @override
-  List<Object> get props => [keyword, country];
+  List<Object> get props => [query];
 }
 
 class ClearAirportSearch extends AirportEvent {}

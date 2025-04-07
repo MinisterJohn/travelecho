@@ -1,14 +1,5 @@
 part of 'flight_booking_bloc.dart';
 
-enum FlightBookingUpdateKey {
-  originDestination,
-  traveler,
-  cabinRestriction,
-  maxFlightOffers,
-  currencyCode,
-  sources,
-}
-
 abstract class FlightBookingEvent extends Equatable {
   const FlightBookingEvent();
 
@@ -16,7 +7,6 @@ abstract class FlightBookingEvent extends Equatable {
   List<Object?> get props => [];
 }
 
-// Event to request flight bookings
 class RequestFlightBooking extends FlightBookingEvent {
   final FlightBookingModel flightBooking;
 
@@ -26,7 +16,16 @@ class RequestFlightBooking extends FlightBookingEvent {
   List<Object?> get props => [flightBooking];
 }
 
-// Event to update a flight booking
+enum FlightBookingUpdateKey {
+  originDestination,
+  traveler,
+  cabinRestriction,
+  maxFlightOffers,
+  currencyCode,
+  sources,
+  travelerDetails,
+}
+
 class UpdateFlightBooking extends FlightBookingEvent {
   final FlightBookingUpdateKey updateKey;
   final dynamic updateValue;
@@ -38,4 +37,17 @@ class UpdateFlightBooking extends FlightBookingEvent {
 
   @override
   List<Object?> get props => [updateKey, updateValue];
+}
+
+class UpdateTravelerDetails extends FlightBookingEvent {
+  final String travelerId;
+  final TravelerDetails details;
+
+  const UpdateTravelerDetails({
+    required this.travelerId,
+    required this.details,
+  });
+
+  @override
+  List<Object?> get props => [travelerId, details];
 }

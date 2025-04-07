@@ -1,7 +1,8 @@
 part of 'flight_booking_bloc.dart';
 
-
 abstract class FlightBookingState extends Equatable {
+  const FlightBookingState();
+
   @override
   List<Object?> get props => [];
 }
@@ -16,7 +17,7 @@ class FlightBookingLoading extends FlightBookingState {}
 class FlightBookingSuccess extends FlightBookingState {
   final FlightBookingModel flightBooking;
 
-  FlightBookingSuccess({required this.flightBooking});
+  const FlightBookingSuccess({required this.flightBooking});
 
   @override
   List<Object?> get props => [flightBooking];
@@ -26,9 +27,8 @@ class FlightBookingSuccess extends FlightBookingState {
 class FlightBookingError extends FlightBookingState {
   final String message;
 
-  FlightBookingError({required this.message});
+  const FlightBookingError({required this.message});
 
   @override
   List<Object?> get props => [message];
 }
-

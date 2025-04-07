@@ -14,8 +14,16 @@ class FlightDateSection extends StatelessWidget {
               state.flightBooking.originDestinations.first;
           return ElevatedButton(
             onPressed: () {
-              // TODO: Implement date picker
-              AppNavigator.push(context, const FlightDate());
+              AppNavigator.push(
+                context,
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: sl<FlightBookingBloc>()),
+                    BlocProvider.value(value: sl<AirportBloc>()),
+                  ],
+                  child: const FlightDate(),
+                ),
+              );
             },
             style: ElevatedButton.styleFrom(
               minimumSize: const Size(double.infinity, 70),

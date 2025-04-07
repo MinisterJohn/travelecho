@@ -25,10 +25,10 @@ Future<void> setupServiceLocator() async {
       () => LanguageLocalSourceImpl());
   sl.registerLazySingleton<InterestLocalSource>(
       () => InterestLocalSourceImpl());
-  sl.registerLazySingleton<TokenApiService>(() => TokenApiService());
-  sl.registerLazySingleton<AirportApiService>(() => AirportApiService());
+  sl.registerLazySingleton<AmadeusApiService>(() => AmadeusApiService());
+  sl.registerLazySingleton<AirlineApiService>(() => AirlineApiService());
 
-//Repository
+  //Repository
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
   sl.registerLazySingleton<CurrencyRepository>(() => CurrencyRepositoryImpl());
   sl.registerLazySingleton<SchoolRepository>(() => SchoolRepositoryImpl());
@@ -39,10 +39,13 @@ Future<void> setupServiceLocator() async {
       () => LanguagesRepositoryImpl());
   sl.registerLazySingleton<InterestsRepository>(
       () => InterestsRepositoryImpl());
-  sl.registerLazySingleton<TokenAuthRepository>(
-      () => TokenAuthRepository(sl<TokenApiService>()));
 
-//usecases
+  sl.registerLazySingleton<AirportRepository>(() => AirportRepositoryImpl());
+  sl.registerLazySingleton<FlightOffersRepository>(
+      () => FlightOffersRepositoryImpl());
+ 
+
+  //usecases
   sl.registerLazySingleton<SignupUseCase>(() => SignupUseCase());
   sl.registerLazySingleton<SigninUseCase>(() => SigninUseCase());
   sl.registerSingleton<IsLoggedInUseCase>(IsLoggedInUseCase());
@@ -54,6 +57,11 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetOccupations());
   sl.registerLazySingleton(() => GetLanguages());
   sl.registerLazySingleton(() => GetInterests());
+   sl.registerLazySingleton<GetFlightOfferPricingUseCase>(
+      () => GetFlightOfferPricingUseCase());
+  sl.registerLazySingleton<GetSeatmapUseCase>(
+      () => GetSeatmapUseCase());
+  sl.registerLazySingleton<SearchAirport>(() => SearchAirport());
 
   //blocs
   sl.registerLazySingleton<AuthBloc>(() => AuthBloc());
@@ -61,11 +69,16 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<DataSearchBloc>(() => DataSearchBloc());
   sl.registerLazySingleton<ProfileBloc>(
       () => ProfileBloc(sl<ProfileApiService>(), sl<SharedPreferences>()));
-  sl.registerLazySingleton<TokenAuthBloc>(
-      () => TokenAuthBloc(sl<TokenAuthRepository>()));
-  sl.registerLazySingleton<AirportBloc>(
-      () => AirportBloc(sl<AirportApiService>()));
+
+  sl.registerLazySingleton<AirportBloc>(() => AirportBloc());
   sl.registerLazySingleton<FlightBookingBloc>(() => FlightBookingBloc());
   sl.registerLazySingleton<ProfileApiService>(
       () => ProfileApiServiceImpl(sl<Dio>(), sl<SharedPreferences>()));
+  sl.registerLazySingleton<FlightOffersBloc>(() => FlightOffersBloc());
+
+  //cubits
+  sl.registerLazySingleton<AirlineCubit>(() => AirlineCubit());
+  sl.registerLazySingleton<FlightPricingCubit>(() => FlightPricingCubit());
+  sl.registerLazySingleton<SeatmapCubit>(() => SeatmapCubit());
+  
 }

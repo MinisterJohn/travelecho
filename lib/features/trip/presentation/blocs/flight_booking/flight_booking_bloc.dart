@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import "../../../trip_exports.dart";
 
@@ -7,7 +6,6 @@ part 'flight_booking_event.dart';
 part 'flight_booking_state.dart';
 
 class FlightBookingBloc extends Bloc<FlightBookingEvent, FlightBookingState> {
-  // final Dio dio;
   FlightBookingModel flightBooking = FlightBookingModel(
     currencyCode: "USD",
     originDestinations: [],
@@ -21,9 +19,13 @@ class FlightBookingBloc extends Bloc<FlightBookingEvent, FlightBookingState> {
     ),
   );
 
+  // Map to store traveler details
+  final Map<String, TravelerDetails> travelerDetailsMap = {};
+
   FlightBookingBloc() : super(FlightBookingInitial()) {
     on<RequestFlightBooking>(_onRequestFlightBooking);
     on<UpdateFlightBooking>(_onUpdateFlightBooking);
+    on<UpdateTravelerDetails>(_onUpdateTravelerDetails);
   }
 
   // Handling flight booking request
@@ -41,7 +43,6 @@ class FlightBookingBloc extends Bloc<FlightBookingEvent, FlightBookingState> {
   // Handling flight booking update
   Future<void> _onUpdateFlightBooking(
       UpdateFlightBooking event, Emitter<FlightBookingState> emit) async {
-    emit(FlightBookingLoading());
     try {
       // Create a new updated booking based on the update key and value
       FlightBookingModel updatedBooking = flightBooking;
@@ -51,7 +52,14 @@ class FlightBookingBloc extends Bloc<FlightBookingEvent, FlightBookingState> {
           final originDestination = event.updateValue as OriginDestination;
           final updatedDestinations =
               List<OriginDestination>.from(flightBooking.originDestinations);
-          updatedDestinations.add(originDestination);
+
+          // If there's an existing destination, update it instead of adding a new one
+          if (updatedDestinations.isNotEmpty) {
+            updatedDestinations[0] = originDestination;
+      } else {
+            updatedDestinations.add(originDestination);
+          }
+
           updatedBooking =
               flightBooking.copyWith(originDestinations: updatedDestinations);
           break;
@@ -98,10 +106,30 @@ class FlightBookingBloc extends Bloc<FlightBookingEvent, FlightBookingState> {
           final sources = event.updateValue as List<String>;
           updatedBooking = flightBooking.copyWith(sources: sources);
           break;
+
+        case FlightBookingUpdateKey.travelerDetails:
+          // This case is handled by the _onUpdateTravelerDetails method
+          break;
       }
 
       flightBooking = updatedBooking;
       emit(FlightBookingSuccess(flightBooking: flightBooking));
+    } catch (e) {
+      emit(FlightBookingError(message: e.toString()));
+    }
+  }
+
+  // Handling traveler details update
+  Future<void> _onUpdateTravelerDetails(
+      UpdateTravelerDetails event, Emitter<FlightBookingState> emit) async {
+    try {
+      // Store the traveler details in the map
+      travelerDetailsMap[event.travelerId] = event.details;
+
+      // Emit the current state to trigger a rebuild
+      if (state is FlightBookingSuccess) {
+        emit(FlightBookingSuccess(flightBooking: flightBooking));
+      }
     } catch (e) {
       emit(FlightBookingError(message: e.toString()));
     }
@@ -197,6 +225,17 @@ class FlightBookingBloc extends Bloc<FlightBookingEvent, FlightBookingState> {
     ));
   }
 
+  // Update traveler details
+  void updateTravelerDetails({
+    required String travelerId,
+    required TravelerDetails details,
+  }) {
+    add(UpdateTravelerDetails(
+      travelerId: travelerId,
+      details: details,
+    ));
+  }
+
   // Clear all booking data
   void clearBooking() {
     final emptyBooking = FlightBookingModel(
@@ -213,5 +252,13 @@ class FlightBookingBloc extends Bloc<FlightBookingEvent, FlightBookingState> {
     );
 
     add(RequestFlightBooking(flightBooking: emptyBooking));
+    travelerDetailsMap.clear();
+  }
+
+  // Clear all travelers
+  void clearTravelers() {
+    final updatedBooking = flightBooking.copyWith(travelers: []);
+    add(RequestFlightBooking(flightBooking: updatedBooking));
+    travelerDetailsMap.clear();
   }
 }

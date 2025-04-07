@@ -26,7 +26,7 @@ class AirportSearchResults extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is AirportLoaded) {
-          if (state.airports.isEmpty) {
+          if (state.citiesAndAirports.isEmpty) {
             return const Center(child: Text("No airports found"));
           }
           return Column(
@@ -46,7 +46,7 @@ class AirportSearchResults extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
-                    children: state.airports.map((airport) {
+                    children: state.citiesAndAirports.map((airport) {
                       return Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -57,29 +57,48 @@ class AirportSearchResults extends StatelessWidget {
                                 const Icon(Icons.local_airport_outlined),
                                 WidgetsSpacer.horinzontalSpacer8,
                                 Expanded(
-                                    child: Row(children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(airport.name),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "${airport.name}, ${airport.city}",
+                                              softWrap: true,
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                              ),
+                                            ),
+                                            const SizedBox(height: 2),
+                                            Text(
+                                              airport.country,
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                                color:
+                                                    Color.fromRGBO(0, 0, 0, .6),
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      WidgetsSpacer.horinzontalSpacer8,
                                       Text(
-                                        airport.country,
+                                        airport.iataCode,
                                         style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Color.fromRGBO(0, 0, 0, .6),
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
                                     ],
                                   ),
-                                ])),
-                                WidgetsSpacer.horinzontalSpacer8,
-                                Text(
-                                  airport.iata + "al",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
+                                ),
                               ],
                             ),
                           ),

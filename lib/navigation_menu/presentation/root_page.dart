@@ -22,8 +22,6 @@ class _RootPageState extends State<RootPage> {
     const HomeScreen(),
     // Container(),
     MultiBlocProvider(providers: [
-      BlocProvider(
-          create: (context) => sl<TokenAuthBloc>()..add(FetchTokenAuthToken())),
       BlocProvider(create: (context) => sl<AirportBloc>()),
       BlocProvider(create: (context) => sl<FlightBookingBloc>()),
     ], child: const TripScreen()),

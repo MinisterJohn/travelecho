@@ -1,10 +1,6 @@
-import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
-import '../widgets/trip_progress_display.dart';
-import '../widgets/destination_bottom_bar.dart';
-import '../widgets/airport_search_section.dart';
 
 class SetDestination extends StatelessWidget {
   const SetDestination({super.key});
@@ -23,7 +19,7 @@ class SetDestination extends StatelessWidget {
         id: originDestination.id,
         originLocationCode: originDestination.originLocationCode,
         originLocationName: originDestination.originLocationName,
-        destinationLocationCode: airport.iata,
+        destinationLocationCode: airport.iataCode,
         destinationLocationName: airport.name,
         departureDateTimeRange: originDestination.departureDateTimeRange,
       );
@@ -39,7 +35,7 @@ class SetDestination extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _destinationAirportSearchController =
+    final TextEditingController destinationAirportSearchController =
         TextEditingController();
 
     return Scaffold(
@@ -57,13 +53,16 @@ class SetDestination extends StatelessWidget {
                       state.flightBooking.originDestinations.first;
                   return TripProgressDisplay(
                       progressKey: "Origin Airport",
-                      progressValue: originDestination.originLocationName,
+                      progressIcon: Icons.flight_takeoff_outlined,
+                      progressValue: originDestination.originLocationCode,
                       onPressed: () {
                         AppNavigator.push(
                             context,
-                            BlocProvider.value(
-                                value: sl<FlightBookingBloc>(),
-                                child: const TripScreen()));
+                            MultiBlocProvider(providers: [
+                              BlocProvider.value(
+                                  value: sl<FlightBookingBloc>()),
+                              BlocProvider.value(value: sl<AirportBloc>())
+                            ], child: const TripScreen()));
                       });
                 }
                 return const SizedBox.shrink();
@@ -71,14 +70,40 @@ class SetDestination extends StatelessWidget {
               WidgetsSpacer.verticalSpacer16,
               BlocProvider.value(
                 value: sl<AirportBloc>(),
-                child: AirportSearchSection(
-                  onAirportSelected: (airport) => _onDestinationAirportSelected(
-                      context, airport, _destinationAirportSearchController),
-                  title: "Where to?",
-                  hintText: "Enter your destination",
-                  isDestination: true,
-                  searchController: _destinationAirportSearchController,
-                ),
+                child: BlocBuilder<FlightBookingBloc, FlightBookingState>(
+                    builder: (context, state) {
+                  String? selectedAirportCode;
+                  String? selectedAirportName;
+
+                  if (state is FlightBookingSuccess &&
+                      state.flightBooking.originDestinations.isNotEmpty) {
+                    final originDestination =
+                        state.flightBooking.originDestinations.first;
+                    selectedAirportCode =
+                        originDestination.destinationLocationCode;
+                    selectedAirportName =
+                        originDestination.destinationLocationName;
+
+                    // Set the text controller to the current airport name
+                    if (destinationAirportSearchController.text.isEmpty &&
+                        selectedAirportName.isNotEmpty) {
+                      destinationAirportSearchController.text =
+                          selectedAirportName;
+                    }
+                  }
+
+                  return AirportSearchSection(
+                    onAirportSelected: (airport) =>
+                        _onDestinationAirportSelected(context, airport,
+                            destinationAirportSearchController),
+                    title: "Where to?",
+                    hintText: "Enter your destination",
+                    isDestination: true,
+                    searchController: destinationAirportSearchController,
+                    selectedAirportCode: selectedAirportCode,
+                    selectedAirportName: selectedAirportName,
+                  );
+                }),
               )
             ],
           ),
@@ -87,6 +112,7 @@ class SetDestination extends StatelessWidget {
       bottomNavigationBar: DestinationBottomBar(onClear: () {
         context.read<AirportBloc>().add(ClearAirportSearch());
       }, onNext: () {
+        // context.read<AirportBloc>().add(ClearAirportSearch());
         AppNavigator.push(
             context,
             BlocProvider.value(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../trip_exports.dart';
 
@@ -16,6 +17,65 @@ class _FlightBookingState extends State<FlightBooking> {
   int pets = 0;
 
   @override
+  void initState() {
+    super.initState();
+    _loadSavedTravelers();
+  }
+
+  void _loadSavedTravelers() {
+    final state = context.read<FlightBookingBloc>().state;
+    if (state is FlightBookingSuccess) {
+      setState(() {
+        // Count travelers by type
+        for (var traveler in state.flightBooking.travelers) {
+          switch (traveler.travelerType.toUpperCase()) {
+            case 'ADULT':
+              adults++;
+              break;
+            case 'CHILD':
+              children++;
+              break;
+            case 'INFANT':
+              infants++;
+              break;
+          }
+        }
+      });
+    }
+  }
+
+  void _updateTravelers() {
+    final flightBookingBloc = context.read<FlightBookingBloc>();
+
+    // Clear existing travelers
+    flightBookingBloc.clearTravelers();
+
+    // Add adults
+    for (int i = 0; i < adults; i++) {
+      flightBookingBloc.addTraveler(
+        id: "ADT_$i",
+        travelerType: "ADULT",
+      );
+    }
+
+    // Add children
+    for (int i = 0; i < children; i++) {
+      flightBookingBloc.addTraveler(
+        id: "CHD_$i",
+        travelerType: "CHILD",
+      );
+    }
+
+    // Add infants
+    for (int i = 0; i < infants; i++) {
+      flightBookingBloc.addTraveler(
+        id: "INF_$i",
+        travelerType: "INFANT",
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: setAppBar("Flight Booking", context),
@@ -25,101 +85,104 @@ class _FlightBookingState extends State<FlightBooking> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  AppNavigator.push(context, const SetDestination());
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 70),
-                  backgroundColor:
-                      Colors.white, // Ensure a strong white background
-                  foregroundColor: Colors.black, // Text and icon color
-                  elevation: 1.0, // Shadow intdow effect
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6), // Rounded corners
-                  ),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "Next destination",
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.location_on_outlined,
-                          size: 14,
-                        ),
-                        Text(
-                          "Germany, Munich",
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  AppNavigator.push(context, const FlightDate());
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 70),
-                  backgroundColor:
-                      Colors.white, // Ensure a strong white background
-                  foregroundColor: Colors.black, // Text and icon color
-                  elevation: 1.0, // Shadow intdow effect
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6), // Rounded corners
-                  ),
-                ),
-                child: const Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "When is your trip?",
-                      style: TextStyle(color: Colors.black),
-                    ),
-                    Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_month_outlined,
-                          size: 14,
-                        ),
-                        Text(
-                          "Sat, 14th Sept. 2024",
-                          style: TextStyle(color: Colors.black),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-
-              // _nextTravel
-              // Plan(),
+              _progressDisplay(),
               WidgetsSpacer.verticalSpacer16,
               _peopleComing(),
               WidgetsSpacer.verticalSpacer16,
-
-              ElevatedButton(
-                onPressed: () {
-                  AppNavigator.push(context, const TripNotification());
-                },
-                // ignore: sort_child_properties_last
-                child: const Text(
-                  "Book Now",
-                  style: TextStyle(color: Colors.white, fontSize: 18),
+              if (adults > 0 || children > 0 || infants > 0 || pets > 0)
+                ElevatedButton(
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: sl<FlightBookingBloc>()),
+                        ],
+                        child: const TravelerDetailsScreen(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                    backgroundColor: AppColors.primaryColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    "Next",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
-              )
-              // _location()
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _progressDisplay() {
+    return BlocBuilder<FlightBookingBloc, FlightBookingState>(
+      builder: (context, state) {
+        if (state is FlightBookingSuccess) {
+          final originDestination =
+              state.flightBooking.originDestinations.first;
+          return SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(children: [
+                TripProgressDisplay(
+                    progressIcon: Icons.flight_takeoff_outlined,
+                    progressKey: "Origin Airport",
+                    progressValue: originDestination.originLocationCode,
+                    onPressed: () {
+                      AppNavigator.push(
+                          context,
+                          BlocProvider.value(
+                              value: sl<FlightBookingBloc>(),
+                              child: const TripScreen()));
+                    }),
+                WidgetsSpacer.horinzontalSpacer8,
+                TripProgressDisplay(
+                    progressIcon: Icons.flight_land_outlined,
+                    progressKey: "Destination Airport",
+                    progressValue: originDestination.destinationLocationCode,
+                    onPressed: () {
+                      AppNavigator.push(
+                          context,
+                          BlocProvider.value(
+                              value: sl<FlightBookingBloc>(),
+                              child: const SetDestination()));
+                    }),
+                WidgetsSpacer.horinzontalSpacer8,
+                TripProgressDisplay(
+                    progressIcon: Icons.calendar_month_outlined,
+                    progressKey: "Date",
+                    progressValue:
+                        originDestination.departureDateTimeRange.date,
+                    onPressed: () {
+                      AppNavigator.push(
+                          context,
+                          BlocProvider.value(
+                              value: sl<FlightBookingBloc>(),
+                              child: const FlightDate()));
+                    }),
+                WidgetsSpacer.horinzontalSpacer8,
+                TripProgressDisplay(
+                    progressIcon: Icons.access_time_outlined,
+                    progressKey: "Departure Time",
+                    progressValue:
+                        originDestination.departureDateTimeRange.time,
+                    onPressed: () {
+                      AppNavigator.push(
+                          context,
+                          BlocProvider.value(
+                              value: sl<FlightBookingBloc>(),
+                              child: const FlightDate()));
+                    }),
+              ]));
+        }
+        return const SizedBox.shrink();
+      },
     );
   }
 
@@ -146,10 +209,15 @@ class _FlightBookingState extends State<FlightBooking> {
             ),
             Row(
               children: [
-                IconButton(
-                  onPressed: onDecrement,
-                  icon: const Icon(LineIcons.minusSquare),
-                ),
+                if (value > 0)
+                  IconButton(
+                    onPressed: () {
+                      onDecrement();
+                      _updateTravelers();
+                    },
+                    icon: Icon(LineIcons.minusSquare,
+                        color: AppColors.defaultColor400),
+                  ),
                 const SizedBox(width: 4),
                 Text(
                   "$value",
@@ -157,8 +225,12 @@ class _FlightBookingState extends State<FlightBooking> {
                 ),
                 const SizedBox(width: 4),
                 IconButton(
-                  onPressed: onIncrement,
-                  icon: const Icon(LineIcons.plusSquare),
+                  onPressed: () {
+                    onIncrement();
+                    _updateTravelers();
+                  },
+                  icon: Icon(LineIcons.plusSquare,
+                      color: AppColors.defaultColor400),
                 ),
               ],
             )
@@ -173,20 +245,18 @@ class _FlightBookingState extends State<FlightBooking> {
 
   Widget _peopleComing() {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-          "Who is coming?",
+          "Who's coming?",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 20),
+        WidgetsSpacer.verticalSpacer16,
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _setofpeople(
-              "Adult",
-              "From 13 years and Above",
+              "Adults",
+              "Age 12 and above",
               adults,
               () {
                 setState(() {
@@ -195,13 +265,13 @@ class _FlightBookingState extends State<FlightBooking> {
               },
               () {
                 setState(() {
-                  if (adults > 0) adults -= 1; // Prevent negative values
+                  if (adults > 0) adults -= 1;
                 });
               },
             ),
             _setofpeople(
               "Children",
-              "Age 2 - 12 years",
+              "Age 2-11",
               children,
               () {
                 setState(() {

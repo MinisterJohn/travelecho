@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../trip_exports.dart';
+import "../../trip_exports.dart";
+
 
 class DestinationBottomBar extends StatelessWidget {
   final VoidCallback onClear;
@@ -8,7 +8,7 @@ class DestinationBottomBar extends StatelessWidget {
 
   const DestinationBottomBar({
     super.key,
-    required this.onClear, 
+    required this.onClear,
     required this.onNext,
   });
 
@@ -23,7 +23,10 @@ class DestinationBottomBar extends StatelessWidget {
             onPressed: onClear,
             style: OutlinedButton.styleFrom(
               minimumSize: const Size(100, 40),
-              
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(5),
+              ),
+              side: BorderSide(color: AppColors.primaryColor300),
             ),
             child: const Text("Clear"),
           ),

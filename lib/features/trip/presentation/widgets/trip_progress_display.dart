@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
 
 class TripProgressDisplay extends StatelessWidget {
+  final IconData progressIcon;
   final String progressKey;
   final String progressValue;
   final VoidCallback onPressed;
   const TripProgressDisplay(
       {super.key,
+      required this.progressIcon,
       required this.progressKey,
       required this.progressValue,
       required this.onPressed});
@@ -17,33 +18,34 @@ class TripProgressDisplay extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size(double.infinity, 70),
+        minimumSize: const Size(50, 70),
         backgroundColor: Colors.white,
+        shadowColor: AppColors.defaultColor100,
         // foregroundColor: Colors.black,
-        elevation: 1.0,
+        elevation: 1.5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
         ),
       ),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            progressKey,
-            style: TextStyle(color: Colors.black, fontSize: 12),
-          ),
-          WidgetsSpacer.horinzontalSpacer8,
+          Text(progressKey,
+              style: TextStyle(color: AppColors.defaultColor400, fontSize: 12)),
+          WidgetsSpacer.verticalSpacer8,
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const Icon(
-                Icons.location_on_outlined,
-                size: 14,
-              ),
+              Icon(progressIcon, size: 24, color: AppColors.defaultColor400),
+              WidgetsSpacer.horinzontalSpacer8,
+              
               Text(
                 progressValue,
-                style: const TextStyle(color: Colors.black),
-                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: AppColors.defaultColor,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold),
+                softWrap: true,
               ),
             ],
           ),

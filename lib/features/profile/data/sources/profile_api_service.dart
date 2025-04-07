@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../profile_exports.dart';
 
 abstract class ProfileApiService {
   Future<Either<String, Map<String, dynamic>>> getProfile(String profileId);
@@ -119,7 +118,7 @@ class ProfileApiServiceImpl implements ProfileApiService {
       );
 
       final formData = FormData.fromMap({
-        'image': await MultipartFile.fromBytes(
+        'image': MultipartFile.fromBytes(
           await imageFile.readAsBytes(),
           filename: imageFile.path.split('/').last.replaceAll(" ", "_"),
         ),

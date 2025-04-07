@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
-import '../widgets/travel_plan_section.dart';
-import '../widgets/airport_search_section.dart';
 
 class TripScreen extends StatelessWidget {
   const TripScreen({super.key});
@@ -12,7 +10,7 @@ class TripScreen extends StatelessWidget {
     searchController.text = airport.name;
     context.read<FlightBookingBloc>().addOriginDestination(
           id: "1",
-          originLocationCode: airport.iata,
+          originLocationCode: airport.iataCode,
           originLocationName: airport.name,
           destinationLocationCode: "",
           destinationLocationName: "",
@@ -25,7 +23,7 @@ class TripScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController _originAirportSearchController =
+    final TextEditingController originAirportSearchController =
         TextEditingController();
 
     return MultiBlocProvider(
@@ -37,31 +35,59 @@ class TripScreen extends StatelessWidget {
         appBar: setAppBar("Trip", context),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
                 const TravelPlanSection(),
-                WidgetsSpacer.verticalSpacer16,
-                AirportSearchSection(
-                  onAirportSelected: (airport) => _onOriginAirportSelected(
-                      context, airport, _originAirportSearchController),
-                  title: "Origin Airport",
+              WidgetsSpacer.verticalSpacer16,
+                BlocBuilder<FlightBookingBloc, FlightBookingState>(
+                    builder: (context, state) {
+                  String? selectedAirportCode;
+                  String? selectedAirportName;
+
+                  if (state is FlightBookingSuccess &&
+                      state.flightBooking.originDestinations.isNotEmpty) {
+                    final originDestination =
+                        state.flightBooking.originDestinations.first;
+                    selectedAirportCode = originDestination.originLocationCode;
+                    selectedAirportName = originDestination.originLocationName;
+
+                    // Set the text controller to the current airport name
+                    if (originAirportSearchController.text.isEmpty) {
+                      originAirportSearchController.text = selectedAirportName;
+                    }
+                  }
+
+                  return AirportSearchSection(
+                    onAirportSelected: (airport) => _onOriginAirportSelected(
+                        context, airport, originAirportSearchController),
+                    title: "Origin Airport",
                   hintText: "Enter your location",
-                  isDestination: false,
-                  searchController: _originAirportSearchController,
-                ),
+                    isDestination: false,
+                    searchController: originAirportSearchController,
+                    selectedAirportCode: selectedAirportCode,
+                    selectedAirportName: selectedAirportName,
+                  );
+                }),
                 WidgetsSpacer.verticalSpacer16,
                 BlocBuilder<FlightBookingBloc, FlightBookingState>(
                   builder: (context, state) {
                     if (state is FlightBookingSuccess &&
                         state.flightBooking.originDestinations.isNotEmpty) {
                       return OutlinedButton(
-                        onPressed: () {
+                onPressed: () {
                           AppNavigator.push(
                             context,
-                            BlocProvider.value(
-                              value: sl<FlightBookingBloc>(),
+                            MultiBlocProvider(
+                              providers: [
+                                BlocProvider.value(
+                                  value: sl<FlightBookingBloc>(),
+                                ),
+                                BlocProvider.value(
+                                  value: sl<AirportBloc>(),
+                                ),
+                              ],
                               child: const SetDestination(),
                             ),
                           );
@@ -76,11 +102,11 @@ class TripScreen extends StatelessWidget {
                         child: const Text(
                           "Select Destination",
                           style: TextStyle(color: Colors.white),
-                        ),
-                      );
-                    }
-                    return const SizedBox.shrink();
-                  },
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
                 ),
               ],
             ),

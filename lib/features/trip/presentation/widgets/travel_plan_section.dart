@@ -6,10 +6,10 @@ class TravelPlanSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return const Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Plan your next travel",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),

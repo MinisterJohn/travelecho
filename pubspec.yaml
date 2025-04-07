@@ -24,6 +24,7 @@ dependencies:
   line_icons: ^2.0.3
   #date_picker
   date_picker_plus: ^4.1.0
+  wheel_picker: ^0.2.1
   provider: ^6.1.2
   # flutter_svg: ^2.0.16
   camera: 
@@ -72,6 +73,7 @@ flutter:
     - assets/json/occupations.json
     - assets/json/interests.json
     - assets/json/language-list-json.json
+    - assets/json/countries.json
     - assets/images/
     - assets/images/auth/
     - assets/images/home_images/

@@ -2,6 +2,8 @@
 
 part of 'airport_bloc.dart';
 
+
+
 abstract class AirportState extends Equatable {
   @override
   List<Object> get props => [];
@@ -12,12 +14,12 @@ class AirportInitial extends AirportState {}
 class AirportLoading extends AirportState {}
 
 class AirportLoaded extends AirportState {
-  final List<Airport> airports;
+  final List<Airport> citiesAndAirports;
 
-  AirportLoaded(this.airports);
+  AirportLoaded(this.citiesAndAirports);
 
   @override
-  List<Object> get props => [airports];
+  List<Object> get props => [citiesAndAirports];
 }
 
 class AirportError extends AirportState {
