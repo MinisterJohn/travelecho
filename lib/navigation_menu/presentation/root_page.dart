@@ -31,7 +31,12 @@ class _RootPageState extends State<RootPage> {
       child: const BudgetTracker(), // Your Budget page widget
     ), // Replace with your Budget page widget
     // Container(),
-    MemoryPage(),
+    MultiBlocProvider(providers: [
+    BlocProvider( 
+        create: (context) => sl<MemoriesBloc>(),),
+    BlocProvider(
+        create: (context) => sl<DataSearchBloc>(),),
+    ], child: const MemoriesHomePage()),
     // Container(),
     const CommunityPage(),
     // Container(),

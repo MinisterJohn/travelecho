@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 class AppNavigator {
   static void pushReplacement(BuildContext context, Widget widget) {
     Navigator.pushReplacement(
@@ -16,4 +15,12 @@ class AppNavigator {
         MaterialPageRoute(builder: (context) => widget),
         (Route<dynamic> route) => false);
   }
+
+  // static void pushNamedAndRemoveUntil(BuildContext context, String routeName) {
+  //   Navigator.pushAndRemoveUntil(
+  //     context,
+  //     MaterialPageRoute(builder: (context) => const LoginScreen()),
+  //     (Route<dynamic> route) => false,
+  //   );
+  // }
 }

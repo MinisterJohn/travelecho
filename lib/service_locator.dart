@@ -3,16 +3,40 @@ import "package:get_it/get_it.dart";
 import 'features/features_exports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// Service locator instance for dependency injection
 final sl = GetIt.instance;
 
+/// Sets up the service locator with all required dependencies
 Future<void> setupServiceLocator() async {
+  // Register core services
+  await _registerCoreServices();
+
+  // Register API services
+  _registerApiServices();
+
+  // Register repositories
+  _registerRepositories();
+
+  // Register use cases
+  _registerUseCases();
+
+  // Register blocs
+  _registerBlocs();
+
+  // Register cubits
+  _registerCubits();
+}
+
+/// Registers core services like SharedPreferences and Dio
+Future<void> _registerCoreServices() async {
   final prefs = await SharedPreferences.getInstance();
   sl.registerSingleton<SharedPreferences>(prefs);
-
   sl.registerSingleton<DioClient>(DioClient());
   sl.registerSingleton<Dio>(Dio());
+}
 
-  //services
+/// Registers all API services
+void _registerApiServices() {
   sl.registerSingleton<AuthApiService>(AuthApiServiceImpl());
   sl.registerLazySingleton<CurrencyRemoteSource>(
       () => CurrencyRemoteSourceImpl());
@@ -27,9 +51,18 @@ Future<void> setupServiceLocator() async {
       () => InterestLocalSourceImpl());
   sl.registerLazySingleton<AmadeusApiService>(() => AmadeusApiService());
   sl.registerLazySingleton<AirlineApiService>(() => AirlineApiService());
+  sl.registerLazySingleton<MemoriesApiService>(() => MemoriesApiServiceImpl());
+  sl.registerLazySingleton<ProfileApiService>(
+    () => ProfileApiServiceImpl(sl<DioClient>(), sl<SharedPreferences>()),
+  );
+}
 
-  //Repository
+/// Registers all repositories
+void _registerRepositories() {
+  // Auth and Profile
   sl.registerSingleton<AuthRepository>(AuthRepositoryImpl());
+
+  // Data repositories
   sl.registerLazySingleton<CurrencyRepository>(() => CurrencyRepositoryImpl());
   sl.registerLazySingleton<SchoolRepository>(() => SchoolRepositoryImpl());
   sl.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl());
@@ -40,16 +73,27 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<InterestsRepository>(
       () => InterestsRepositoryImpl());
 
+  // Travel related repositories
   sl.registerLazySingleton<AirportRepository>(() => AirportRepositoryImpl());
   sl.registerLazySingleton<FlightOffersRepository>(
       () => FlightOffersRepositoryImpl());
- 
+  sl.registerLazySingleton<HotelBookingRepository>(
+      () => HotelBookingRepositoryImpl());
+  sl.registerLazySingleton<MemoriesRepository>(() => MemoriesRepositoryImpl());
+}
 
-  //usecases
+/// Registers all use cases
+void _registerUseCases() {
+  // Auth use cases
   sl.registerLazySingleton<SignupUseCase>(() => SignupUseCase());
   sl.registerLazySingleton<SigninUseCase>(() => SigninUseCase());
+  sl.registerLazySingleton<VerifyOtpUseCase>(() => VerifyOtpUseCase());
+  sl.registerLazySingleton<SendOtpUseCase>(() => SendOtpUseCase());
+  sl.registerLazySingleton<ResetPasswordUseCase>(() => ResetPasswordUseCase());
   sl.registerSingleton<IsLoggedInUseCase>(IsLoggedInUseCase());
   sl.registerSingleton<IsNotNewUserUseCase>(IsNotNewUserUseCase());
+
+  // Data use cases
   sl.registerLazySingleton(() => ConvertCurrency());
   sl.registerLazySingleton(() => GetCurrencyList());
   sl.registerLazySingleton(() => GetLocationList());
@@ -57,28 +101,44 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton(() => GetOccupations());
   sl.registerLazySingleton(() => GetLanguages());
   sl.registerLazySingleton(() => GetInterests());
-   sl.registerLazySingleton<GetFlightOfferPricingUseCase>(
+
+  // Travel related use cases
+  sl.registerLazySingleton<GetFlightOfferPricingUseCase>(
       () => GetFlightOfferPricingUseCase());
-  sl.registerLazySingleton<GetSeatmapUseCase>(
-      () => GetSeatmapUseCase());
+  sl.registerLazySingleton<GetSeatmapUseCase>(() => GetSeatmapUseCase());
   sl.registerLazySingleton<SearchAirport>(() => SearchAirport());
 
-  //blocs
+  // Memories use cases
+  sl.registerLazySingleton<CreateMemoryUseCase>(() => CreateMemoryUseCase());
+  sl.registerLazySingleton<UploadMemoryImageUseCase>(
+      () => UploadMemoryImageUseCase());
+  sl.registerLazySingleton<UploadMultipleMemoryImagesUseCase>(
+      () => UploadMultipleMemoryImagesUseCase());
+  sl.registerLazySingleton<GetMemoriesUseCase>(() => GetMemoriesUseCase());
+  sl.registerLazySingleton<DeleteMemoryUseCase>(() => DeleteMemoryUseCase());
+  sl.registerLazySingleton<EditMemoryUseCase>(() => EditMemoryUseCase());
+  sl.registerLazySingleton<DeleteMultipleMemoriesUseCase>(
+      () => DeleteMultipleMemoriesUseCase());
+}
+
+/// Registers all blocs
+void _registerBlocs() {
   sl.registerLazySingleton<AuthBloc>(() => AuthBloc());
   sl.registerLazySingleton<CurrencyBloc>(() => CurrencyBloc());
   sl.registerLazySingleton<DataSearchBloc>(() => DataSearchBloc());
   sl.registerLazySingleton<ProfileBloc>(
-      () => ProfileBloc(sl<ProfileApiService>(), sl<SharedPreferences>()));
-
+    () => ProfileBloc(sl<ProfileApiService>(), sl<SharedPreferences>()),
+  );
   sl.registerLazySingleton<AirportBloc>(() => AirportBloc());
   sl.registerLazySingleton<FlightBookingBloc>(() => FlightBookingBloc());
-  sl.registerLazySingleton<ProfileApiService>(
-      () => ProfileApiServiceImpl(sl<Dio>(), sl<SharedPreferences>()));
   sl.registerLazySingleton<FlightOffersBloc>(() => FlightOffersBloc());
+  sl.registerLazySingleton<HotelBookingBloc>(() => HotelBookingBloc());
+  sl.registerLazySingleton<MemoriesBloc>(() => MemoriesBloc());
+}
 
-  //cubits
+/// Registers all cubits
+void _registerCubits() {
   sl.registerLazySingleton<AirlineCubit>(() => AirlineCubit());
   sl.registerLazySingleton<FlightPricingCubit>(() => FlightPricingCubit());
   sl.registerLazySingleton<SeatmapCubit>(() => SeatmapCubit());
-  
 }

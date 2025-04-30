@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import "package:flutter/services.dart";
 
-
 class AppTheme {
   static final appTheme = ThemeData(
     // useMaterial3: true,
@@ -35,9 +34,20 @@ class AppTheme {
       error: Colors.red,
       onError: AppColors.defaultColor,
     ),
-    snackBarTheme: const SnackBarThemeData(
-      backgroundColor: AppColors.primaryColor,
-      contentTextStyle: TextStyle(color: AppColors.white),
+    snackBarTheme: SnackBarThemeData(
+      backgroundColor: AppColors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+        side: const BorderSide(color: AppColors.primaryColor),
+      ),
+      contentTextStyle: const TextStyle(
+        color: AppColors.primaryColor,
+        overflow: TextOverflow.ellipsis,
+      ),
+      behavior: SnackBarBehavior.floating,
+      // width: 400,
+      actionTextColor: AppColors.primaryColor,
+      elevation: 6,
     ),
     inputDecorationTheme: InputDecorationTheme(
       filled: false,
@@ -63,17 +73,18 @@ class AppTheme {
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-        backgroundColor: AppColors.primaryColor,
-        foregroundColor: AppColors.white,
-        elevation: 5,
-        shadowColor: AppColors.primaryColor100,
-        textStyle: const TextStyle(
-            fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.white),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(5),
-        ),
-        minimumSize: Size(375.w, 50)
-      ),
+          backgroundColor: AppColors.primaryColor,
+          foregroundColor: AppColors.white,
+          elevation: 5,
+          shadowColor: AppColors.primaryColor100,
+          textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+              color: AppColors.white),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(5),
+          ),
+          minimumSize: Size(375.w, 50)),
     ),
     appBarTheme: const AppBarTheme(
       backgroundColor: AppColors.white,
