@@ -7,10 +7,10 @@ class CountrySelector extends StatefulWidget {
   final String? initialCountryCode;
 
   const CountrySelector({
-    Key? key,
+    super.key,
     required this.onCountrySelected,
     this.initialCountryCode,
-  }) : super(key: key);
+  });
 
   @override
   State<CountrySelector> createState() => _CountrySelectorState();

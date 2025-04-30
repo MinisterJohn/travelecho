@@ -39,7 +39,7 @@ void showWhereIWorkDialog(BuildContext context) {
     });
   }
 
-  DraggableBottomModal(
+  showDraggableBottomModal(
     context,
     MultiBlocProvider(
       providers: [

@@ -2,7 +2,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import '../../profile_exports.dart';
 
-
 // import 'data_search_event.dart';
 part 'data_search_event.dart';
 part 'data_search_state.dart';
@@ -47,6 +46,15 @@ class DataSearchBloc extends Bloc<DataSearchEvent, DataSearchState> {
           await sl<GetInterests>().getInterestsList(event.interestHint);
       emit(InterestsLoaded(interests));
     });
+    on<LocationListRequested>((event, emit) async {
+      emit(DataSearchLoading());
+
+      final result = await sl<GetLocationList>().getList(event.locationHint);
+      result.fold(
+        (failure) => emit(DataSearchError(failure)),
+        (locations) => emit(LocationListLoaded(locations)),
+      );
+    });
 
     on<ClearSearchResults>((event, emit) async {
       switch (event.type) {
@@ -61,6 +69,9 @@ class DataSearchBloc extends Bloc<DataSearchEvent, DataSearchState> {
           break;
         case SearchType.interest:
           emit(InterestsLoaded(const []));
+          break;
+        case SearchType.location:
+          emit(LocationListLoaded(const []));
           break;
       }
     });

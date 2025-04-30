@@ -6,9 +6,9 @@ class SeatmapDialog extends StatelessWidget {
   final dynamic flightOffer;
 
   const SeatmapDialog({
-    Key? key,
+    super.key,
     required this.flightOffer,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -62,10 +62,10 @@ class SeatmapDialog extends StatelessWidget {
                                           Icons.error_outline,
                                           size: 48,
                                           color: Colors.red,
-                                        ),
-                                        const SizedBox(height: 16),
+                  ),
+                  const SizedBox(height: 16),
                                         Text(
-                                          state.message,
+                        state.message,
                                           style: const TextStyle(
                                               color: Colors.red),
                                           textAlign: TextAlign.center,
@@ -159,8 +159,8 @@ class SeatmapDialog extends StatelessWidget {
             color: Colors.blue.shade50,
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
-            children: [
+        child: Column(
+          children: [
               Text(
                 '${departure?['iataCode'] ?? 'Unknown'} → ${arrival?['iataCode'] ?? 'Unknown'}',
                 style: const TextStyle(
@@ -170,7 +170,7 @@ class SeatmapDialog extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'Aircraft: Boeing ${aircraftCode}',
+                'Aircraft: Boeing $aircraftCode',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey.shade700,
@@ -189,7 +189,7 @@ class SeatmapDialog extends StatelessWidget {
         ),
         const SizedBox(height: 16),
 
-        // Seat rows
+            // Seat rows
         Expanded(
           child: SingleChildScrollView(
             child: Column(
@@ -242,22 +242,22 @@ class SeatmapDialog extends StatelessWidget {
                   // Check if this is an exit row
                   final isExitRow = exitRows.contains(int.tryParse(rowNumber));
 
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 4.0),
+              return Padding(
+                padding: const EdgeInsets.symmetric(vertical: 4.0),
                     child: Column(
                       children: [
                         // Row number with exit row indicator
                         Row(
-                          children: [
+                  children: [
                             // Row number (fixed)
-                            Container(
-                              width: 40,
-                              alignment: Alignment.center,
+                    Container(
+                      width: 40,
+                      alignment: Alignment.center,
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    rowNumber,
+                        rowNumber,
                                     style: const TextStyle(
                                         fontWeight: FontWeight.bold),
                                   ),
@@ -295,16 +295,16 @@ class SeatmapDialog extends StatelessWidget {
                                             [];
 
                                     // Determine seat color based on availability and characteristics
-                                    Color seatColor = Colors.grey;
+                      Color seatColor = Colors.grey;
                                     if (availabilityStatus == 'AVAILABLE') {
-                                      seatColor = Colors.green;
+                        seatColor = Colors.green;
                                     } else if (availabilityStatus ==
                                         'OCCUPIED') {
-                                      seatColor = Colors.red;
+                        seatColor = Colors.red;
                                     } else if (availabilityStatus ==
                                         'BLOCKED') {
-                                      seatColor = Colors.orange;
-                                    }
+                        seatColor = Colors.orange;
+                      }
 
                                     // Add special indicators for seat characteristics
                                     bool isWindow =
@@ -330,14 +330,14 @@ class SeatmapDialog extends StatelessWidget {
                                       );
                                     }
 
-                                    return Container(
-                                      width: 30,
-                                      height: 30,
+                      return Container(
+                        width: 30,
+                        height: 30,
                                       margin: const EdgeInsets.symmetric(
                                           horizontal: 2.0),
-                                      decoration: BoxDecoration(
-                                        color: seatColor,
-                                        borderRadius: BorderRadius.circular(4),
+                        decoration: BoxDecoration(
+                          color: seatColor,
+                          borderRadius: BorderRadius.circular(4),
                                         border: specialBorder,
                                         boxShadow: [
                                           BoxShadow(
@@ -347,19 +347,19 @@ class SeatmapDialog extends StatelessWidget {
                                             offset: const Offset(0, 1),
                                           ),
                                         ],
-                                      ),
-                                      child: Center(
-                                        child: Text(
+                        ),
+                        child: Center(
+                          child: Text(
                                           seatLetter,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
                                             fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
+                            ),
+                          ),
+                        ),
+                      );
+                    }).toList(),
                                 ),
                               ),
                             ),
@@ -377,10 +377,10 @@ class SeatmapDialog extends StatelessWidget {
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                  );
-                }).toList(),
+                  ],
+                ),
+              );
+                }),
               ],
             ),
           ),

@@ -25,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
             MaterialPageRoute(builder: (context) => const RootPage()),
           );
         } else if (state is AuthFailure) {
-          DisplayMessage.errorMessage(state.message, context);
+          DisplayMessage.errorMessage(state.error, context);
         }
       },
       child: Scaffold(
@@ -252,7 +252,7 @@ class _LoginPageState extends State<LoginPage> {
     if (email.isEmpty || password.isEmpty) {
       DisplayMessage.errorMessage("Please enter all fields", context);
     } else {
-      context.read<AuthBloc>().add(LoginEvent(email, password));
+      context.read<AuthBloc>().add(LoginEvent(email: email, password: password));
     }
   }
 }

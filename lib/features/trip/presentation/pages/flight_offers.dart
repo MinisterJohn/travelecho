@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
-import 'flight_detail.dart';
 
 class FlightOffers extends StatefulWidget {
   const FlightOffers({super.key});
@@ -244,7 +243,7 @@ class _FlightOffersState extends State<FlightOffers> {
         color: AppColors.defaultColor100,
         thickness: 2,
       ),
-      Text("Flight Details"),
+      const Text("Flight Details"),
       WidgetsSpacer.verticalSpacer8,
       Text("Ticket Booking end date: ${offer['lastTicketingDate']}"),
       WidgetsSpacer.verticalSpacer8,

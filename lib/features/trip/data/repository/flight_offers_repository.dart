@@ -87,6 +87,7 @@ class FlightOffersRepositoryImpl implements FlightOffersRepository {
     }
   }
 
+  @override
   Future<Map<String, dynamic>> getSeatmap(
       dynamic flightOffer) async {
       final flightOfferCopy = Map<String, dynamic>.from(flightOffer);
@@ -103,7 +104,7 @@ class FlightOffersRepositoryImpl implements FlightOffersRepository {
       print(response.data);
       return response.data;
     } catch (e) {
-      throw Exception('Failed to fetch seatmap: ${e}');
+      throw Exception('Failed to fetch seatmap: $e');
     }
   }
 }

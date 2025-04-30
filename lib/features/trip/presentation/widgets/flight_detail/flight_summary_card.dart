@@ -10,13 +10,13 @@ class FlightSummaryCard extends StatelessWidget {
   final String flightNumber;
 
   const FlightSummaryCard({
-    Key? key,
+    super.key,
     required this.departure,
     required this.arrival,
     required this.total,
     required this.carrierCode,
     required this.flightNumber,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -108,7 +108,7 @@ class FlightSummaryCard extends StatelessWidget {
                   ),
                   child: Text(
                     "\$${double.tryParse(total)?.toStringAsFixed(2) ?? '0.00'}",
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
                       color: AppColors.primaryColor,

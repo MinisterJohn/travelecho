@@ -7,7 +7,7 @@ class TravelerDetails extends Equatable {
   final TravelerContact contact;
   final List<TravelerDocument> documents;
 
-  TravelerDetails({
+  const TravelerDetails({
     required this.id,
     required this.dateOfBirth,
     required this.name,
@@ -46,7 +46,7 @@ class TravelerName extends Equatable {
   final String firstName;
   final String lastName;
 
-  TravelerName({
+  const TravelerName({
     required this.firstName,
     required this.lastName,
   });
@@ -72,7 +72,7 @@ class TravelerName extends Equatable {
 class TravelerContact extends Equatable {
   final List<TravelerPhone> phones;
 
-  TravelerContact({
+  const TravelerContact({
     required this.phones,
   });
 
@@ -98,7 +98,7 @@ class TravelerPhone extends Equatable {
   final String countryCallingCode;
   final String number;
 
-  TravelerPhone({
+  const TravelerPhone({
     required this.countryCallingCode,
     required this.number,
   });
@@ -129,7 +129,7 @@ class TravelerDocument extends Equatable {
   final String nationality;
   final bool holder;
 
-  TravelerDocument({
+  const TravelerDocument({
     required this.documentType,
     required this.number,
     required this.expiryDate,

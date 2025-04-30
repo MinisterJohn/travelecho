@@ -40,7 +40,9 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
 
   @override
   void dispose() {
-    _controllers.values.forEach((controller) => controller.dispose());
+    for (var controller in _controllers.values) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -235,7 +237,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
             Row(
               children: [
                 // Country selector button
-                Container(
+                SizedBox(
                   width: 100,
                   child: OutlinedButton(
                     onPressed: () => _showCountrySelector(context, traveler.id),

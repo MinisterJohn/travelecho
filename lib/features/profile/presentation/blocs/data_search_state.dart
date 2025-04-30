@@ -40,6 +40,13 @@ class InterestsLoaded extends DataSearchState {
   List<Object?> get props => [interests];
 }
 
+class LocationListLoaded extends DataSearchState {
+  final List<LocationModel> locations;
+  LocationListLoaded(this.locations);
+  @override
+  List<Object?> get props => [locations];
+}
+
 class DataSearchError extends DataSearchState {
   final String message;
   DataSearchError(this.message);

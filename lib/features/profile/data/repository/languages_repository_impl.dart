@@ -6,6 +6,6 @@ class LanguagesRepositoryImpl extends LanguagesRepository {
   Future<LanguagesModel> getLanguages(String languageHint) async {
     final languagesModel =
         await languageLocalSource.fetchLanguages(languageHint);
-    return LanguagesModel(languages: languagesModel.toList());
+    return languagesModel;
   }
 }

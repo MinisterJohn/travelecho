@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelecho/core/network/dio_client.dart';
 
 abstract class ProfileApiService {
   Future<Either<String, Map<String, dynamic>>> getProfile(String profileId);
@@ -12,17 +13,13 @@ abstract class ProfileApiService {
 }
 
 class ProfileApiServiceImpl implements ProfileApiService {
-  final Dio _dio;
+  final DioClient _dioClient;
   final SharedPreferences _prefs;
 
-  ProfileApiServiceImpl(this._dio, this._prefs);
-
-  Future<String?> _getToken() async {
-    return _prefs.getString('token');
-  }
+  ProfileApiServiceImpl(this._dioClient, this._prefs);
 
   Future<Options> _getOptions() async {
-    final token = await _getToken();
+    final token = await _prefs.getString('token');
     return Options(
       headers: {
         'Authorization': 'Bearer $token',
@@ -57,7 +54,7 @@ class ProfileApiServiceImpl implements ProfileApiService {
       }
 
       final options = await _getOptions();
-      final response = await _dio.get(
+      final response = await _dioClient.get(
         'https://travel-echo-backend.onrender.com/api/profiles/$profileId',
         options: options,
       );
@@ -83,7 +80,7 @@ class ProfileApiServiceImpl implements ProfileApiService {
       }
 
       final options = await _getOptions();
-      final response = await _dio.put(
+      final response = await _dioClient.put(
         'https://travel-echo-backend.onrender.com/api/profiles/$profileId',
         data: data,
         options: options,
@@ -109,7 +106,7 @@ class ProfileApiServiceImpl implements ProfileApiService {
         return const Left('Profile ID is required');
       }
 
-      final token = await _getToken();
+      final token = await _prefs.getString('token');
       final options = Options(
         headers: {
           'Authorization': 'Bearer $token',
@@ -118,14 +115,14 @@ class ProfileApiServiceImpl implements ProfileApiService {
       );
 
       final formData = FormData.fromMap({
-        'image': MultipartFile.fromBytes(
-          await imageFile.readAsBytes(),
-          filename: imageFile.path.split('/').last.replaceAll(" ", "_"),
+        'image': await MultipartFile.fromFile(
+          imageFile.path,
+          filename: imageFile.path.split('/').last,
         ),
       });
 
-      final response = await _dio.post(
-        'https://travel-echo-backend.onrender.com/api/profiles/image/$profileId',
+      final response = await _dioClient.post(
+        'https://travel-echo-backend.onrender.com/api/profiles/$profileId/image',
         data: formData,
         options: options,
       );

@@ -12,7 +12,7 @@ class FlightInfoCard extends StatelessWidget {
   final String amenityDescriptions;
 
   const FlightInfoCard({
-    Key? key,
+    super.key,
     required this.firstSegment,
     required this.flightOffer,
     required this.cabinClass,
@@ -21,7 +21,7 @@ class FlightInfoCard extends StatelessWidget {
     required this.checkedBags,
     required this.cabinBags,
     required this.amenityDescriptions,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -47,7 +47,7 @@ class SetDestination extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               BlocBuilder<FlightBookingBloc, FlightBookingState>(
-                  builder: (context, state) {
+            builder: (context, state) {
                 if (state is FlightBookingSuccess) {
                   final originDestination =
                       state.flightBooking.originDestinations.first;
@@ -64,8 +64,8 @@ class SetDestination extends StatelessWidget {
                               BlocProvider.value(value: sl<AirportBloc>())
                             ], child: const TripScreen()));
                       });
-                }
-                return const SizedBox.shrink();
+              }
+              return const SizedBox.shrink();
               }),
               WidgetsSpacer.verticalSpacer16,
               BlocProvider.value(

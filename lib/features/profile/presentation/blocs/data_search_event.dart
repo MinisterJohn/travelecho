@@ -1,6 +1,5 @@
 part of "data_search_bloc.dart";
 
-
 abstract class DataSearchEvent extends Equatable {
   const DataSearchEvent();
 
@@ -12,7 +11,7 @@ abstract class DataSearchEvent extends Equatable {
 class SchoolListRequested extends DataSearchEvent {
   final String schoolHint;
   const SchoolListRequested({required this.schoolHint});
-  
+
   @override
   List<Object?> get props => [schoolHint];
 }
@@ -41,8 +40,16 @@ class InterestsRequested extends DataSearchEvent {
   List<Object?> get props => [interestHint];
 }
 
+class LocationListRequested extends DataSearchEvent {
+  final String locationHint;
+  const LocationListRequested({required this.locationHint});
+
+  @override
+  List<Object?> get props => [locationHint];
+}
+
 // 🔹 Generalized Clear Event
-enum SearchType { school, occupation, language, interest }
+enum SearchType { school, occupation, language, interest, location }
 
 class ClearSearchResults extends DataSearchEvent {
   final SearchType type;

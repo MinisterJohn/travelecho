@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../memories_exports.dart';
 
 class MemoryPage extends StatelessWidget {
@@ -65,8 +66,13 @@ class MemoryPage extends StatelessWidget {
           const Spacer(),
           GestureDetector(
             onTap: () {
-              AppNavigator.push(context, CreateMemoryPage());
-          
+              AppNavigator.push(
+                context,
+                BlocProvider.value(
+                  value: sl<MemoriesBloc>(),
+                  child: const CreateMemoryDetailsPage(),
+                ),
+              );
             },
             child: Container(
               height: 60,

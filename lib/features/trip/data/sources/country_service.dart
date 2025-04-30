@@ -29,91 +29,91 @@ class CountryService {
 
   static List<Country> _getDefaultCountries() {
     return [
-      Country(
+      const Country(
         name: 'United States',
         code: 'US',
         phoneCode: '1',
         flag: '🇺🇸',
       ),
-      Country(
+      const Country(
         name: 'United Kingdom',
         code: 'GB',
         phoneCode: '44',
         flag: '🇬🇧',
       ),
-      Country(
+      const Country(
         name: 'Canada',
         code: 'CA',
         phoneCode: '1',
         flag: '🇨🇦',
       ),
-      Country(
+      const Country(
         name: 'Australia',
         code: 'AU',
         phoneCode: '61',
         flag: '🇦🇺',
       ),
-      Country(
+      const Country(
         name: 'India',
         code: 'IN',
         phoneCode: '91',
         flag: '🇮🇳',
       ),
-      Country(
+      const Country(
         name: 'China',
         code: 'CN',
         phoneCode: '86',
         flag: '🇨🇳',
       ),
-      Country(
+      const Country(
         name: 'Japan',
         code: 'JP',
         phoneCode: '81',
         flag: '🇯🇵',
       ),
-      Country(
+      const Country(
         name: 'Germany',
         code: 'DE',
         phoneCode: '49',
         flag: '🇩🇪',
       ),
-      Country(
+      const Country(
         name: 'France',
         code: 'FR',
         phoneCode: '33',
         flag: '🇫🇷',
       ),
-      Country(
+      const Country(
         name: 'Italy',
         code: 'IT',
         phoneCode: '39',
         flag: '🇮🇹',
       ),
-      Country(
+      const Country(
         name: 'Spain',
         code: 'ES',
         phoneCode: '34',
         flag: '🇪🇸',
       ),
-      Country(
+      const Country(
         name: 'Brazil',
         code: 'BR',
         phoneCode: '55',
         flag: '🇧🇷',
       ),
-      Country(
+      const Country(
         name: 'Mexico',
         code: 'MX',
         phoneCode: '52',
         flag: '🇲🇽',
       ),
-      Country(
+      const Country(
         name: 'South Korea',
         code: 'KR',
         phoneCode: '82',
         flag: '🇰🇷',
       ),
-      Country(
+      const Country(
         name: 'Russia',
         code: 'RU',
         phoneCode: '7',

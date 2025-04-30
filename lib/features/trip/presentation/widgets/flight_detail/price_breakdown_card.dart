@@ -8,12 +8,12 @@ class PriceBreakdownCard extends StatelessWidget {
   final String total;
 
   const PriceBreakdownCard({
-    Key? key,
+    super.key,
     required this.baseFare,
     required this.totalTaxes,
     // required this.fees,
     required this.total,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

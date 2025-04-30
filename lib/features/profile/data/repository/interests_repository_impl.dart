@@ -6,6 +6,6 @@ class InterestsRepositoryImpl extends InterestsRepository {
   Future<InterestsModel> getInterests(String interestHint) async {
     final interestsModel =
         await interestLocalSource.fetchInterests(interestHint);
-    return InterestsModel(interests: interestsModel.toList());
+    return interestsModel;
   }
 }

@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth_exports.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
@@ -11,69 +13,68 @@ class ForgotPasswordPage extends StatefulWidget {
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   final TextEditingController _emailController = TextEditingController();
   GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
+  bool _isLoading = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Forgot Password',
-                style: TextStyle(
-                  fontSize: 32.0,
-                  fontWeight: FontWeight.bold,
-                  color: Color(0xff930BFF),
-                ),
+      appBar: setAppBar("", context),
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthSuccess) {
+            setState(() => _isLoading = false);
+            // Navigate to verification page
+            AppNavigator.push(
+              context,
+              OtpForm(
+                email: _emailController.text,
+                isSignup: false,
+                isPasswordReset: true,
               ),
-              const SizedBox(height: 8.0),
-              const Text(
-                'Find a flight that matches your destination and schedule it instantly',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black54,
-                ),
-              ),
-              WidgetsSpacer.verticalSpacer16,
-
-              // Email Address Field
-              _emailForm(),
-
-              // Send Reset Link Button
-
-              WidgetsSpacer.verticalSpacer16,
-
-              // Footer with Login link (will stick to the bottom if space is available)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+            );
+          } else if (state is AuthFailure) {
+            setState(() => _isLoading = false);
+            DisplayMessage.errorMessage(state.error, context);
+          } else if (state is AuthLoading) {
+            setState(() => _isLoading = true);
+          }
+        },
+        builder: (context, state) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: WidgetsSpacer.pagePadding,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Remember your password?'),
-                  TextButton(
-                    onPressed: () {
-                      // Navigate to login page
-                      AppNavigator.pushAndRemove(context, const LoginPage());
-                    },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  const HeadingText(text: "Forgot Password"),
+                  WidgetsSpacer.verticalSpacer8,
+                  const Text(
+                    "Enter your email address to receive a verification code",
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      color: AppColors.defaultColor,
                     ),
                   ),
+                  WidgetsSpacer.verticalSpacer32,
+                  _emailForm(state),
+                  WidgetsSpacer.verticalSpacer16,
+                  _loginLink(),
                 ],
               ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
 
-  Widget _emailForm() {
+  Widget _emailForm(AuthState state) {
     return Form(
       key: emailFormKey,
       child: Column(
@@ -81,45 +82,47 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         children: [
           TextFormField(
             controller: _emailController,
-            decoration: const InputDecoration(
+            enabled: !_isLoading,
+            decoration: InputDecoration(
               labelText: 'Email Address',
-              border: OutlineInputBorder(),
+              border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.email_outlined),
+              prefixIconColor: AppColors.primaryColor300,
             ),
             keyboardType: TextInputType.emailAddress,
             validator: (email) {
-              // Check if email is null or empty
               if (email == null || email.isEmpty) {
                 return 'Please enter an email address';
               }
-              // Validate email format using regex
               final emailRegex =
                   RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
               if (!emailRegex.hasMatch(email)) {
-                return 'Email is invalid';
+                return 'Please enter a valid email address';
               }
               return null;
             },
           ),
           WidgetsSpacer.verticalSpacer8,
           Text(
-            'A 6 Digit Code will be sent to your email to enable you change your password',
+            'A 6-digit code will be sent to your email',
             style: TextStyle(
               fontSize: 12.0,
               color: AppColors.defaultColor400,
             ),
           ),
-          const SizedBox(height: 20.0),
+          WidgetsSpacer.verticalSpacer32,
           ElevatedButton(
-            onPressed: () {
-              // Validate the form before proceeding
-              if (emailFormKey.currentState?.validate() ?? false) {
-                // If form is valid, navigate to verification page
-                AppNavigator.push(context, const OtpForm());
-                print('Password reset link sent to ${_emailController.text}');
-              } else {
-                print('Please enter a valid email address');
-              }
-            },
+            onPressed: _isLoading
+                ? null
+                : () {
+                    if (emailFormKey.currentState?.validate() ?? false) {
+                      context.read<AuthBloc>().add(
+                            SendOtpEvent(
+                              email: _emailController.text.trim(),
+                            ),
+                          );
+                    }
+                  },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.primaryColor,
               minimumSize: const Size(double.infinity, 50),
@@ -127,15 +130,47 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
             ),
-            child: const Text(
-              'Next',
-              style: TextStyle(
-                color: AppColors.white,
-                fontSize: 18.0,
-              ),
-            ),
+            child: _isLoading
+                ? const SizedBox(
+                    height: 20,
+                    width: 20,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    ),
+                  )
+                : const Text(
+                    'Send Code',
+                    style: TextStyle(
+                      color: AppColors.white,
+                      fontSize: 18.0,
+                    ),
+                  ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _loginLink() {
+    return Center(
+      child: Text.rich(
+        TextSpan(
+          children: [
+            const TextSpan(text: "Remember your password? "),
+            TextSpan(
+              style: const TextStyle(
+                color: AppColors.primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
+              recognizer: TapGestureRecognizer()
+                ..onTap = () {
+                  AppNavigator.pushAndRemove(context, const LoginPage());
+                },
+              text: 'Login',
+            ),
+          ],
+        ),
       ),
     );
   }

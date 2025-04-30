@@ -16,13 +16,10 @@ class InterestLocalSourceImpl extends InterestLocalSource {
       try {
         final String response =
             await rootBundle.loadString('assets/json/interests.json');
-
         if (response.isEmpty) {
-          throw Exception('Empty response from hobbies.json');
+          throw Exception('Empty response from interests.json');
         }
-
         final List<dynamic> interestsJsonData = json.decode(response);
-
         allInterests = InterestsModel.fromJson(interestsJsonData);
       } catch (e) {
         throw Exception('Error loading interests: $e');

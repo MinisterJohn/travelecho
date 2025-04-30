@@ -23,7 +23,7 @@ class _ProfilePageState extends State<ProfilePage> {
               if (authState is AuthSuccess) {
                 return BlocProvider(
                   create: (context) => sl<ProfileBloc>()
-                    ..add(ProfileRequested(authState.user.profileId)),
+                    ..add(ProfileRequested(authState.user?.profileId ?? '')),
                   child: BlocBuilder<ProfileBloc, ProfileState>(
                     builder: (context, profileState) {
                       return ScreenContainer(
@@ -59,14 +59,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          authState.user.fullname,
+                                          authState.user?.fullname ?? "",
                                           style: const TextStyle(
                                             fontSize: 18,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
                                         Text(
-                                          authState.user.email,
+                                          authState.user?.email ?? "",
                                           style: const TextStyle(
                                             color:
                                                 Color.fromARGB(255, 94, 97, 99),

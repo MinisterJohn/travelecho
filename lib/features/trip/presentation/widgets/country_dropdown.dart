@@ -103,7 +103,7 @@ class _CountryDropdownState extends State<CountryDropdown> {
                         ? _countries
                             .firstWhere(
                               (country) => country.code == widget.value,
-                              orElse: () => Country(
+                              orElse: () => const Country(
                                 name: '',
                                 code: '',
                                 phoneCode: '',

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../profile_exports.dart';
 
 void showInterestsDialog(BuildContext context) {
-  DraggableBottomModal(
+  showDraggableBottomModal(
       context,
       MultiBlocProvider(
         providers: [

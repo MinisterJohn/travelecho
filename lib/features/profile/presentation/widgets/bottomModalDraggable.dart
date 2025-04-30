@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../profile_exports.dart';
 
-
-Future DraggableBottomModal(BuildContext context, Widget widget) {
+Future showDraggableBottomModal(BuildContext context, Widget widget) {
   return showModalBottomSheet(
       backgroundColor: AppColors.white,
       elevation: 0,

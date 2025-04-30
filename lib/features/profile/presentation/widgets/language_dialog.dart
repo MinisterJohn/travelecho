@@ -7,6 +7,7 @@ import '../../profile_exports.dart';
 void showLanguageDialog(BuildContext context) {
   TextEditingController searchController = TextEditingController();
   Timer? debounce;
+  bool _isUpdating = false;
 
   void searchForLanguages(String value) {
     if (debounce?.isActive ?? false) debounce!.cancel();
@@ -19,7 +20,7 @@ void showLanguageDialog(BuildContext context) {
     });
   }
 
-  DraggableBottomModal(
+  showDraggableBottomModal(
     context,
     MultiBlocProvider(
       providers: [

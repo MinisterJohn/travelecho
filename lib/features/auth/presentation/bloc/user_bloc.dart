@@ -9,7 +9,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SigninUseCase loginUseCase = sl<SigninUseCase>();
   final SignupUseCase signupUseCase = sl<SignupUseCase>();
   final IsLoggedInUseCase isLoggedInUseCase = sl<IsLoggedInUseCase>();
-  // final ResetPassword resetPasswordUseCase;
+  final VerifyOtpUseCase verifyOtpUseCase = sl<VerifyOtpUseCase>();
+  final SendOtpUseCase sendOtpUseCase = sl<SendOtpUseCase>();
+  final ResetPasswordUseCase resetPasswordUseCase = sl<ResetPasswordUseCase>();
 
   AuthBloc() : super(AuthInitial()) {
     on<LoginEvent>((event, emit) async {
@@ -59,7 +61,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           params: SignupReqParams(
             email: event.email.trim(),
             password: event.password,
-            name: event.fullname.trim(),
+            name: event.name.trim(),
           ),
         );
 
@@ -134,14 +136,78 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
-    // on<ResetPasswordEvent>((event, emit) async {
-    //   emit(AuthLoading());
-    //   try {
-    //     await resetPasswordUseCase(event.email);
-    //     emit(AuthSuccess());
-    //   } catch (e) {
-    //     emit(AuthFailure(e.toString()));
-    //   }
-    // });
+    on<VerifyOtpEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final result = await verifyOtpUseCase.call(
+          params: {
+            'email': event.email,
+            'otp': event.otp,
+          },
+        );
+
+        result.fold(
+          (error) => emit(AuthFailure(error)),
+          (success) => emit(AuthSuccess(User(
+            id: '',
+            email: event.email,
+            fullname: '',
+            token: '',
+            profileId: '',
+          ))),
+        );
+      } catch (e) {
+        print("OTP verification error: $e");
+        emit(AuthFailure(
+            "An unexpected error occurred during OTP verification"));
+      }
+    });
+
+    on<ResetPasswordEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final result = await resetPasswordUseCase.call(
+          params: {
+            'email': event.email,
+            'password': event.password,
+            'confirmPassword': event.confirmPassword,
+          },
+        );
+
+        result.fold(
+          (error) => emit(AuthFailure(error)),
+          (data) => emit(AuthSuccess(User(
+            id: '',
+            email: event.email,
+            fullname: '',
+            token: '',
+            profileId: '',
+          ))),
+        );
+      } catch (e) {
+        print("Reset Password error: $e");
+        emit(AuthFailure("Failed to reset password: $e"));
+      }
+    });
+
+    on<SendOtpEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final result = await sendOtpUseCase.call(params: event.email);
+        result.fold(
+          (error) => emit(AuthFailure(error)),
+          (success) => emit(AuthSuccess(User(
+            id: '',
+            email: event.email,
+            fullname: '',
+            token: '',
+            profileId: '',
+          ))),
+        );
+      } catch (e) {
+        print("Send OTP error: $e");
+        emit(AuthFailure("Failed to send OTP: $e"));
+      }
+    });
   }
 }

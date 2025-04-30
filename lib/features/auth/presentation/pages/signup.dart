@@ -27,12 +27,24 @@ class _SignUpPageState extends State<SignUpPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: WidgetsSpacer.pagePadding,
-          child: BlocBuilder<AuthBloc, AuthState>(
+          child: BlocConsumer<AuthBloc, AuthState>(
+            listener: (context, state) {
+              if (state is AuthSuccess) {
+                // Navigate to verification page with email
+                AppNavigator.push(
+                  context,
+                  OtpForm(
+                    email: state.user?.email ?? _emailController.text,
+                    isSignup: true,
+                  ),
+                );
+              } else if (state is AuthFailure) {
+                DisplayMessage.errorMessage(state.error, context);
+              }
+            },
             builder: (context, state) {
               if (state is AuthLoading) {
                 return const Center(child: CircularProgressIndicator());
-              } else if (state is AuthSuccess) {
-                
               }
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -79,6 +91,7 @@ class _SignUpPageState extends State<SignUpPage> {
 
   Widget _signupForm(BuildContext context) {
     return Form(
+      key: form,
       child: Column(
         children: [
           // Full Name Field
@@ -101,9 +114,6 @@ class _SignUpPageState extends State<SignUpPage> {
             controller: _emailController,
             decoration: const InputDecoration(
               hintText: 'Email Address',
-              // border: OutlineInputBorder(),
-              // focusedBorder:
-              //     OutlineInputBorder(borderSide: BorderSide(width: 1))
             ),
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
@@ -173,20 +183,20 @@ class _SignUpPageState extends State<SignUpPage> {
           // Sign Up Button
           ElevatedButton(
             onPressed: () async {
-              if (_passwordController.text == _confirmPasswordController.text) {
-                try {
-                  await sl<SignupUseCase>().call(
-                      params: SignupReqParams(
+              if (form.currentState!.validate()) {
+                if (_passwordController.text ==
+                    _confirmPasswordController.text) {
+                  context.read<AuthBloc>().add(
+                        SignupEvent(
                           email: _emailController.text,
                           password: _passwordController.text,
-                          name: _fullNameController.text));
-
-                  AppNavigator.push(context, const NewUserWelcomePage());
-                } catch (e) {
-                  DisplayMessage.errorMessage(e.toString(), context);
+                          name: _fullNameController.text,
+                        ),
+                      );
+                } else {
+                  DisplayMessage.errorMessage(
+                      'Passwords do not match', context);
                 }
-              } else {
-                DisplayMessage.errorMessage('Passwords do not match', context);
               }
             },
             style: ElevatedButton.styleFrom(
@@ -275,12 +285,12 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
-                  AppNavigator.push(context, 
-                  BlocProvider.value(
-                    value: sl<AuthBloc>(),
-                    child: const LoginPage(),
-                  )
-                  );
+                  AppNavigator.push(
+                      context,
+                      BlocProvider.value(
+                        value: sl<AuthBloc>(),
+                        child: const LoginPage(),
+                      ));
                 },
               text: 'Login',
             ),

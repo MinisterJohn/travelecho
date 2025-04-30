@@ -6,9 +6,9 @@ class FlightDetail extends StatefulWidget {
   final dynamic flightOffer;
 
   const FlightDetail({
-    Key? key,
+    super.key,
     required this.flightOffer,
-  }) : super(key: key);
+  });
 
   @override
   State<FlightDetail> createState() => _FlightDetailState();
@@ -133,7 +133,7 @@ class _FlightDetailState extends State<FlightDetail> {
                             carrierCode: segment['carrierCode'],
                             flightNumber: segment['number'],
                           ))
-                      .toList(),
+                      ,
 
                   // Return Flight (if exists)
                   if (returnSegments.isNotEmpty) ...[
@@ -155,7 +155,7 @@ class _FlightDetailState extends State<FlightDetail> {
                               carrierCode: segment['carrierCode'],
                               flightNumber: segment['number'],
                             ))
-                        .toList(),
+                        ,
                   ],
 
                   FlightInfoCard(

@@ -25,7 +25,7 @@ void showWhereISchooledDialog(BuildContext context) {
     });
   }
 
-  DraggableBottomModal(
+  showDraggableBottomModal(
     context,
     MultiBlocProvider(
       providers: [

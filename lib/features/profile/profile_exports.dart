@@ -48,7 +48,7 @@ export 'presentation/pages/addCardDetails.dart';
 export 'presentation/pages/appFeatures.dart';
 export 'presentation/pages/helpPage.dart';
 export 'presentation/pages/changepassword.dart';
-export 'presentation/pages/forgotmypassword.dart';
+// export 'presentation/pages/forgotmypassword.dart';
 export 'presentation/pages/loginandsecurity.dart';
 export 'presentation/pages/passportpage.dart';
 export 'presentation/pages/passsavepref.dart';
@@ -60,5 +60,14 @@ export 'presentation/widgets/school_location_dialog.dart';
 export 'presentation/widgets/date_dialog.dart';
 export 'presentation/widgets/language_dialog.dart';
 export 'presentation/widgets/bottomModalDraggable.dart';
+
+// Widgets
+export 'presentation/widgets/editable_fields_section.dart';
+// export 'presentation/widgets/location_dialog.dart';
+// export 'presentation/widgets/occupation_dialog.dart';
+// export 'presentation/widgets/school_dialog.dart';
+// export 'presentation/widgets/dob_dialog.dart';
+// export 'presentation/widgets/languages_dialog.dart';
+// export 'presentation/widgets/interests_dialog.dart';
 
 export "../features_exports.dart";

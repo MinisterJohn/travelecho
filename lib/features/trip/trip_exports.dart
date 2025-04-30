@@ -57,3 +57,12 @@ export 'presentation/widgets/country_dropdown.dart';
 export 'presentation/widgets/country_selector.dart';
 
 export '../features_exports.dart';
+
+// Hotel Booking
+export 'data/models/hotel_booking_model.dart';
+export 'domain/repository/hotel_booking_repository.dart';
+export 'data/repository/hotel_booking_repository_impl.dart';
+export 'presentation/blocs/hotel/hotel_booking_bloc.dart';
+export 'presentation/pages/hotel_booking.dart';
+export 'presentation/widgets/hotel_search_form.dart';
+export 'presentation/widgets/hotel_list.dart';

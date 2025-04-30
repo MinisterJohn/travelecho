@@ -6,9 +6,9 @@ class TravelerInfoCard extends StatelessWidget {
   final List<Map> travelers;
 
   const TravelerInfoCard({
-    Key? key,
+    super.key,
     required this.travelers,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
