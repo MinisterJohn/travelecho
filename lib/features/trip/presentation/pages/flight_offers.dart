@@ -95,13 +95,52 @@ class _FlightOffersState extends State<FlightOffers> {
                         if (offers.isEmpty) {
                           return const Center(child: Text('No flights found'));
                         }
-                        return ListView.builder(
-                          padding: const EdgeInsets.all(16),
-                          itemCount: offers.length,
-                          itemBuilder: (context, index) {
-                            final offer = offers[index];
-                            return _buildFlightOfferCard(offer);
+                        return RefreshIndicator(
+                          onRefresh: () async {
+                            final flightBookingBloc =
+                                context.read<FlightBookingBloc>();
+                            if (flightBookingBloc.state
+                                is FlightBookingSuccess) {
+                              final booking = (flightBookingBloc.state
+                                      as FlightBookingSuccess)
+                                  .flightBooking;
+                              final originDestination =
+                                  booking.originDestinations.first;
+
+                              // Count travelers by type
+                              final adults = booking.travelers
+                                  .where((t) => t.travelerType == "ADULT")
+                                  .length;
+                              final children = booking.travelers
+                                  .where((t) => t.travelerType == "CHILD")
+                                  .length;
+                              final infants = booking.travelers
+                                  .where((t) => t.travelerType == "INFANT")
+                                  .length;
+
+                              context
+                                  .read<FlightOffersBloc>()
+                                  .add(SearchFlightOffers(
+                                    origin:
+                                        originDestination.originLocationCode,
+                                    destination: originDestination
+                                        .destinationLocationCode,
+                                    departureDate: originDestination
+                                        .departureDateTimeRange.date,
+                                    adults: adults,
+                                    children: children,
+                                    infants: infants,
+                                  ));
+                            }
                           },
+                          child: ListView.builder(
+                            padding: const EdgeInsets.all(16),
+                            itemCount: offers.length,
+                            itemBuilder: (context, index) {
+                              final offer = offers[index];
+                              return _buildFlightOfferCard(offer);
+                            },
+                          ),
                         );
                       } else if (state is FlightOffersError) {
                         return Center(child: Text(state.message));
@@ -199,7 +238,8 @@ class _FlightOffersState extends State<FlightOffers> {
                               BlocProvider.value(
                                   value: sl<FlightPricingCubit>()),
                               BlocProvider.value(value: sl<FlightOffersBloc>()),
-                              BlocProvider.value(value: sl<FlightBookingBloc>()),
+                              BlocProvider.value(
+                                  value: sl<FlightBookingBloc>()),
                               BlocProvider.value(value: sl<SeatmapCubit>()),
                             ], child: FlightDetail(flightOffer: offer)),
                           );
@@ -239,7 +279,7 @@ class _FlightOffersState extends State<FlightOffers> {
     context.read<AirlineCubit>().searchAirline(firstSegment['carrierCode']);
 
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Divider(
+      const Divider(
         color: AppColors.defaultColor100,
         thickness: 2,
       ),

@@ -1,20 +1,9 @@
-import 'dart:typed_data';
 import 'dart:async';
-import 'dart:html' as html;
-import 'dart:io' as io;
 
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
-import 'package:http_parser/http_parser.dart';
 import '../../memories_exports.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import '../../../../core/network/dio_client.dart';
-import 'dart:convert';
-import 'image_upload_handler.dart';
-import 'web_image_upload_handler.dart';
-import 'mobile_image_upload_handler.dart';
+
 import 'memory_crud_handler.dart';
 import 'memory_image_handler.dart';
 
@@ -28,10 +17,10 @@ abstract class MemoriesApiService {
     bool isPublic = true,
   });
 
-  Future<Either<String, void>> uploadMemoryImage({
-    required String memoryId,
-    required String imagePath,
-  });
+  // Future<Either<String, void>> uploadMemoryImage({
+  //   required String memoryId,
+  //   required String imagePath,
+  // });
 
   Future<Either<String, void>> uploadMultipleMemoryImages({
     required String memoryId,
@@ -47,6 +36,9 @@ abstract class MemoriesApiService {
     required int limit,
     required int skip,
   });
+
+  Future<Either<String, Map<String, dynamic>>> getMemoryDetails(
+      String memoryId);
 
   Future<Either<String, void>> deleteMemory(String memoryId);
 
@@ -92,16 +84,16 @@ class MemoriesApiServiceImpl implements MemoriesApiService {
     );
   }
 
-  @override
-  Future<Either<String, void>> uploadMemoryImage({
-    required String memoryId,
-    required String imagePath,
-  }) {
-    return _imageHandler.uploadMemoryImage(
-      memoryId: memoryId,
-      imagePath: imagePath,
-    );
-  }
+  // @override
+  // Future<Either<String, void>> uploadMemoryImage({
+  //   required String memoryId,
+  //   required String imagePath,
+  // }) {
+  //   return _imageHandler.uploadMemoryImage(
+  //     memoryId: memoryId,
+  //     imagePath: imagePath,
+  //   );
+  // }
 
   @override
   Future<Either<String, void>> uploadMultipleMemoryImages({
@@ -133,6 +125,12 @@ class MemoriesApiServiceImpl implements MemoriesApiService {
       limit: limit,
       skip: skip,
     );
+  }
+
+  @override
+  Future<Either<String, Map<String, dynamic>>> getMemoryDetails(
+      String memoryId) {
+    return _crudHandler.getMemoryDetails(memoryId);
   }
 
   @override

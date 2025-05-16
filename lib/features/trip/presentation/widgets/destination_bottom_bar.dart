@@ -26,7 +26,7 @@ class DestinationBottomBar extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(5),
               ),
-              side: BorderSide(color: AppColors.primaryColor300),
+              side: const BorderSide(color: AppColors.primaryColor300),
             ),
             child: const Text("Clear"),
           ),

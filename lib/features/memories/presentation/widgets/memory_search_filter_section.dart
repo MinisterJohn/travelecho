@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../memories_exports.dart';
-import 'memory_search_bar.dart';
 import 'memory_filter_dialog.dart';
 
 class MemorySearchFilterSection extends StatelessWidget {
@@ -68,11 +67,11 @@ class MemorySearchFilterSection extends StatelessWidget {
                 if (currentLocation != null)
                   Chip(
                     label: Text('Location: $currentLocation'),
-                    deleteIcon: Icon(LineIcons.timesCircleAlt,
+                    deleteIcon: const Icon(LineIcons.timesCircleAlt,
                         color: AppColors.defaultColor400),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
-                      side: BorderSide(color: AppColors.primaryColor300),
+                      side: const BorderSide(color: AppColors.primaryColor300),
                     ),
                     onDeleted: () => onApplyFilters(null, currentDate),
                   ),
@@ -82,11 +81,11 @@ class MemorySearchFilterSection extends StatelessWidget {
                     label: Text(
                       'Date: ${currentDate!.day}/${currentDate!.month}/${currentDate!.year}',
                     ),
-                    deleteIcon: Icon(LineIcons.timesCircleAlt,
+                    deleteIcon: const Icon(LineIcons.timesCircleAlt,
                         color: AppColors.defaultColor400),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
-                      side: BorderSide(color: AppColors.primaryColor300),
+                      side: const BorderSide(color: AppColors.primaryColor300),
                     ),
                     onDeleted: () => onApplyFilters(currentLocation, null),
                   ),

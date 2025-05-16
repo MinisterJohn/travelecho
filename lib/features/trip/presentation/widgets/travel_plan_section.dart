@@ -90,7 +90,7 @@ class _TravelUtils extends StatelessWidget {
             children: [
               Container(
                 padding: const EdgeInsets.all(8.0),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: AppColors.defaultColor100,
                   shape: BoxShape.circle,
                 ),

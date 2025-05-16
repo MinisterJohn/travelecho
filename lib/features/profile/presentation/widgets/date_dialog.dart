@@ -41,8 +41,8 @@ void showDateDialog(BuildContext context) {
                 const SizedBox(height: 20.0),
                 BlocBuilder<ProfileBloc, ProfileState>(
                   builder: (context, state) {
-                    final DateTime dob = state is ProfileLoaded
-                        ? state.profile.dob
+                    final DateTime dateOfBirth = state is ProfileLoaded
+                        ? state.profile.dateOfBirth as DateTime
                         : DateTime.now();
 
                     return Expanded(
@@ -57,7 +57,7 @@ void showDateDialog(BuildContext context) {
                               ProfileUpdateRequested(
                                   selectedDate,
                                   ProfileUpdateKey
-                                      .dob)); // Store the selected date
+                                      .dateOfBirth)); // Store the selected date
                         },
                       ),
                     );

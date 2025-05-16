@@ -56,7 +56,7 @@ class TravelGuidePage extends StatelessWidget {
                     Container(
                       width: 150,
                       height: 150,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                         color: AppColors.defaultColor100,
                       ),

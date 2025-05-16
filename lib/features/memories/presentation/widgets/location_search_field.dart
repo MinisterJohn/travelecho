@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
-import '../../../../features/profile/presentation/blocs/data_search_bloc.dart';
 import '../../memories_exports.dart';
 
 class LocationSearchField extends StatefulWidget {
@@ -38,7 +37,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
           );
     } else {
       context.read<DataSearchBloc>().add(
-            ClearSearchResults(type: SearchType.location),
+            const ClearSearchResults(type: SearchType.location),
           );
     }
   }
@@ -54,7 +53,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            prefixIcon: Icon(LineIcons.mapMarker, color: AppColors.defaultColor400),
+            prefixIcon: const Icon(LineIcons.mapMarker, color: AppColors.defaultColor400),
           ),
         ),
         BlocBuilder<DataSearchBloc, DataSearchState>(
@@ -85,7 +84,7 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
                         widget.controller.text = location.location;
                         widget.onLocationSelected(location.location);
                         context.read<DataSearchBloc>().add(
-                              ClearSearchResults(type: SearchType.location),
+                              const ClearSearchResults(type: SearchType.location),
                             );
                       },
                     );

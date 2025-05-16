@@ -82,12 +82,12 @@ class _PassportDetailsPageState extends State<PassportDetailsPage> {
               decoration: BoxDecoration(
                 color: Colors.white, // White background
                 borderRadius: BorderRadius.circular(5),
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: AppColors.defaultColor100, // Grey shadow color
                     spreadRadius: 2, // Spread radius
                     blurRadius: 6, // Blur radius
-                    offset: const Offset(0, 3), // Shadow position
+                    offset: Offset(0, 3), // Shadow position
                   ),
                 ],
               ),

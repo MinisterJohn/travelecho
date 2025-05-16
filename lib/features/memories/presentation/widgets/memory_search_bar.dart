@@ -39,10 +39,10 @@ class _MemorySearchBarState extends State<MemorySearchBar> {
       controller: widget.controller,
       decoration: InputDecoration(
         hintText: 'Search memories...',
-        prefixIcon: Icon(Icons.search, color: AppColors.defaultColor400,),
+        prefixIcon: const Icon(Icons.search, color: AppColors.defaultColor400,),
         suffixIcon: widget.controller.text.isNotEmpty
             ? IconButton(
-                icon: Icon(LineIcons.times, color: AppColors.defaultColor400,),
+                icon: const Icon(LineIcons.times, color: AppColors.defaultColor400,),
                 onPressed: () {
                   widget.controller.clear();
                   widget.onSearch('');

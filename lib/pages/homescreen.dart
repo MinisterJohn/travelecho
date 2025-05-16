@@ -303,7 +303,7 @@ class _HomeScreenState extends State<HomeScreen2> {
               padding: const EdgeInsets.all(8.0),
               child: Text(
                 cityName,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.white,
                   fontSize: 11,
                   fontWeight: FontWeight.bold,

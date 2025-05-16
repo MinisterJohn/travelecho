@@ -12,6 +12,13 @@ class SchoolModel extends Equatable {
       country: json['country'] as String,
     );
   }
+
+   Map<String, dynamic> toJson() {
+    return {
+      'country': country,
+      'name': name,
+    };
+  }
   
   @override
   List<Object?> get props => [name, country];

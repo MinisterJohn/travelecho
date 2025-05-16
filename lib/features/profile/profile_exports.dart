@@ -30,6 +30,8 @@ export "domain/repository/locations_repository.dart";
 export "domain/repository/interests_repository.dart";
 export "domain/repository/languages_repository.dart";
 export "domain/repository/occupations_repository.dart";
+export "domain/repository/profile_repository.dart";
+export "data/repository/profile_repository_impl.dart";
 
 // Usecases
 export 'domain/usecases/interests_usecase.dart';
@@ -37,6 +39,8 @@ export 'domain/usecases/languages_usecase.dart';
 export 'domain/usecases/occupations_list_usecase.dart';
 export 'domain/usecases/school_list_usecase.dart';
 export 'domain/usecases/location_list_usecase.dart';
+export 'domain/usecases/get_user_profile.dart';
+export 'domain/usecases/update_profile_image.dart';
 
 // Presentation
 export 'presentation/blocs/profile_bloc.dart';

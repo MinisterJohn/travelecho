@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import "../../profile_exports.dart";
 
 class ProfilePage extends StatefulWidget {
@@ -11,183 +12,334 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final SharedPreferences _prefs = sl<SharedPreferences>();
+
   @override
   Widget build(BuildContext context) {
+    final fullname = _prefs.getString('name');
+    final email = _prefs.getString('email') ?? "";
+    final isVerified = _prefs.getBool('verified') ?? false;
+
     return Scaffold(
       appBar: setAppBar("", context),
-      body: SingleChildScrollView(
-        child: BlocProvider.value(
-          value: sl<AuthBloc>(),
-          child: BlocBuilder<AuthBloc, AuthState>(
-            builder: (context, authState) {
-              if (authState is AuthSuccess) {
-                return BlocProvider(
-                  create: (context) => sl<ProfileBloc>()
-                    ..add(ProfileRequested(authState.user?.profileId ?? '')),
-                  child: BlocBuilder<ProfileBloc, ProfileState>(
-                    builder: (context, profileState) {
-                      return ScreenContainer(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 16.0, vertical: 8.0),
-                              child: Text(
-                                "Profile",
-                                style: TextStyle(
-                                  color: AppColors.primaryColor,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Row(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 30,
-                                    backgroundColor: Colors.grey[300],
-                                  ),
-                                  const SizedBox(width: 16),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          authState.user?.fullname ?? "",
-                                          style: const TextStyle(
-                                            fontSize: 18,
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: () async {
+              context.read<ProfileBloc>().add(ProfileLoadRequested());
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: BlocProvider.value(
+                value: sl<AuthBloc>(),
+                child: BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, authState) {
+                    if (authState is AuthSuccess ||
+                        authState is AuthLoginSuccess) {
+                      return BlocProvider(
+                        create: (context) =>
+                            sl<ProfileBloc>()..add(ProfileLoadRequested()),
+                        child: BlocBuilder<ProfileBloc, ProfileState>(
+                          builder: (context, profileState) {
+                            
+                            return Column(
+                              children: [
+                                ScreenContainer(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16.0, vertical: 8.0),
+                                        child: Text(
+                                          "Profile",
+                                          style: TextStyle(
+                                            color: AppColors.primaryColor,
+                                            fontSize: 24,
                                             fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                        Text(
-                                          authState.user?.email ?? "",
-                                          style: const TextStyle(
-                                            color:
-                                                Color.fromARGB(255, 94, 97, 99),
+                                      ),
+                                      const SizedBox(height: 16),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0),
+                                        child: Row(
+                                          children: [
+                                            Container(
+                                              width: 60,
+                                              height: 60,
+                                              decoration: BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                color: Colors.grey[300],
+                                                image: profileState
+                                                            is ProfileLoaded &&
+                                                        profileState.profile
+                                                            .image.isNotEmpty
+                                                    ? DecorationImage(
+                                                        image: NetworkImage(
+                                                            profileState
+                                                                .profile.image),
+                                                        fit: BoxFit.cover,
+                                                        alignment:
+                                                            Alignment.topCenter,
+                                                      )
+                                                    : null,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 16),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    fullname ??
+                                                        (profileState
+                                                                is ProfileLoaded
+                                                            ? profileState
+                                                                .profile.userId
+                                                            : 'User'),
+                                                    style: const TextStyle(
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    email,
+                                                    style: const TextStyle(
+                                                      color: Color.fromARGB(
+                                                          255, 94, 97, 99),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            isVerified
+                                                ? const Icon(
+                                                    Icons.verified_outlined,
+                                                    color:
+                                                        AppColors.primaryColor)
+                                                : const SizedBox.shrink(),
+                                          ],
+                                        ),
+                                      ),
+                                      const SizedBox(height: 32),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16.0),
+                                        child: Text(
+                                          "Settings",
+                                          style: TextStyle(
+                                            fontSize: FontSize.size16,
+                                            fontWeight: FontWeight.bold,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  const Icon(Icons.chevron_right,
-                                      color: Colors.black),
-                                ],
-                              ),
-                            ),
-                            const SizedBox(height: 32),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16.0),
-                              child: Text(
-                                "Settings",
-                                style: TextStyle(
-                                  fontSize: FontSize.size16,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            _buildSettingsItem(
-                              icon: LineIcons.userCircle,
-                              title: "Personal Information",
-                              onTap: () {
-                                AppNavigator.push(
-                                  context,
-                                  MultiBlocProvider(
-                                    providers: [
-                                      BlocProvider(
-                                        create: (context) =>
-                                            sl<DataSearchBloc>(),
                                       ),
-                                      BlocProvider.value(
-                                        value: sl<ProfileBloc>(),
+                                      const SizedBox(height: 16),
+                                      _buildSettingsItem(
+                                        icon: LineIcons.userCircle,
+                                        title: "Personal Information",
+                                        onTap: () {
+                                          AppNavigator.push(
+                                            context,
+                                            MultiBlocProvider(
+                                              providers: [
+                                                BlocProvider(
+                                                  create: (context) =>
+                                                      sl<DataSearchBloc>(),
+                                                ),
+                                                BlocProvider.value(
+                                                  value: sl<ProfileBloc>(),
+                                                ),
+                                              ],
+                                              child: const EditProfilePage(),
+                                            ),
+                                          );
+                                        },
                                       ),
+                                      _buildDivider(),
+                                      _buildSettingsItem(
+                                        icon: LineIcons.passport,
+                                        title: "Passport Information",
+                                        onTap: () {
+                                          AppNavigator.push(context,
+                                              const PassportDetailsPage());
+                                        },
+                                      ),
+                                      _buildDivider(),
+                                      _buildSettingsItem(
+                                        icon: LineIcons.cogs,
+                                        title: "App and Features",
+                                        onTap: () {
+                                          AppNavigator.push(
+                                              context, const FeaturesPage());
+                                        },
+                                      ),
+                                      _buildDivider(),
+                                      _buildSettingsItem(
+                                        icon: LineIcons.trophy,
+                                        title: "Milestones & Achievements",
+                                        onTap: () {
+                                          AppNavigator.push(
+                                              context, const MilestonesPage());
+                                        },
+                                      ),
+                                      _buildDivider(),
+                                      _buildSettingsItem(
+                                        icon: LineIcons.alternateShield,
+                                        title: "Login and Security",
+                                        onTap: () {
+                                          AppNavigator.push(context,
+                                              const LoginAndSecurityPage());
+                                        },
+                                      ),
+                                      _buildDivider(),
+                                      _buildSettingsItem(
+                                        icon: LineIcons.questionCircle,
+                                        title: "Help",
+                                        onTap: () {
+                                          AppNavigator.push(
+                                              context, const HelpPage());
+                                        },
+                                      ),
+                                      _buildDivider(),
+                                      _buildSettingsItem(
+                                        icon: LineIcons.infoCircle,
+                                        title: "About",
+                                        onTap: () {
+                                          AppNavigator.push(
+                                              context, const AboutPage());
+                                        },
+                                      ),
+                                      _buildDivider(),
+                                      _buildLogoutButton(),
                                     ],
-                                    child: const EditProfilePage(),
                                   ),
-                                );
-                              },
-                            ),
-                            _buildDivider(),
-                            _buildSettingsItem(
-                              icon: LineIcons.passport,
-                              title: "Passport Information",
-                              onTap: () {
-                                AppNavigator.push(
-                                    context, const PassportDetailsPage());
-                              },
-                            ),
-                            _buildDivider(),
-                            _buildSettingsItem(
-                              icon: LineIcons.cogs,
-                              title: "App and Features",
-                              onTap: () {
-                                AppNavigator.push(
-                                    context, const FeaturesPage());
-                              },
-                            ),
-                            _buildDivider(),
-                            _buildSettingsItem(
-                              icon: LineIcons.trophy,
-                              title: "Milestones & Achievements",
-                              onTap: () {
-                                AppNavigator.push(
-                                    context, const MilestonesPage());
-                              },
-                            ),
-                            _buildDivider(),
-                            _buildSettingsItem(
-                              icon: LineIcons.alternateShield,
-                              title: "Login and Security",
-                              onTap: () {
-                                AppNavigator.push(
-                                    context, const LoginAndSecurityPage());
-                              },
-                            ),
-                            _buildDivider(),
-                            _buildSettingsItem(
-                              icon: LineIcons.questionCircle,
-                              title: "Help",
-                              onTap: () {
-                                AppNavigator.push(context, const HelpPage());
-                              },
-                            ),
-                            _buildDivider(),
-                            _buildSettingsItem(
-                              icon: LineIcons.infoCircle,
-                              title: "About",
-                              onTap: () {
-                                AppNavigator.push(context, const AboutPage());
-                              },
-                            ),
-                            _buildDivider(),
-                            _buildLogoutButton(),
-                          ],
+                                ),
+                              ],
+                            );
+                          },
                         ),
                       );
-                    },
+                    } else {
+                      return const Center(
+                        child: Text("Authentication required."),
+                      );
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+          BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, profileState) {
+              if (profileState is ProfileLoading) {
+                return Positioned(
+                  top: 8,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Loading profile...',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
                 );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
               }
+              return const SizedBox.shrink();
             },
           ),
-        ),
+          BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, profileState) {
+              if (profileState is ProfileFailure) {
+                return Positioned(
+                  top: 8,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: Icon(Icons.refresh,
+                                color: Colors.white),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Refresh to load profile',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildDivider() {
-    return Divider(color: AppColors.defaultColor100);
+    return const Divider(color: AppColors.defaultColor100);
   }
 
   Widget _buildSettingsItem({

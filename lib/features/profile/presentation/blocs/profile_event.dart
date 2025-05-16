@@ -1,20 +1,38 @@
 part of "profile_bloc.dart";
 
-abstract class ProfileEvent extends Equatable {}
+enum ProfileUpdateKey {
+  name,
+  dateOfBirth,
+  location,
+  school,
+  occupation,
+  interests,
+  languages
+}
 
-class ProfileRequested extends ProfileEvent {
-  final String profileId;
-  ProfileRequested(this.profileId);
+abstract class ProfileEvent extends Equatable {
+  const ProfileEvent();
 
   @override
-  List<Object?> get props => [profileId];
+  List<Object?> get props => [];
 }
+
+class ProfileLoadRequested extends ProfileEvent {}
 
 class ProfileUpdateRequested extends ProfileEvent {
   final dynamic updateValue;
   final ProfileUpdateKey updateKey;
-  ProfileUpdateRequested(this.updateValue, this.updateKey);
+  const ProfileUpdateRequested(this.updateValue, this.updateKey);
 
   @override
   List<Object?> get props => [updateValue, updateKey];
+}
+
+class ProfileImageUpdateRequested extends ProfileEvent {
+  final dynamic imageFile;
+
+  const ProfileImageUpdateRequested(this.imageFile);
+
+  @override
+  List<Object?> get props => [imageFile];
 }

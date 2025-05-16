@@ -31,7 +31,7 @@ class TripProgressDisplay extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(progressKey,
-              style: TextStyle(color: AppColors.defaultColor400, fontSize: 12)),
+              style: const TextStyle(color: AppColors.defaultColor400, fontSize: 12)),
           WidgetsSpacer.verticalSpacer8,
           Row(
             mainAxisAlignment: MainAxisAlignment.start,

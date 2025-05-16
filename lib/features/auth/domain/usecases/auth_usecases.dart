@@ -1,30 +1,20 @@
 import 'package:dartz/dartz.dart';
-import 'package:travelecho/core/usecases/usecases.dart';
-import 'package:travelecho/features/auth/data/models/signup_req_params.dart';
-import 'package:travelecho/features/auth/domain/repository/auth_repository.dart';
-import 'package:travelecho/service_locator.dart';
-import 'package:travelecho/features/auth/data/models/signin_req_params.dart';
-import 'package:travelecho/features/auth/data/models/otp_verification_model.dart';
+import "../../auth_exports.dart";
 
-// class Login {
-//   final AuthRepository repository;
-//   Login(this.repository);
-
-//   Future<void> call(String email, String password) {
-//     return repository.login(email, password);
-//   }
-// }
-
-class SigninUseCase extends UseCases<Either, SigninReqParams> {
+class SigninUseCase
+    extends UseCases<Either<String, Map<String, dynamic>>, SigninReqParams> {
   @override
-  Future<Either> call({SigninReqParams? params}) async {
+  Future<Either<String, Map<String, dynamic>>> call(
+      {SigninReqParams? params}) async {
     return await sl<AuthRepository>().signin(params!);
   }
 }
 
-class SignupUseCase extends UseCases<Either, SignupReqParams> {
+class SignupUseCase
+    extends UseCases<Either<String, Map<String, dynamic>>, SignupReqParams> {
   @override
-  Future<Either> call({SignupReqParams? params}) async {
+  Future<Either<String, Map<String, dynamic>>> call(
+      {SignupReqParams? params}) async {
     return await sl<AuthRepository>().signup(params!);
   }
 }
@@ -42,15 +32,6 @@ class IsNotNewUserUseCase extends UseCases<bool, dynamic> {
     return await sl<AuthRepository>().isNotNewUser();
   }
 }
-
-// class ResetPassword {
-//   final AuthRepository repository;
-//   ResetPassword(this.repository);
-
-//   Future<void> call(String email) {
-//     return repository.resetPassword(email);
-//   }
-// }
 
 class SendOtpUseCase extends UseCases<Either<String, bool>, String> {
   final AuthRepository repository = sl<AuthRepository>();
@@ -71,9 +52,11 @@ class VerifyOtpUseCase
   }
 }
 
-class ResetPasswordUseCase extends UseCases<Either, Map<String, String>> {
+class ResetPasswordUseCase extends UseCases<
+    Either<String, Map<String, dynamic>>, Map<String, String>> {
   @override
-  Future<Either> call({Map<String, String>? params}) async {
+  Future<Either<String, Map<String, dynamic>>> call(
+      {Map<String, String>? params}) async {
     return await sl<AuthRepository>().resetPassword(
       params!['email']!,
       params['password']!,

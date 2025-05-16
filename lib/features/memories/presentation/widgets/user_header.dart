@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import '../../memories_exports.dart';
 
@@ -26,9 +26,35 @@ class UserHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            CircleAvatar(
-              backgroundColor: AppColors.defaultColor100,
-              child: const Icon(LineIcons.user),
+            BlocProvider.value(
+              value: sl<ProfileBloc>(),
+              child: BlocBuilder<ProfileBloc, ProfileState>(
+                builder: (context, profileState) {
+                  return profileState is ProfileLoaded
+                      ? Container(
+                          width: 60,
+                          height: 60,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.grey[300],
+                            image: DecorationImage(
+                              image: NetworkImage(profileState.profile.image),
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                            ),
+                          ),
+                        )
+                      : const CircleAvatar(
+                          radius: 30,
+                          // backgroundColor: AppColors.primaryColor,
+                          child: Icon(
+                            Icons.person_outline_outlined,
+                            size: 30,
+                            color: Colors.white,
+                          ),
+                        );
+                },
+              ),
             ),
             WidgetsSpacer.horinzontalSpacer8,
             Column(
@@ -36,11 +62,16 @@ class UserHeader extends StatelessWidget {
               children: [
                 Text(
                   username,
-                  style: TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 12),
                 ),
-                Text(
-                  location ?? "",
-                  style: TextStyle(color: AppColors.defaultColor400),
+                SizedBox(
+                  width: 200, // adjust as needed
+                  child: Text(
+                    location ?? "",
+                    style: const TextStyle(color: AppColors.defaultColor400),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                  ),
                 )
               ],
             ),
@@ -53,7 +84,7 @@ class UserHeader extends StatelessWidget {
               border: Border.all(color: AppColors.defaultColor400),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.more_horiz_outlined,
               color: AppColors.defaultColor400,
             ),
@@ -89,14 +120,14 @@ class UserHeader extends StatelessWidget {
                             LineIcons.eye,
                             onView,
                           ),
-                          Divider(color: AppColors.defaultColor100),
+                          const Divider(color: AppColors.defaultColor100),
                           _buildOptionButton(
                             context,
                             'Edit Memory',
                             LineIcons.editAlt,
                             onEdit,
                           ),
-                          Divider(color: AppColors.defaultColor100),
+                          const Divider(color: AppColors.defaultColor100),
                           _buildOptionButton(
                             context,
                             'Delete Memory',

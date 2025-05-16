@@ -320,7 +320,7 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
             : Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     "Select Departure Time",
                     style: TextStyle(
                       fontSize: 18,

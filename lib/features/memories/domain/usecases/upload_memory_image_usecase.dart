@@ -21,19 +21,19 @@ class UploadMultipleMemoryImagesParams {
   });
 }
 
-class UploadMemoryImageUseCase extends UseCase<void, UploadMemoryImageParams> {
-  final MemoriesRepository _repository = sl<MemoriesRepository>();
+// class UploadMemoryImageUseCase extends UseCase<void, UploadMemoryImageParams> {
+//   final MemoriesRepository _repository = sl<MemoriesRepository>();
 
-  UploadMemoryImageUseCase();
+//   UploadMemoryImageUseCase();
 
-  @override
-  Future<Either<String, void>> call(UploadMemoryImageParams params) async {
-    return await _repository.uploadMemoryImage(
-      memoryId: params.memoryId,
-      imagePath: params.imagePath,
-    );
-  }
-}
+//   @override
+//   Future<Either<String, void>> call(UploadMemoryImageParams params) async {
+//     return await _repository.uploadMemoryImage(
+//       memoryId: params.memoryId,
+//       imagePath: params.imagePath,
+//     );
+//   }
+// }
 
 class UploadMultipleMemoryImagesUseCase
     extends UseCase<void, UploadMultipleMemoryImagesParams> {

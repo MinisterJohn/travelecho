@@ -1,40 +1,79 @@
 import 'package:equatable/equatable.dart';
+import '../../auth_exports.dart';
 
 class User extends Equatable {
   final String id;
-  final String? email;
-  final String? fullname;
+  final String name;
+  final String email;
+  final bool verified;
+  final String plan;
+  final dynamic subscription;
+  final Profile profile;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String role;
   final String? token;
-  final String? profileId;
 
   const User({
     required this.id,
-    this.email,
-    this.fullname,
+    required this.name,
+    required this.email,
+    required this.verified,
+    required this.plan,
+    this.subscription,
+    required this.profile,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.role,
     this.token,
-    this.profileId,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
     return User(
-      id: json['id']?.toString() ?? '',
+      id: json['_id'] ?? '',
+      name: json['name'] ?? '',
       email: json['email'] ?? '',
-      fullname: json['name'] ?? '',
-      token: json['token'] ?? '',
-      profileId: json['profileId']?.toString() ?? '',
+      verified: json['verified'] ?? false,
+      plan: json['plan'] ?? 'FREE',
+      subscription: json['subscription'],
+      profile: Profile.fromJson(json['profile'] ?? {}),
+      createdAt:
+          DateTime.parse(json['createdAt'] ?? DateTime.now().toIso8601String()),
+      updatedAt:
+          DateTime.parse(json['updatedAt'] ?? DateTime.now().toIso8601String()),
+      role: json['role'] ?? 'USER',
+      token: json['token'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      '_id': id,
+      'name': name,
       'email': email,
-      'fullname': fullname,
+      'verified': verified,
+      'plan': plan,
+      'subscription': subscription,
+      'profile': profile.toJson(),
+      'createdAt': createdAt.toIso8601String(),
+      'updatedAt': updatedAt.toIso8601String(),
+      'role': role,
       'token': token,
-      'profileId': profileId,
     };
   }
 
   @override
-  List<Object?> get props => [id, email, fullname, token, profileId];
+  List<Object?> get props => [
+        id,
+        name,
+        email,
+        verified,
+        plan,
+        subscription,
+        profile,
+        createdAt,
+        updatedAt,
+        role,
+        token,
+      ];
 }

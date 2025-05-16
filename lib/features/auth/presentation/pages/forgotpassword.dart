@@ -83,10 +83,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           TextFormField(
             controller: _emailController,
             enabled: !_isLoading,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Email Address',
-              border: const OutlineInputBorder(),
-              prefixIcon: const Icon(Icons.email_outlined),
+              border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.email_outlined),
               prefixIconColor: AppColors.primaryColor300,
             ),
             keyboardType: TextInputType.emailAddress,
@@ -103,7 +103,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             },
           ),
           WidgetsSpacer.verticalSpacer8,
-          Text(
+          const Text(
             'A 6-digit code will be sent to your email',
             style: TextStyle(
               fontSize: 12.0,

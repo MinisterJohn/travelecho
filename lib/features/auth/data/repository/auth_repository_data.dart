@@ -1,48 +1,62 @@
 import 'package:dartz/dartz.dart';
-import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../auth_exports.dart';
+import 'dart:convert';
+import 'package:logger/logger.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthApiService _authApiService = sl<AuthApiService>();
-  @override
-  Future<Either> signin(SigninReqParams params) async {
-    var data = await _authApiService.signin(params);
+  final Logger _logger = sl<Logger>();
 
-    return data.fold((error) {
-      return Left(error);
-    }, (data) {
-      return Right(data);
-    });
+  @override
+  Future<Either<String, Map<String, dynamic>>> signin(
+      SigninReqParams params) async {
+    try {
+      final result = await _authApiService.signin(params);
+      return result.fold(
+        (error) {
+          _logger.e('Signin Error: $error');
+          return Left('Signin Error: $error');
+        },
+        (data) async {
+          // Fetch and save user profile
+          return Right(data);
+        },
+      );
+    } catch (e) {
+      _logger.e('Signin Error: ${e.toString()}');
+      return Left('Signin Error: ${e.toString()}');
+    }
   }
 
   @override
-  Future<Either> signup(SignupReqParams params) async {
+  Future<Either<String, Map<String, dynamic>>> signup(
+      SignupReqParams params) async {
     var data = await _authApiService.signup(params);
 
     return data.fold((error) {
-      print('Signup Error: $error');
+      _logger.e('Signup Error: $error');
       return Left(error);
     }, (data) async {
       try {
-        print('Signup Response Data: $data');
+        _logger.i('Signup Response Data: $data');
 
         // Send OTP after successful signup using the email from params
         final otpResult = await sendOtp(params.email);
         return otpResult.fold(
           (otpResponse) {
-            print('OTP Response: $otpResponse');
+            _logger.i('OTP Response: $otpResponse');
             // Return the email for navigation to verification page
             return Right({'email': params.email, 'isSignup': true});
           },
           (error) {
-            print('OTP Error: $error');
-            return Left('Signup successful but failed to send OTP: $error');
+            _logger.e('OTP Error: $error');
+            return const Left('Signup successful but failed to send OTP');
           },
         );
       } catch (e) {
-        print('Signup Process Error: $e');
-        return Left('Error during signup process: ${e.toString()}');
+        _logger.e('Signup Process Error: ${e.toString()}');
+        return Left('Signup Process Error: ${e.toString()}');
       }
     });
   }
@@ -50,13 +64,13 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   Future<Either<String, bool>> sendOtp(String email) async {
     try {
-      print('Sending OTP to email: $email');
+      _logger.i('Sending OTP to email: $email');
       final response = await _authApiService.sendOtp(email);
       return response;
     } catch (e) {
-      print('Error sending OTP: $e');
-      print('Error type: ${e.runtimeType}');
-      return Left(e.toString());
+      _logger.e('Error sending OTP: $e');
+      _logger.e('Error type: ${e.runtimeType}');
+      return Left('Error sending OTP: $e.toString()');
     }
   }
 
@@ -66,7 +80,8 @@ class AuthRepositoryImpl implements AuthRepository {
       final response = await _authApiService.verifyOtp(email, otp);
       return response;
     } catch (e) {
-      return Left(e.toString());
+      _logger.e('Verify OTP Error: ${e.toString()}');
+      return Left('Verify OTP Error: ${e.toString()}');
     }
   }
 
@@ -90,17 +105,36 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either> resetPassword(
+  Future<Either<String, Map<String, dynamic>>> resetPassword(
       String email, String password, String confirmPassword) async {
     try {
-      final result =
-          await _authApiService.resetPassword(email, password, confirmPassword);
+      return await _authApiService.resetPassword(
+          email, password, confirmPassword);
+    } catch (e) {
+      _logger.e('Reset Password Error: ${e.toString()}');
+      return Left('Reset Password Error: ${e.toString()}');
+    }
+  }
+
+  @override
+  Future<Either<String, Map<String, dynamic>>> getUserProfile() async {
+    try {
+      final result = await _authApiService.getUserProfile();
       return result.fold(
-        (error) => Left(error),
-        (data) => Right(data),
+        (error) {
+          _logger.e('Get User Profile Error: $error');
+          return Left(error);
+        },
+        (data) async {
+          // Save profile data to SharedPreferences
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setString('user_profile', jsonEncode(data));
+          return Right(data);
+        },
       );
     } catch (e) {
-      return Left(e.toString());
+      _logger.e('Get User Profile Error: ${e.toString()}');
+      return Left('Get User Profile Error: ${e.toString()}');
     }
   }
 }

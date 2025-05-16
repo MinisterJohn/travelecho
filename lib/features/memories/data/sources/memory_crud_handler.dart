@@ -9,7 +9,7 @@ class MemoryCrudHandler {
   MemoryCrudHandler();
 
   Future<Options> _getOptions() async {
-    final token = await _prefs.getString('token');
+    final token = _prefs.getString('token');
     return Options(
       headers: {
         'Authorization': 'Bearer $token',
@@ -48,14 +48,14 @@ class MemoryCrudHandler {
         return const Left('Title is required');
       }
 
-      final storedUserId = await _prefs.getString('user_id');
+      final storedUserId = _prefs.getString('user_id');
       if (storedUserId == null || storedUserId.isEmpty) {
         return const Left('User ID is required');
       }
 
       final options = await _getOptions();
       final response = await _dioClient.post(
-        'https://travel-echo-backend.onrender.com/api/memories?populate=user,name,email',
+        ApiUrl.fullUrl(ApiUrl.memoriesURL),
         data: {
           'user': storedUserId,
           'title': title,
@@ -68,7 +68,7 @@ class MemoryCrudHandler {
         options: options,
       );
 
-      if (response.statusCode == 201) {
+      if (response.statusCode == 201 || response.statusCode == 200) {
         return Right(response.data);
       } else {
         return Left(response.data['message'] ?? 'Failed to create memory');
@@ -99,7 +99,7 @@ class MemoryCrudHandler {
       }
 
       final response = await _dioClient.get(
-        'https://travel-echo-backend.onrender.com/api/memories?populate=user,name,email',
+        '${ApiUrl.fullUrl(ApiUrl.memoriesURL)}?sort=createdAt,DESC',
         queryParameters: {
           if (search != null) 'search': search,
           if (title != null) 'title': title,
@@ -148,7 +148,7 @@ class MemoryCrudHandler {
       }
 
       final response = await _dioClient.delete(
-        'https://travel-echo-backend.onrender.com/api/memories/$memoryId',
+        ApiUrl.fullUrl(ApiUrl.dynamicMemoryURL(memoryId)),
         options: options,
       );
       print("Delete Response: ${response.data}");
@@ -184,7 +184,7 @@ class MemoryCrudHandler {
     try {
       final options = await _getOptions();
       final response = await _dioClient.put(
-        'https://travel-echo-backend.onrender.com/api/memories/$memoryId/',
+        ApiUrl.fullUrl(ApiUrl.dynamicMemoryURL(memoryId)),
         data: {
           'title': title,
           if (description != null) 'description': description,
@@ -200,6 +200,28 @@ class MemoryCrudHandler {
         return Right(response.data);
       } else {
         return Left(response.data['message'] ?? 'Failed to update memory');
+      }
+    } on DioException catch (e) {
+      return Left(_handleError(e));
+    } catch (e) {
+      return Left('An unexpected error occurred: $e');
+    }
+  }
+
+  Future<Either<String, Map<String, dynamic>>> getMemoryDetails(
+      String memoryId) async {
+    try {
+      final options = await _getOptions();
+      final response = await _dioClient.get(
+        '${ApiUrl.fullUrl(ApiUrl.memoriesURL)}/$memoryId',
+        options: options,
+      );
+
+      if (response.statusCode == 200) {
+        return Right(response.data);
+      } else {
+        return Left(
+            response.data['message'] ?? 'Failed to fetch memory details');
       }
     } on DioException catch (e) {
       return Left(_handleError(e));

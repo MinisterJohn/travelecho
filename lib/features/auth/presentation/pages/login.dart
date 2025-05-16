@@ -19,11 +19,8 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthSuccess) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (context) => const RootPage()),
-          );
+        if (state is AuthLoginSuccess) {
+          AppNavigator.pushReplacement(context, const RootPage());
         } else if (state is AuthFailure) {
           DisplayMessage.errorMessage(state.error, context);
         }
@@ -43,9 +40,9 @@ class _LoginPageState extends State<LoginPage> {
                 // Email Address Field
                 TextField(
                   controller: _emailController,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Email Address',
-                    prefixIcon: const Icon(Icons.email_outlined),
+                    prefixIcon: Icon(Icons.email_outlined),
                     prefixIconColor: AppColors.primaryColor300,
                   ),
                   keyboardType: TextInputType.emailAddress,

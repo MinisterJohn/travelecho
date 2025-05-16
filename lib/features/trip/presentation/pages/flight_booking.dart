@@ -215,7 +215,7 @@ class _FlightBookingState extends State<FlightBooking> {
                       onDecrement();
                       _updateTravelers();
                     },
-                    icon: Icon(LineIcons.minusSquare,
+                    icon: const Icon(LineIcons.minusSquare,
                         color: AppColors.defaultColor400),
                   ),
                 const SizedBox(width: 4),
@@ -229,7 +229,7 @@ class _FlightBookingState extends State<FlightBooking> {
                     onIncrement();
                     _updateTravelers();
                   },
-                  icon: Icon(LineIcons.plusSquare,
+                  icon: const Icon(LineIcons.plusSquare,
                       color: AppColors.defaultColor400),
                 ),
               ],
@@ -237,7 +237,7 @@ class _FlightBookingState extends State<FlightBooking> {
           ],
         ),
         WidgetsSpacer.verticalSpacer8,
-        Divider(height: 2, color: AppColors.defaultColor100),
+        const Divider(height: 2, color: AppColors.defaultColor100),
         WidgetsSpacer.verticalSpacer8,
       ],
     );

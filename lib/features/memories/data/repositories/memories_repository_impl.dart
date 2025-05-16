@@ -18,7 +18,7 @@ class MemoriesRepositoryImpl implements MemoriesRepository {
     bool isPublic = true,
   }) async {
     try {
-      final storedUserId = await _prefs.getString('user_id');
+      final storedUserId = _prefs.getString('user_id');
       if (storedUserId == null || storedUserId.isEmpty) {
         return const Left('User ID is required');
       }
@@ -32,24 +32,24 @@ class MemoriesRepositoryImpl implements MemoriesRepository {
         isPublic: isPublic,
       );
     } catch (e) {
-      return Left('Failed to create memory. Please try again later');
+      return const Left('Failed to create memory. Please try again later');
     }
   }
 
-  @override
-  Future<Either<String, void>> uploadMemoryImage({
-    required String memoryId,
-    required String imagePath,
-  }) async {
-    try {
-      return await _apiService.uploadMemoryImage(
-        memoryId: memoryId,
-        imagePath: imagePath,
-      );
-    } catch (e) {
-      return Left('Failed to upload image. Please try again later');
-    }
-  }
+  // @override
+  // Future<Either<String, void>> uploadMemoryImage({
+  //   required String memoryId,
+  //   required String imagePath,
+  // }) async {
+  //   try {
+  //     return await _apiService.uploadMemoryImage(
+  //       memoryId: memoryId,
+  //       imagePath: imagePath,
+  //     );
+  //   } catch (e) {
+  //     return Left('Failed to upload image. Please try again later');
+  //   }
+  // }
 
   @override
   Future<Either<String, void>> uploadMultipleMemoryImages({
@@ -62,7 +62,7 @@ class MemoriesRepositoryImpl implements MemoriesRepository {
         imagePaths: imagePaths,
       );
     } catch (e) {
-      return Left('Failed to upload images. Please try again later');
+      return const Left('Failed to upload images. Please try again later');
     }
   }
 
@@ -87,7 +87,7 @@ class MemoriesRepositoryImpl implements MemoriesRepository {
         isPublic: isPublic,
       );
     } catch (e) {
-      return Left('Failed to update memory. Please try again later');
+      return const Left('Failed to update memory. Please try again later');
     }
   }
 
@@ -132,15 +132,11 @@ class MemoriesRepositoryImpl implements MemoriesRepository {
                   description: '',
                   location: '',
                   date: DateTime.now(),
-                  images: [],
-                  tags: [],
+                  images: const [],
+                  tags: const [],
                   userId: '',
-                  user: User(
-                      id: '',
-                      email: '',
-                      fullname: '',
-                      token: '',
-                      profileId: ''),
+                  name: '',
+                  email: '',
                   isPublic: false,
                   createdAt: DateTime.now(),
                   updatedAt: DateTime.now(),
@@ -150,13 +146,13 @@ class MemoriesRepositoryImpl implements MemoriesRepository {
             return Right(memories);
           } catch (e) {
             print('Error converting memories data: $e');
-            return Left('Failed to process memories data');
+            return const Left('Failed to process memories data');
           }
         },
       );
     } catch (e) {
       print('Error fetching memories: $e');
-      return Left('Failed to fetch memories. Please try again later');
+      return const Left('Failed to fetch memories. Please try again later');
     }
   }
 
@@ -168,5 +164,27 @@ class MemoriesRepositoryImpl implements MemoriesRepository {
   @override
   Future<Either<String, void>> deleteMultipleMemories(List<String> memoryIds) {
     return _apiService.deleteMultipleMemories(memoryIds);
+  }
+
+  @override
+  Future<Either<String, MemoryModel>> getMemoryDetails(String memoryId) async {
+    try {
+      final result = await _apiService.getMemoryDetails(memoryId);
+      return result.fold(
+        (error) => Left(error),
+        (data) {
+          try {
+            final memory = MemoryModel.fromJson(data);
+            return Right(memory);
+          } catch (e) {
+            print('Error converting memory data: $e');
+            return const Left('Failed to process memory data');
+          }
+        },
+      );
+    } catch (e) {
+      print('Error fetching memory details: $e');
+      return const Left('Failed to fetch memory details. Please try again later');
+    }
   }
 }

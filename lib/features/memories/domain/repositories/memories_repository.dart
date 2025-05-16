@@ -11,10 +11,10 @@ abstract class MemoriesRepository {
     bool isPublic = true,
   });
 
-  Future<Either<String, void>> uploadMemoryImage({
-    required String memoryId,
-    required String imagePath,
-  });
+  // Future<Either<String, void>> uploadMemoryImage({
+  //   required String memoryId,
+  //   required String imagePath,
+  // });
 
   Future<Either<String, void>> uploadMultipleMemoryImages({
     required String memoryId,
@@ -30,6 +30,8 @@ abstract class MemoriesRepository {
     required int limit,
     required int skip,
   });
+
+  Future<Either<String, MemoryModel>> getMemoryDetails(String memoryId);
 
   Future<Either<String, void>> deleteMemory(String memoryId);
 

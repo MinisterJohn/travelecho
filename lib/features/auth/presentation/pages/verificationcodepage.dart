@@ -186,7 +186,7 @@ class _OtpFormState extends State<OtpForm> {
         if (!canResend && remainingAttempts > 0)
           Text(
             "You have $remainingAttempts attempts remaining",
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 12.0,
               color: AppColors.defaultColor400,
             ),

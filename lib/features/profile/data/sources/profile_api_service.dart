@@ -1,25 +1,24 @@
-import 'dart:io';
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:travelecho/core/network/dio_client.dart';
+import '../../profile_exports.dart';
 
 abstract class ProfileApiService {
-  Future<Either<String, Map<String, dynamic>>> getProfile(String profileId);
-  Future<Either<String, Map<String, dynamic>>> updateProfile(
-      String profileId, Map<String, dynamic> data);
+  Future<Either<String, Profile>> getUserProfile();
+  Future<Either<String, Profile>> updateUserProfile(Map<String, dynamic> data);
   Future<Either<String, Map<String, dynamic>>> updateProfileImage(
-      String profileId, File imageFile);
+      dynamic imageFile);
 }
 
 class ProfileApiServiceImpl implements ProfileApiService {
   final DioClient _dioClient;
   final SharedPreferences _prefs;
+  final ImageHandler _imageHandler = ImageHandler();
 
   ProfileApiServiceImpl(this._dioClient, this._prefs);
 
   Future<Options> _getOptions() async {
-    final token = await _prefs.getString('token');
+    final token = _prefs.getString('token');
     return Options(
       headers: {
         'Authorization': 'Bearer $token',
@@ -46,21 +45,19 @@ class ProfileApiServiceImpl implements ProfileApiService {
   }
 
   @override
-  Future<Either<String, Map<String, dynamic>>> getProfile(
-      String profileId) async {
+  Future<Either<String, Profile>> getUserProfile() async {
     try {
-      if (profileId.isEmpty) {
-        return const Left('Profile ID is required');
-      }
-
       final options = await _getOptions();
       final response = await _dioClient.get(
-        'https://travel-echo-backend.onrender.com/api/profiles/$profileId',
+        "${ApiUrl.fullUrl(ApiUrl.userProfileURL)}?populate=user",
         options: options,
       );
 
+      print('API Response data: ${response.data}');
       if (response.statusCode == 200) {
-        return Right(response.data);
+        final profileData = response.data['profile'];
+        print('Profile data before parsing: $profileData');
+        return Right(Profile.fromJson(profileData));
       } else {
         return Left(response.data['message'] ?? 'Failed to get profile');
       }
@@ -72,22 +69,18 @@ class ProfileApiServiceImpl implements ProfileApiService {
   }
 
   @override
-  Future<Either<String, Map<String, dynamic>>> updateProfile(
-      String profileId, Map<String, dynamic> data) async {
+  Future<Either<String, Profile>> updateUserProfile(
+      Map<String, dynamic> data) async {
     try {
-      if (profileId.isEmpty) {
-        return const Left('Profile ID is required');
-      }
-
       final options = await _getOptions();
       final response = await _dioClient.put(
-        'https://travel-echo-backend.onrender.com/api/profiles/$profileId',
+        ApiUrl.fullUrl(ApiUrl.userProfileURL),
         data: data,
         options: options,
       );
 
       if (response.statusCode == 200) {
-        return Right(response.data);
+        return Right(Profile.fromJson(response.data['profile']));
       } else {
         return Left(response.data['message'] ?? 'Failed to update profile');
       }
@@ -100,43 +93,12 @@ class ProfileApiServiceImpl implements ProfileApiService {
 
   @override
   Future<Either<String, Map<String, dynamic>>> updateProfileImage(
-      String profileId, File imageFile) async {
-    try {
-      if (profileId.isEmpty) {
-        return const Left('Profile ID is required');
-      }
-
-      final token = await _prefs.getString('token');
-      final options = Options(
-        headers: {
-          'Authorization': 'Bearer $token',
-          'Content-Type': 'multipart/form-data',
-        },
-      );
-
-      final formData = FormData.fromMap({
-        'image': await MultipartFile.fromFile(
-          imageFile.path,
-          filename: imageFile.path.split('/').last,
-        ),
-      });
-
-      final response = await _dioClient.post(
-        'https://travel-echo-backend.onrender.com/api/profiles/$profileId/image',
-        data: formData,
-        options: options,
-      );
-
-      if (response.statusCode == 200) {
-        return Right(response.data);
-      } else {
-        return Left(
-            response.data['message'] ?? 'Failed to update profile image');
-      }
-    } on DioException catch (e) {
-      return Left(_handleError(e));
-    } catch (e) {
-      return Left('An unexpected error occurred: $e');
-    }
+      dynamic imageFile) async {
+    return _imageHandler.uploadImage(
+      url: ApiUrl.fullUrl(ApiUrl.userProfileImageURL),
+      imageFile: imageFile,
+      fieldName: 'image',
+      // additionalFields: {'profileId': profileId},
+    );
   }
 }

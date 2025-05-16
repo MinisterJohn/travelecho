@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:image_picker/image_picker.dart'; // For image picking
-import 'package:line_icons/line_icons.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+// For image picking
 import "../../profile_exports.dart";
-import 'dart:io'; // For file handling
+// For file handling
 import '../widgets/profile_image_section.dart';
-import '../widgets/editable_fields_section.dart';
 
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
@@ -16,31 +13,23 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  bool _isLocationLoading = false;
-  bool _isOccupationLoading = false;
-  bool _isSchoolLoading = false;
-  bool _isDobLoading = false;
-  bool _isLanguageLoading = false;
-  bool _isInterestsLoading = false;
+  final bool _isLocationLoading = false;
+  final bool _isOccupationLoading = false;
+  final bool _isSchoolLoading = false;
+  final bool _isDobLoading = false;
+  final bool _isLanguageLoading = false;
+  final bool _isInterestsLoading = false;
 
-  Future<void> _handleImageSelected(File image) async {
+  Future<void> _handleImageSelected(dynamic image) async {
+    if (!mounted) return;
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final profileId = prefs.getString('profileId');
-
-      if (profileId == null) {
-        throw Exception('Profile ID not found');
-      }
-
-      final result =
-          await sl<ProfileApiService>().updateProfileImage(profileId, image);
-      result.fold(
-        (error) => DisplayMessage.errorMessage(error, context),
-        (data) => DisplayMessage.successMessage(
-            "Profile photo updated successfully", context),
-      );
+      print('profile image selected: $image');
+      context.read<ProfileBloc>().add(ProfileImageUpdateRequested(image));
+      DisplayMessage.successMessage(
+          "Profile photo updated successfully", context);
     } catch (e) {
       if (mounted) {
+        print('profile image update failed: $e');
         DisplayMessage.errorMessage(
             "Failed to update profile photo: $e", context);
       }
@@ -70,9 +59,32 @@ class _EditProfilePageState extends State<EditProfilePage> {
           }
         },
         builder: (context, state) {
-          // if (state is ProfileLoading) {
-          //   return const Center(child: CircularProgressIndicator());
-          // }
+          if (state is ProfileLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (state is ProfileFailure) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Failed to load profile: ${state.error}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: () {
+                      context.read<ProfileBloc>().add(ProfileLoadRequested());
+                    },
+                    icon: const Icon(Icons.refresh),
+                    label: const Text('Retry'),
+                  ),
+                ],
+              ),
+            );
+          }
 
           return SingleChildScrollView(
             child: ScreenContainer(

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../memories_exports.dart';
 
 class MemoryCard extends StatelessWidget {
   final MemoryModel memory;
-  final String username;
+  // final String username;
   final VoidCallback onView;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -13,7 +14,7 @@ class MemoryCard extends StatelessWidget {
   const MemoryCard({
     super.key,
     required this.memory,
-    required this.username,
+    // required this.username,
     required this.onView,
     required this.onEdit,
     required this.onDelete,
@@ -21,6 +22,9 @@ class MemoryCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final SharedPreferences prefs = sl<SharedPreferences>();
+    final String? username = prefs.getString('name');
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -28,7 +32,7 @@ class MemoryCard extends StatelessWidget {
           children: [
             Expanded(
               child: UserHeader(
-                username: memory.user.fullname ?? "Unknown User",
+                username: username as String,
                 location: memory.location,
                 onView: onView,
                 onEdit: onEdit,
@@ -39,14 +43,18 @@ class MemoryCard extends StatelessWidget {
         ),
         WidgetsSpacer.verticalSpacer8,
         Text(
-          "Posted ${timeago.format(memory.createdAt)}",
+          formatDate(memory.createdAt),
           style: TextStyle(
             color: Colors.grey[600],
             fontSize: 12,
+            
           ),
         ),
+        WidgetsSpacer.verticalSpacer16,
+
         if (memory.images.isNotEmpty) ...[
           _buildImageCarousel(),
+          WidgetsSpacer.verticalSpacer8,
           _buildCarouselDots(),
           WidgetsSpacer.verticalSpacer16,
         ],
@@ -64,7 +72,8 @@ class MemoryCard extends StatelessWidget {
         viewportFraction: 0.8,
         enlargeCenterPage: true,
       ),
-      items: memory.images.map((imagePath) {
+      items: memory.images.map((image) {
+        final imagePath = image['url'];
         return Builder(
           builder: (BuildContext context) {
             return Container(
@@ -114,13 +123,13 @@ class MemoryCard extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        if (memory.description != null) ...[
-          const SizedBox(height: 8),
-          Text(
-            memory.description!,
-            style: const TextStyle(fontSize: 14),
-          ),
-        ],
+        ...[
+        const SizedBox(height: 8),
+        Text(
+          memory.description,
+          style: const TextStyle(fontSize: 14),
+        ),
+      ],
         if (memory.tags.isNotEmpty) ...[
           const SizedBox(height: 8),
           Wrap(
@@ -128,8 +137,8 @@ class MemoryCard extends StatelessWidget {
             children: memory.tags
                 .map((tag) => Text(
                       "#$tag",
-                      style: TextStyle(
-                          color: const Color.fromARGB(255, 163, 140, 182)),
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 163, 140, 182)),
                     ))
                 .toList(),
           ),

@@ -23,34 +23,35 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             password: event.password,
           ),
         );
-
+        print("result $result");
         await result.fold(
           (error) async {
-            emit(AuthFailure(error));
+            emit(AuthFailure(error.toString()));
           },
           (data) async {
+            print("data $data");
+
             final Map userData = data['user'];
             // Store user data in SharedPreferences
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setString('user_id', userData['_id']);
-            await prefs.setString('user_name', userData['name']);
-            await prefs.setString('user_email', userData['email']);
-            await prefs.setString('token', userData['token']);
-            await prefs.setString('profile_id', userData['profile']);
-            await prefs.setBool('is_not_new_user', true);
 
-            emit(AuthSuccess(User(
+            emit(AuthLoginSuccess(User(
               id: userData['_id'],
-              email: userData['email'],
-              fullname: userData['name'],
-              profileId: userData['profile'],
               token: userData['token'],
+              name: userData['name'],
+              email: userData['email'],
+              verified: userData['verified'],
+              plan: userData['plan'],
+              subscription: userData['subscription'],
+              profile: Profile.fromJson(userData['profile']),
+              createdAt: DateTime.parse(userData['createdAt']),
+              updatedAt: DateTime.parse(userData['updatedAt']),
+              role: userData['role'],
             )));
           },
         );
       } catch (e) {
         print("Login event error: $e"); // Debug log
-        emit(AuthFailure("An unexpected error occurred during login"));
+        emit(AuthFailure(e.toString()));
       }
     });
 
@@ -70,24 +71,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
             emit(AuthFailure(error));
           },
           (data) async {
-            final Map userData = data['user'];
-
-            // Store user data in SharedPreferences
-            final prefs = await SharedPreferences.getInstance();
-            await prefs.setString('user_id', userData['id']);
-            await prefs.setString('user_name', userData['fullname']);
-            await prefs.setString('user_email', userData['email']);
-            await prefs.setString('token', userData['token']);
-            await prefs.setString('profile_id', userData['profile']);
-            await prefs.setBool('is_not_new_user', false);
-
-            emit(AuthSuccess(User(
-              id: userData['id'],
-              email: userData['email'],
-              fullname: userData['fullname'],
-              token: userData['token'],
-              profileId: userData['profile'],
-            )));
+            emit(AuthSignupSuccess(email: event.email));
           },
         );
       } catch (e) {
@@ -106,22 +90,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         if (isLoggedIn) {
           final token = prefs.getString('token');
           final userId = prefs.getString('user_id');
-          final userName = prefs.getString('user_name');
-          final userEmail = prefs.getString('user_email');
-          final profileId = prefs.getString('profile_id');
 
-          if (userId != null &&
-              userName != null &&
-              userEmail != null &&
-              profileId != null &&
-              token != null) {
-            emit(AuthSuccess(User(
-              id: userId,
-              email: userEmail,
-              fullname: userName,
-              token: token,
-              profileId: profileId,
-            )));
+          if (userId != null && token != null) {
+            emit(AuthSuccess());
           } else {
             // If we have a token but missing other data, clear everything and start fresh
             await prefs.clear();
@@ -148,13 +119,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         result.fold(
           (error) => emit(AuthFailure(error)),
-          (success) => emit(AuthSuccess(User(
-            id: '',
-            email: event.email,
-            fullname: '',
-            token: '',
-            profileId: '',
-          ))),
+          (success) => emit(AuthSuccess()),
         );
       } catch (e) {
         print("OTP verification error: $e");
@@ -176,13 +141,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         result.fold(
           (error) => emit(AuthFailure(error)),
-          (data) => emit(AuthSuccess(User(
-            id: '',
-            email: event.email,
-            fullname: '',
-            token: '',
-            profileId: '',
-          ))),
+          (data) => emit(AuthSuccess()),
         );
       } catch (e) {
         print("Reset Password error: $e");
@@ -196,13 +155,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         final result = await sendOtpUseCase.call(params: event.email);
         result.fold(
           (error) => emit(AuthFailure(error)),
-          (success) => emit(AuthSuccess(User(
-            id: '',
-            email: event.email,
-            fullname: '',
-            token: '',
-            profileId: '',
-          ))),
+          (success) => emit(AuthSuccess()),
         );
       } catch (e) {
         print("Send OTP error: $e");

@@ -22,7 +22,7 @@ class ProfileIDPage extends StatelessWidget {
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
           WidgetsSpacer.verticalSpacer16,
-          Text(
+          const Text(
             'This will be used for further connections in the community',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: AppColors.defaultColor400),

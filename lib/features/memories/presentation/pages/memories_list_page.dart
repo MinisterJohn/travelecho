@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../memories_exports.dart';
-import '../widgets/memory_search_filter_section.dart';
-import '../widgets/memories_list_section.dart';
 
 class MemoriesListPage extends StatefulWidget {
   const MemoriesListPage({super.key});
@@ -69,7 +67,7 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
     setState(() {
       _currentLocation = location;
       _currentDate = date;
-      _currentSort = date != null ? date.toIso8601String() : null;
+      _currentSort = date?.toIso8601String();
       _memories = [];
     });
     _fetchMemories();
@@ -81,6 +79,7 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
         _currentSearch == null &&
         _currentLocation == null &&
         _currentSort == null) {
+      if ((_memories.length % 10) == 0) return;
       context.read<MemoriesBloc>().add(
             FetchMemories(
               search: _currentSearch,
@@ -171,7 +170,9 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
       child: Scaffold(
         floatingActionButton: FloatingActionButton(
           backgroundColor: AppColors.primaryColor,
-          child: const Icon(Icons.add, color: AppColors.white),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(50),
+          ),
           onPressed: () {
             AppNavigator.push(
               context,
@@ -181,40 +182,104 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
               ),
             );
           },
+          child: const Icon(Icons.add, color: AppColors.white),
         ),
-        body: Column(
+        body: Stack(
           children: [
-            MemorySearchFilterSection(
-              searchController: _searchController,
-              onSearch: _onSearch,
-              currentLocation: _currentLocation,
-              currentDate: _currentDate,
-              onApplyFilters: _onApplyFilters,
-            ),
-            Expanded(
-              child: Padding(
-                padding: WidgetsSpacer.pagePadding,
-                child: BlocBuilder<MemoriesBloc, MemoriesState>(
-                  builder: (context, state) {
-                    if (state is MemoriesLoaded) {
-                      _memories = state.memories;
-                    } else if (state is MemoriesLoading) {
-                      _memories = state.memories;
-                    }
-
-                    return MemoriesListSection(
-                      memories: _memories,
-                      username: _username,
-                      state: state,
-                      scrollController: _scrollController,
-                      onView: _handleViewMemory,
-                      onEdit: _handleEditMemory,
-                      onDelete: _handleDeleteMemory,
-                      onRetry: _fetchMemories,
-                    );
-                  },
+            Column(
+              children: [
+                MemorySearchFilterSection(
+                  searchController: _searchController,
+                  onSearch: _onSearch,
+                  currentLocation: _currentLocation,
+                  currentDate: _currentDate,
+                  onApplyFilters: _onApplyFilters,
                 ),
-              ),
+                Expanded(
+                  child: Padding(
+                    padding: WidgetsSpacer.pagePadding,
+                    child: RefreshIndicator(
+                      onRefresh: () async {
+                        setState(() {
+                          _memories = [];
+                        });
+                        _fetchMemories();
+                      },
+                      child: BlocBuilder<MemoriesBloc, MemoriesState>(
+                        builder: (context, state) {
+                          if (state is MemoriesLoaded) {
+                            _memories = state.memories;
+                          } else if (state is MemoriesLoading) {
+                            _memories = state.memories;
+                          }
+
+                          return MemoriesListSection(
+                            memories: _memories,
+                            username: _username,
+                            state: state,
+                            scrollController: _scrollController,
+                            onView: _handleViewMemory,
+                            onEdit: _handleEditMemory,
+                            onDelete: _handleDeleteMemory,
+                            onRetry: _fetchMemories,
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            BlocBuilder<MemoriesBloc, MemoriesState>(
+              builder: (context, state) {
+                if (state is MemoriesLoading) {
+                  return Positioned(
+                    top: 8,
+                    left: 0,
+                    right: 0,
+                    child: Center(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.1),
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                              ),
+                            ),
+                            SizedBox(width: 8),
+                            Text(
+                              'Loading memories...',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
             ),
           ],
         ),

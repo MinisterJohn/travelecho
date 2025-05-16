@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import "../../memories_exports.dart";
 
 class MemoryModel extends Equatable {
   final String id;
@@ -7,10 +6,11 @@ class MemoryModel extends Equatable {
   final String description;
   final String location;
   final DateTime date;
-  final List<String> images;
+  final List<dynamic> images;
   final List<String> tags;
   final String userId;
-  final User user;
+  final String name;
+  final String email;
   final bool isPublic;
   final DateTime createdAt;
   final DateTime updatedAt;
@@ -24,7 +24,8 @@ class MemoryModel extends Equatable {
     required this.images,
     required this.tags,
     required this.userId,
-    required this.user,
+    required this.name,
+    required this.email,
     required this.isPublic,
     required this.createdAt,
     required this.updatedAt,
@@ -38,10 +39,11 @@ class MemoryModel extends Equatable {
       location: json['location'] ?? '',
       date:
           json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
-      images: List<String>.from(json['images'] ?? []),
+      images: List<dynamic>.from(json['images'] ?? []),
       tags: List<String>.from(json['tags'] ?? []),
       userId: json['userId']?.toString() ?? '',
-      user: User.fromJson(json['user'] ?? {}),
+      name: json['name'] ?? '',
+      email: json['email'] ?? '',
       isPublic: json['isPublic'] ?? false,
       createdAt: json['createdAt'] != null
           ? DateTime.parse(json['createdAt'])
@@ -62,7 +64,8 @@ class MemoryModel extends Equatable {
       'images': images,
       'tags': tags,
       'userId': userId,
-      'user': user.toJson(),
+      'name': name,
+      'email': email,
       'isPublic': isPublic,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
@@ -78,7 +81,8 @@ class MemoryModel extends Equatable {
     List<String>? images,
     List<String>? tags,
     String? userId,
-    User? user,
+    String? name,
+    String? email,
     bool? isPublic,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -92,7 +96,8 @@ class MemoryModel extends Equatable {
       images: images ?? this.images,
       tags: tags ?? this.tags,
       userId: userId ?? this.userId,
-      user: user ?? this.user,
+      name: name ?? this.name,
+      email: email ?? this.email,
       isPublic: isPublic ?? this.isPublic,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -109,7 +114,8 @@ class MemoryModel extends Equatable {
         images,
         tags,
         userId,
-        user,
+        name,
+        email,
         isPublic,
         createdAt,
         updatedAt,

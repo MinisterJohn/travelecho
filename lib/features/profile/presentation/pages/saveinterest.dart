@@ -87,8 +87,8 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
 
           BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
             final List<String> selectedInterests =
-                state is InterestsLoaded
-                    ? state.profile.interests
+                state is ProfileLoaded
+                    ? (state).profile.interests
                     : <String>[];
             return BlocBuilder<DataSearchBloc, DataSearchState>(
                 builder: (context, state) {
@@ -133,11 +133,11 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
             color: AppColors.defaultColor100,
             blurRadius: 5,
-            offset: const Offset(0, 2),
+            offset: Offset(0, 2),
           ),
         ],
       ),

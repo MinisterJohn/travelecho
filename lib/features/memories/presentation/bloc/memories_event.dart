@@ -117,3 +117,12 @@ class DeleteMultipleMemories extends MemoriesEvent {
   @override
   List<Object> get props => [memoryIds];
 }
+
+class FetchMemoryDetails extends MemoriesEvent {
+  final String memoryId;
+
+  const FetchMemoryDetails(this.memoryId);
+
+  @override
+  List<Object?> get props => [memoryId];
+}

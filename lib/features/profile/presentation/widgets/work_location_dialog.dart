@@ -142,11 +142,11 @@ Widget _buildRelatedOccupations(List occupations, BuildContext context,
     decoration: BoxDecoration(
       color: AppColors.white,
       borderRadius: BorderRadius.circular(20),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
             color: AppColors.defaultColor100,
             blurRadius: 5,
-            offset: const Offset(0, 2))
+            offset: Offset(0, 2))
       ],
     ),
     constraints: const BoxConstraints(maxHeight: 250),
@@ -181,11 +181,12 @@ Widget _buildRelatedOccupations(List occupations, BuildContext context,
 Widget _buildSelectedOccupation(BuildContext context) {
   return BlocBuilder<ProfileBloc, ProfileState>(
     builder: (context, state) {
+      final profile = (state as ProfileLoaded).profile;
       return Container(
         color: AppColors.primaryColor100,
         padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
         child: Text(
-          state.profile.occupation.toUpperCase(),
+          profile.occupation.toUpperCase(),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       );

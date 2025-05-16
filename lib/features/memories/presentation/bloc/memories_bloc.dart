@@ -7,8 +7,8 @@ part 'memories_state.dart';
 
 class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
   final CreateMemoryUseCase _createMemoryUseCase = sl<CreateMemoryUseCase>();
-  final UploadMemoryImageUseCase _uploadMemoryImageUseCase =
-      sl<UploadMemoryImageUseCase>();
+  // final UploadMemoryImageUseCase _uploadMemoryImageUseCase =
+  //     sl<UploadMemoryImageUseCase>();
   final UploadMultipleMemoryImagesUseCase _uploadMultipleMemoryImagesUseCase =
       sl<UploadMultipleMemoryImagesUseCase>();
   final GetMemoriesUseCase _getMemoriesUseCase = sl<GetMemoriesUseCase>();
@@ -16,15 +16,18 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
   final EditMemoryUseCase _editMemoryUseCase = sl<EditMemoryUseCase>();
   final DeleteMultipleMemoriesUseCase _deleteMultipleMemoriesUseCase =
       sl<DeleteMultipleMemoriesUseCase>();
+  final GetMemoryDetailsUseCase _getMemoryDetailsUseCase =
+      sl<GetMemoryDetailsUseCase>();
 
   MemoriesBloc() : super(MemoriesInitial()) {
     on<CreateMemory>(_onCreateMemory);
-    on<UploadMemoryImage>(_onUploadMemoryImage);
+    // on<UploadMemoryImage>(_onUploadMemoryImage);
     on<UploadMultipleMemoryImages>(_onUploadMultipleMemoryImages);
     on<FetchMemories>(_onFetchMemories);
     on<DeleteMemory>(_onDeleteMemory);
     on<EditMemory>(_onEditMemory);
     on<DeleteMultipleMemories>(_onDeleteMultipleMemories);
+    on<FetchMemoryDetails>(_onFetchMemoryDetails);
   }
 
   Future<void> _onCreateMemory(
@@ -48,9 +51,9 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
         (error) => emit(MemoryError(error)),
         (memory) {
           print("Memory: $memory");
-          final Map<String, dynamic> memoryData = memory;
+          final Map<String, dynamic> memoryData = memory['memory'];
           print("Memory Data: $memoryData");
-          emit(MemoryCreated(memoryData['data']));
+          emit(MemoryCreated(memoryData));
         },
       );
     } catch (e) {
@@ -58,26 +61,26 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
     }
   }
 
-  Future<void> _onUploadMemoryImage(
-    UploadMemoryImage event,
-    Emitter<MemoriesState> emit,
-  ) async {
-    try {
-      final result = await _uploadMemoryImageUseCase(
-        UploadMemoryImageParams(
-          memoryId: event.memoryId,
-          imagePath: event.imagePath,
-        ),
-      );
+  // Future<void> _onUploadMemoryImage(
+  //   UploadMemoryImage event,
+  //   Emitter<MemoriesState> emit,
+  // ) async {
+  //   try {
+  //     final result = await _uploadMemoryImageUseCase(
+  //       UploadMemoryImageParams(
+  //         memoryId: event.memoryId,
+  //         imagePath: event.imagePath,
+  //       ),
+  //     );
 
-      result.fold(
-        (error) => emit(MemoryError(error)),
-        (_) => emit(MemoryImageUploaded()),
-      );
-    } catch (e) {
-      emit(MemoryError(e.toString()));
-    }
-  }
+  //     result.fold(
+  //       (error) => emit(MemoryError(error)),
+  //       (_) => emit(MemoryImageUploaded()),
+  //     );
+  //   } catch (e) {
+  //     emit(MemoryError(e.toString()));
+  //   }
+  // }
 
   Future<void> _onUploadMultipleMemoryImages(
     UploadMultipleMemoryImages event,
@@ -125,7 +128,7 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
     try {
       final currentState = state;
       if (currentState is! MemoriesLoaded) {
-        emit(MemoriesLoading());
+        emit(const MemoriesLoading());
       }
 
       final result = await _getMemoriesUseCase(
@@ -156,6 +159,7 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
             memories: allMemories,
             hasMore: hasMore,
             currentPage: event.skip ~/ event.limit + 1,
+            isSearching: event.search != null,
           ));
         },
       );
@@ -232,9 +236,15 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
 
       result.fold(
         (error) => emit(MemoryError(error)),
-        (memory) => emit(MemoryUpdated(MemoryModel.fromJson(memory))),
+        (memory) {
+          final Map<String, dynamic> memoryData = memory['memory'];
+          print("Update Memory Response: $memoryData");
+
+          emit(MemoryUpdated(memoryData));
+        },
       );
     } catch (e) {
+      print("Update Memory Error: $e");
       emit(MemoryError(e.toString()));
     }
   }
@@ -302,6 +312,22 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
       if (state is! MemoriesLoaded) {
         emit(MemoryError(e.toString()));
       }
+    }
+  }
+
+  Future<void> _onFetchMemoryDetails(
+    FetchMemoryDetails event,
+    Emitter<MemoriesState> emit,
+  ) async {
+    try {
+      final result = await _getMemoryDetailsUseCase(event.memoryId);
+
+      result.fold(
+        (error) => emit(MemoryError(error)),
+        (memory) => emit(MemoryDetailsLoaded(memory)),
+      );
+    } catch (e) {
+      emit(MemoryError(e.toString()));
     }
   }
 }

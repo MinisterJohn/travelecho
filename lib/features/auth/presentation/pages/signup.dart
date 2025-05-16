@@ -29,12 +29,12 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: WidgetsSpacer.pagePadding,
           child: BlocConsumer<AuthBloc, AuthState>(
             listener: (context, state) {
-              if (state is AuthSuccess) {
+              if (state is AuthSignupSuccess) {
                 // Navigate to verification page with email
                 AppNavigator.push(
                   context,
                   OtpForm(
-                    email: state.user?.email ?? _emailController.text,
+                    email: state.email,
                     isSignup: true,
                   ),
                 );

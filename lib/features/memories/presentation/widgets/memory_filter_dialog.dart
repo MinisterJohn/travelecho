@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../memories_exports.dart';
-import 'location_search_field.dart';
 
 class MemoryFilterDialog extends StatefulWidget {
   final String? currentLocation;
@@ -127,7 +126,7 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
                 ),
                 child: Row(
                   children: [
-                    Icon(LineIcons.calendar, color: AppColors.defaultColor400),
+                    const Icon(LineIcons.calendar, color: AppColors.defaultColor400),
                     const SizedBox(width: 8),
                     Text(
                       _selectedDate != null

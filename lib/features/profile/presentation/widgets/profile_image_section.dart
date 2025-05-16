@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
+import 'dart:typed_data';
 import '../../profile_exports.dart';
 import 'dart:io';
 
 class ProfileImageSection extends StatefulWidget {
   final ProfileState state;
-  final Function(File) onImageSelected;
+  final Function(dynamic) onImageSelected;
 
   const ProfileImageSection({
     super.key,
@@ -18,36 +20,40 @@ class ProfileImageSection extends StatefulWidget {
 }
 
 class _ProfileImageSectionState extends State<ProfileImageSection> {
-  File? _image;
+  dynamic _image;
   bool _isImageLoading = false;
 
   Future<void> _takePicture() async {
     if (_isImageLoading) return;
 
     setState(() => _isImageLoading = true);
-    try {
-      final ImagePicker picker = ImagePicker();
-      final XFile? image = await picker.pickImage(
-        source: ImageSource.camera,
-        maxWidth: 800,
-        maxHeight: 800,
-        imageQuality: 85,
-      );
+    // try {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.camera,
+      maxWidth: 800,
+      maxHeight: 800,
+      imageQuality: 85,
+    );
 
-      if (image != null && mounted) {
+    if (image != null && mounted) {
+      if (kIsWeb) {
+        final bytes = await image.readAsBytes();
+        setState(() => _image = bytes);
+      } else {
         setState(() => _image = File(image.path));
-        _showProfilePhotoAddedNotification();
-        widget.onImageSelected(_image!);
       }
-    } catch (e) {
-      if (mounted) {
-        DisplayMessage.errorMessage(
-            "Failed to update profile photo: $e", context);
-      }
-    } finally {
-      if (mounted) {
-        setState(() => _isImageLoading = false);
-      }
+      widget.onImageSelected(image.path);
+    }
+    // } catch (e) {
+    //   if (mounted) {
+    //     DisplayMessage.errorMessage(
+    //         "Failed to update profile photo: $e", context);
+    //   }
+    // } finally {
+    if (mounted) {
+      setState(() => _isImageLoading = false);
+      // }
     }
   }
 
@@ -137,19 +143,35 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
           Stack(
             clipBehavior: Clip.none,
             children: [
-              CircleAvatar(
-                radius: 50,
-                backgroundColor: const Color.fromARGB(255, 156, 126, 126),
-                backgroundImage: _image != null
-                    ? FileImage(_image!)
-                    : (widget.state is ProfileLoaded &&
-                            (widget.state as ProfileLoaded)
-                                .profile
-                                .image
-                                .isNotEmpty
-                        ? NetworkImage(
-                            (widget.state as ProfileLoaded).profile.image)
-                        : null) as ImageProvider?,
+              Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color.fromARGB(255, 156, 126, 126),
+                  image: _image != null
+                      ? DecorationImage(
+                          image: kIsWeb
+                              ? MemoryImage(_image as Uint8List)
+                              : FileImage(_image as File) as ImageProvider,
+                          fit: BoxFit.cover, // or BoxFit.none
+                          alignment: Alignment.topCenter, // 👈 key part
+                        )
+                      : (widget.state is ProfileLoaded &&
+                              (widget.state as ProfileLoaded)
+                                  .profile
+                                  .image
+                                  .isNotEmpty)
+                          ? DecorationImage(
+                              image: NetworkImage(
+                                  (widget.state as ProfileLoaded)
+                                      .profile
+                                      .image),
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                            )
+                          : null,
+                ),
               ),
               Positioned(
                 bottom: -15,
@@ -157,8 +179,9 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                 child: GestureDetector(
                   onTap: _isImageLoading ? null : _showCameraDialog,
                   child: Container(
+                    // constraints: const BoxConstraints(maxWidth: 100),
                     padding:
-                        const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
@@ -172,6 +195,7 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                       ],
                     ),
                     child: Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         SizedBox(
                           width: 20,
@@ -185,11 +209,11 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                                 )
                               : const Icon(
                                   Icons.camera_alt,
-                                  size: 25,
+                                  size: 20,
                                   color: Colors.black,
                                 ),
                         ),
-                        const SizedBox(width: 8),
+                        const SizedBox(width: 4),
                         Text(
                           _isImageLoading ? "Uploading..." : "Add",
                           style: const TextStyle(

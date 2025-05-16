@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
-
-import 'interceptors.dart';
+import '../core_exports.dart';
 
 class DioClient {
   late final Dio _dio;
@@ -8,11 +7,17 @@ class DioClient {
   DioClient() {
     _dio = Dio(
       BaseOptions(
-        // baseUrl: ApiUrl.baseURL,
-        headers: {'Content-Type': 'application/json; charset=UTF-8'},
+        baseUrl: ApiUrl.baseURL,
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Accept': 'application/json',
+        },
         responseType: ResponseType.json,
-        sendTimeout: const Duration(seconds: 30),
-        receiveTimeout: const Duration(seconds: 30),
+        sendTimeout: const Duration(seconds: 120),
+        receiveTimeout: const Duration(seconds: 120),
+        validateStatus: (status) {
+          return status! < 500;
+        },
       ),
     );
     _dio.interceptors.addAll([

@@ -1,4 +1,6 @@
 // import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -6,14 +8,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:line_icons/line_icons.dart';
 import '../../memories_exports.dart';
-import 'dart:convert';
 
 class AddDetailsToMemoryPage extends StatefulWidget {
   final String memoryId;
+  final bool isEditing;
+  final List<dynamic>? existingImages;
 
   const AddDetailsToMemoryPage({
     super.key,
     required this.memoryId,
+    this.isEditing = false,
+    this.existingImages,
   });
 
   @override
@@ -22,14 +27,27 @@ class AddDetailsToMemoryPage extends StatefulWidget {
 
 class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
   final ImagePicker _picker = ImagePicker();
-  List<String> _selectedImages = [];
+  List<dynamic> _selectedImages = [];
   bool _isUploading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.isEditing) {
+      // Fetch memory details when in edit mode
+      context.read<MemoriesBloc>().add(FetchMemoryDetails(widget.memoryId));
+    }
+    if (widget.existingImages != null) {
+      _selectedImages = List.from(widget.existingImages!);
+    }
+    print("Existing Images: ${widget.existingImages}");
+  }
 
   Future<void> _takePicture() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
     if (photo != null) {
       setState(() {
-        _selectedImages.add(photo.path);
+        _selectedImages.add(photo);
       });
     }
   }
@@ -37,10 +55,8 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
   Future<void> _selectImagesFromGallery() async {
     final List<XFile> images = await _picker.pickMultiImage();
     if (images.isNotEmpty) {
-      final imagePaths = images.map((e) => e.path).toList();
-      print("ImagePaths: $imagePaths");
       setState(() {
-        _selectedImages.addAll(imagePaths);
+        _selectedImages.addAll(images);
       });
     }
   }
@@ -56,33 +72,22 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
       _isUploading = true;
     });
 
+    // Filter out existing network images and only upload new local images
+    final newImages = _selectedImages.whereType<XFile>().toList();
+
     if (kIsWeb) {
       final bloc = context.read<MemoriesBloc>();
-      final imagePromises = _selectedImages.map((path) async {
-        final XFile file = XFile(path);
-        return await file.readAsBytes();
-      }).toList();
-
-      Future.wait(imagePromises).then((imageBytes) {
-        if (!mounted) return;
-        bloc.add(
-          UploadMultipleMemoryImages(
-            memoryId: widget.memoryId,
-            imagePaths: imageBytes,
-          ),
-        );
-      }).catchError((error) {
-        if (!mounted) return;
-        setState(() {
-          _isUploading = false;
-        });
-        DisplayMessage.errorMessage('Failed to process images', context);
-      });
+      bloc.add(
+        UploadMultipleMemoryImages(
+          memoryId: widget.memoryId,
+          imagePaths: newImages,
+        ),
+      );
     } else {
       context.read<MemoriesBloc>().add(
             UploadMultipleMemoryImages(
               memoryId: widget.memoryId,
-              imagePaths: _selectedImages,
+              imagePaths: newImages,
             ),
           );
     }
@@ -92,17 +97,19 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
   Widget build(BuildContext context) {
     return BlocListener<MemoriesBloc, MemoriesState>(
       listener: (context, state) {
-        print(state);
-        if (state is MultipleMemoryImagesUploaded) {
+        if (state is MemoryDetailsLoaded) {
+          setState(() {
+            _selectedImages = List.from(state.memory.images);
+          });
+        } else if (state is MultipleMemoryImagesUploaded) {
           setState(() {
             _isUploading = false;
           });
           DisplayMessage.successMessage(
-              'Images uploaded successfully', context);
-          AppNavigator.push(
-              context,
-              BlocProvider.value(
-                  value: sl<MemoriesBloc>(), child: const MemoriesHomePage()));
+              'Images ${widget.isEditing ? 'updated' : 'uploaded'} successfully',
+              context);
+          AppNavigator.pushAndRemove(context,
+              const RootPage(initialPage: RootPage.MEMORIES_PAGE_INDEX));
         } else if (state is MemoryError) {
           setState(() {
             _isUploading = false;
@@ -111,16 +118,19 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
         }
       },
       child: Scaffold(
-        appBar: setAppBar("Add Images", context),
+        appBar:
+            setAppBar(widget.isEditing ? "Edit Images" : "Add Images", context),
         body: BlocBuilder<MemoriesBloc, MemoriesState>(
           builder: (context, state) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 20),
-                const Text(
-                  'Add images to your memory',
-                  style: TextStyle(
+                Text(
+                  widget.isEditing
+                      ? 'Edit images for your memory'
+                      : 'Add images to your memory',
+                  style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
                   ),
@@ -143,7 +153,7 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                         LinearProgressIndicator(
                           value: state.progress,
                           backgroundColor: Colors.grey[200],
-                          valueColor: AlwaysStoppedAnimation<Color>(
+                          valueColor: const AlwaysStoppedAnimation<Color>(
                             AppColors.primaryColor,
                           ),
                         ),
@@ -167,23 +177,50 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                       scrollDirection: Axis.horizontal,
                       itemCount: _selectedImages.length,
                       itemBuilder: (context, index) {
+                        final image = _selectedImages[index];
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 4.0),
                           child: Stack(
                             children: [
-                              kIsWeb
-                                  ? Image.network(
-                                      _selectedImages[index],
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    )
-                                  : Image.file(
-                                      File(_selectedImages[index]),
-                                      width: 100,
-                                      height: 100,
-                                      fit: BoxFit.cover,
-                                    ),
+                              // Handle both network images (existing) and local files (new)
+                              if (image is XFile && !kIsWeb)
+                                Image.file(
+                                  File(image.path),
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                )
+                              else if (image is XFile && kIsWeb)
+                                FutureBuilder<Uint8List>(
+                                  future: image.readAsBytes(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                            ConnectionState.done &&
+                                        snapshot.hasData) {
+                                      return Image.memory(
+                                        snapshot.data!,
+                                        width: 100,
+                                        height: 100,
+                                        fit: BoxFit.cover,
+                                      );
+                                    } else {
+                                      return const SizedBox(
+                                        width: 100,
+                                        height: 100,
+                                        child: Center(
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                )
+                              else
+                                Image.network(
+                                  image.toString(),
+                                  width: 100,
+                                  height: 100,
+                                  fit: BoxFit.cover,
+                                ),
                               Positioned(
                                 right: 0,
                                 child: IconButton(

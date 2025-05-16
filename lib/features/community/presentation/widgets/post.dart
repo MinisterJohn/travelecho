@@ -138,7 +138,7 @@ class _PostState extends State<Post> {
                         _wantsToShare = false;
                       });
                     },
-                    child: Icon(LineIcons.comment,
+                    child: const Icon(LineIcons.comment,
                         color: AppColors.defaultColor400),
                   ),
                   const Text('Comment'),
@@ -151,11 +151,11 @@ class _PostState extends State<Post> {
                     _wantsToShare = !_wantsToShare;
                   });
                 },
-                child: Column(
+                child: const Column(
                   children: [
                     Icon(LineIcons.shareSquare,
                         color: AppColors.defaultColor400),
-                    const Text('Share'),
+                    Text('Share'),
                   ],
                 ),
               ),

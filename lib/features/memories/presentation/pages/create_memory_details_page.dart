@@ -1,7 +1,6 @@
 // import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../memories_exports.dart';
 
@@ -29,6 +28,7 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
   DateTime? _selectedDate;
   bool _isPublic = true;
   List<String> _tags = [];
+  String? _memoryId;
   bool _isLoading = false;
 
   @override
@@ -67,7 +67,7 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
     }
   }
 
-  void _handlePost() {
+  Future<void> _handlePost() async {
     if (_titleController.text.isEmpty) {
       DisplayMessage.errorMessage('Please enter a title', context);
       return;
@@ -133,28 +133,16 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
         if (state is MemoryCreated) {
           setState(() {
             _isLoading = false;
+            _memoryId = state.memory['_id'] ?? state.memory['id'];
           });
-          print("Add Details: ${state.memory}");
-          AppNavigator.push(
-            context,
-            BlocProvider.value(
-              value: context.read<MemoriesBloc>(),
-              child: AddDetailsToMemoryPage(
-                  memoryId: state.memory['_id'] ?? state.memory['id']),
-            ),
-          );
+          print("Memory Created: ${state.memory}");
           DisplayMessage.successMessage('Memory created successfully', context);
         } else if (state is MemoryUpdated) {
           setState(() {
             _isLoading = false;
+            _memoryId = state.memory['_id'] ?? state.memory['id'];
           });
-          AppNavigator.push(
-            context,
-            BlocProvider.value(
-              value: context.read<MemoriesBloc>(),
-              child: const MemoriesListPage(),
-            ),
-          );
+          print("Memory Updated: ${state.memory}");
           DisplayMessage.successMessage('Memory updated successfully', context);
         } else if (state is MemoryError) {
           setState(() {
@@ -171,245 +159,71 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
         ),
         body: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WidgetsSpacer.verticalSpacer32,
 
-                // Title field
-                Text(
-                  'Add a title to describe',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: FontSize.size16,
-                  ),
-                ),
-                WidgetsSpacer.verticalSpacer8,
-
-                TextField(
-                  controller: _titleController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter title',
-                    hintStyle: const TextStyle(color: AppColors.secondaryColor),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  style: const TextStyle(fontSize: 16),
-                  maxLines: 1,
-                ),
-                WidgetsSpacer.verticalSpacer16,
-
-                // Description field
-                Text(
-                  'Add a description',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: FontSize.size16,
-                  ),
-                ),
-                WidgetsSpacer.verticalSpacer8,
-
-                TextField(
-                  controller: _descriptionController,
-                  decoration: InputDecoration(
-                    hintText: 'Enter description',
-                    hintStyle: const TextStyle(color: AppColors.secondaryColor),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                  ),
-                  style: const TextStyle(fontSize: 16),
-                  maxLines: 3,
-                ),
-                WidgetsSpacer.verticalSpacer16,
-
-                // Location field
-                Text(
-                  'Add location',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: FontSize.size16,
-                  ),
-                ),
-                WidgetsSpacer.verticalSpacer8,
-
-                // TextField(
-                //   controller: _locationController,
-                //   decoration: InputDecoration(
-                //     hintText: 'Enter location',
-                //     hintStyle: const TextStyle(color: AppColors.secondaryColor),
-                //     border: OutlineInputBorder(
-                //       borderRadius: BorderRadius.circular(10),
-                //     ),
-                //   ),
-                //   style: const TextStyle(fontSize: 16),
-                //   maxLines: 1,
-                // ),
-                BlocProvider.value(
-                    value: sl<DataSearchBloc>(),
-                    child: LocationSearchField(
-                      controller: _locationController,
-                      onLocationSelected: (location) {
-                        setState(() {
-                          _locationController.text = location;
-                        });
-                      },
-                    )),
-                WidgetsSpacer.verticalSpacer16,
-
-                // Date picker
-                Text(
-                  'Select date',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: FontSize.size16,
-                  ),
-                ),
-                WidgetsSpacer.verticalSpacer8,
-
-                InkWell(
-                  onTap: _selectDate,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: AppColors.secondaryColor),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.calendar_today,
-                          color: AppColors.secondaryColor,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          _selectedDate != null
-                              ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
-                              : 'Select date',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                WidgetsSpacer.verticalSpacer16,
-
-                // Public/Private toggle
-                Row(
-                  children: [
-                    Checkbox(
-                      value: _isPublic,
-                      onChanged: (value) {
-                        setState(() {
-                          _isPublic = value ?? true;
-                        });
-                      },
-                    ),
-                    const Text('Make this memory public'),
-                  ],
+                // Memory form fields
+                MemoryFormFields(
+                  titleController: _titleController,
+                  descriptionController: _descriptionController,
+                  locationController: _locationController,
+                  selectedDate: _selectedDate,
+                  isPublic: _isPublic,
+                  onPublicChanged: (value) {
+                    setState(() {
+                      _isPublic = value ?? true;
+                    });
+                  },
+                  onDateTap: _selectDate,
                 ),
                 WidgetsSpacer.verticalSpacer16,
 
                 // Tags section
-                Text(
-                  'Add tags that describe your experience',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: FontSize.size14,
-                  ),
+                MemoryTagsSection(
+                  tagController: _tagController,
+                  tags: _tags,
+                  onAddTag: _addTag,
+                  onRemoveTag: _removeTag,
                 ),
-                WidgetsSpacer.verticalSpacer8,
-
-                // Tag input field
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _tagController,
-                        decoration: InputDecoration(
-                          hintText: 'Enter tag',
-                          hintStyle:
-                              const TextStyle(color: AppColors.secondaryColor),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                        style: const TextStyle(fontSize: 16),
-                        maxLines: 1,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    ElevatedButton(
-                      onPressed: _addTag,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.primaryColor,
-                        minimumSize: Size(0, 0),
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 12,
-                        ),
-                      ),
-                      child: const Text(
-                        'Add',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-                WidgetsSpacer.verticalSpacer8,
-
-                // Tags list
-                if (_tags.isNotEmpty)
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: _tags.map((tag) {
-                      return Chip(
-                        label: Text(tag),
-                        onDeleted: () => _removeTag(tag),
-                        backgroundColor:
-                            AppColors.primaryColor.withOpacity(0.1),
-                        labelStyle: TextStyle(color: AppColors.primaryColor),
-                      );
-                    }).toList(),
-                  ),
                 WidgetsSpacer.verticalSpacer32,
 
-                // Post button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _handlePost,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
-                    child: _isLoading
-                        ? const SizedBox(
-                            height: 20,
-                            width: 20,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 2,
-                            ),
-                          )
-                        : Text(
-                            widget.isEditing
-                                ? 'Update Memory'
-                                : 'Create Memory',
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                // Action buttons
+                MemoryActionButtons(
+                  isLoading: _isLoading,
+                  isEditing: widget.isEditing,
+                  onCreateUpdate: () async {
+                    await _handlePost();
+                    // ignore: use_build_context_synchronously
+                    AppNavigator.pop(context);
+                  },
+                  onAddUpdatePictures: () async {
+                    if (_memoryId != null) {
+                      AppNavigator.push(
+                        context,
+                        BlocProvider.value(
+                          value: context.read<MemoriesBloc>(),
+                          child: AddDetailsToMemoryPage(
+                            memoryId: _memoryId!,
+                            isEditing: widget.isEditing,
+                            existingImages:
+                                widget.isEditing && widget.memory != null
+                                    ? widget.memory!.images
+                                    : null,
                           ),
-                  ),
+                        ),
+                      );
+                    } else {
+                      if (_titleController.text.isEmpty) {
+                        DisplayMessage.errorMessage(
+                            'Please enter a title', context);
+                        return;
+                      }
+                      await _handlePost();
+                    }
+                  },
                 ),
                 WidgetsSpacer.verticalSpacer32,
               ],

@@ -136,11 +136,11 @@ Widget _relatedSchoolsWidget(List<SchoolModel> schools, BuildContext context,
     decoration: BoxDecoration(
       color: AppColors.white,
       borderRadius: BorderRadius.circular(20),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
             color: AppColors.defaultColor100,
             blurRadius: 5,
-            offset: const Offset(0, 2)),
+            offset: Offset(0, 2)),
       ],
     ),
     constraints: const BoxConstraints(maxHeight: 200),

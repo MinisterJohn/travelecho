@@ -110,6 +110,7 @@ class UploadProgress extends MemoriesState {
 }
 
 class MemoriesLoading extends MemoriesState {
+  @override
   final List<MemoryModel> memories;
 
   const MemoriesLoading({this.memories = const []});
@@ -119,21 +120,24 @@ class MemoriesLoading extends MemoriesState {
 }
 
 class MemoriesLoaded extends MemoriesState {
+  @override
   final List<MemoryModel> memories;
   final bool hasMore;
   final int currentPage;
   final String? deletingMemoryId;
+  final bool isSearching;
 
   const MemoriesLoaded({
     required this.memories,
     required this.hasMore,
     required this.currentPage,
     this.deletingMemoryId,
+    this.isSearching = false,
   });
 
   @override
   List<Object> get props =>
-      [memories, hasMore, currentPage, deletingMemoryId ?? ''];
+      [memories, hasMore, currentPage, deletingMemoryId ?? '', isSearching];
 }
 
 class MemoryError extends MemoriesState {
@@ -155,7 +159,7 @@ class MemoryDeleted extends MemoriesState {
 }
 
 class MemoryUpdated extends MemoriesState {
-  final MemoryModel memory;
+  final Map<String, dynamic> memory;
 
   const MemoryUpdated(this.memory);
 
@@ -170,4 +174,13 @@ class MultipleMemoriesDeleted extends MemoriesState {
 
   @override
   List<Object> get props => [deletedCount];
+}
+
+class MemoryDetailsLoaded extends MemoriesState {
+  final MemoryModel memory;
+
+  const MemoryDetailsLoaded(this.memory);
+
+  @override
+  List<Object?> get props => [memory];
 }

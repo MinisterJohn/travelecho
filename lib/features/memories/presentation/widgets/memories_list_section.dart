@@ -1,7 +1,85 @@
 import 'package:flutter/material.dart';
 import '../../memories_exports.dart';
-import 'memory_card.dart';
-import 'memory_list_footer.dart';
+
+class MemorySkeletonCard extends StatelessWidget {
+  const MemorySkeletonCard({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Image placeholder
+          Container(
+            height: 200,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title placeholder
+                Container(
+                  height: 24,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                // Location placeholder
+                Container(
+                  height: 16,
+                  width: 150,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                // Tags placeholder
+                Row(
+                  children: List.generate(
+                    3,
+                    (index) => Container(
+                      margin: const EdgeInsets.only(right: 8),
+                      height: 24,
+                      width: 80,
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class MemoriesListSection extends StatelessWidget {
   final List<MemoryModel> memories;
@@ -28,7 +106,10 @@ class MemoriesListSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (state is MemoriesLoading && memories.isEmpty) {
-      return const Center(child: CircularProgressIndicator());
+      return ListView.builder(
+        itemCount: 3, // Show 3 skeleton cards while loading
+        itemBuilder: (context, index) => const MemorySkeletonCard(),
+      );
     }
 
     if (state is MemoryError) {
@@ -59,7 +140,9 @@ class MemoriesListSection extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             Text(
-              'No memories found',
+              state is MemoriesLoaded && (state as MemoriesLoaded).isSearching
+                  ? 'No memories found matching your search'
+                  : 'No memories found',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -68,7 +151,9 @@ class MemoriesListSection extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Try adjusting your filters or search terms',
+              state is MemoriesLoaded && (state as MemoriesLoaded).isSearching
+                  ? 'Try different search terms'
+                  : 'Try adjusting your filters or search terms',
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.grey[600],
@@ -101,7 +186,6 @@ class MemoriesListSection extends StatelessWidget {
               : MemoryCard(
                   key: ValueKey(memory.id),
                   memory: memory,
-                  username: username,
                   onView: () => onView(memory),
                   onEdit: () => onEdit(memory),
                   onDelete: () => onDelete(memory),

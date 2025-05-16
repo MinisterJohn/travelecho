@@ -2,6 +2,7 @@ import "package:dio/dio.dart";
 import "package:get_it/get_it.dart";
 import 'features/features_exports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:logger/logger.dart';
 
 /// Service locator instance for dependency injection
 final sl = GetIt.instance;
@@ -33,6 +34,7 @@ Future<void> _registerCoreServices() async {
   sl.registerSingleton<SharedPreferences>(prefs);
   sl.registerSingleton<DioClient>(DioClient());
   sl.registerSingleton<Dio>(Dio());
+  sl.registerSingleton<Logger>(Logger());
 }
 
 /// Registers all API services
@@ -72,6 +74,7 @@ void _registerRepositories() {
       () => LanguagesRepositoryImpl());
   sl.registerLazySingleton<InterestsRepository>(
       () => InterestsRepositoryImpl());
+  sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl());
 
   // Travel related repositories
   sl.registerLazySingleton<AirportRepository>(() => AirportRepositoryImpl());
@@ -92,6 +95,8 @@ void _registerUseCases() {
   sl.registerLazySingleton<ResetPasswordUseCase>(() => ResetPasswordUseCase());
   sl.registerSingleton<IsLoggedInUseCase>(IsLoggedInUseCase());
   sl.registerSingleton<IsNotNewUserUseCase>(IsNotNewUserUseCase());
+  sl.registerSingleton<GetMemoryDetailsUseCase>(GetMemoryDetailsUseCase());
+  
 
   // Data use cases
   sl.registerLazySingleton(() => ConvertCurrency());
@@ -110,8 +115,8 @@ void _registerUseCases() {
 
   // Memories use cases
   sl.registerLazySingleton<CreateMemoryUseCase>(() => CreateMemoryUseCase());
-  sl.registerLazySingleton<UploadMemoryImageUseCase>(
-      () => UploadMemoryImageUseCase());
+  // sl.registerLazySingleton<UploadMemoryImageUseCase>(
+  //     () => UploadMemoryImageUseCase());
   sl.registerLazySingleton<UploadMultipleMemoryImagesUseCase>(
       () => UploadMultipleMemoryImagesUseCase());
   sl.registerLazySingleton<GetMemoriesUseCase>(() => GetMemoriesUseCase());
@@ -119,6 +124,9 @@ void _registerUseCases() {
   sl.registerLazySingleton<EditMemoryUseCase>(() => EditMemoryUseCase());
   sl.registerLazySingleton<DeleteMultipleMemoriesUseCase>(
       () => DeleteMultipleMemoriesUseCase());
+  sl.registerLazySingleton<GetUserProfileUseCase>(() => GetUserProfileUseCase());
+  sl.registerLazySingleton<UpdateProfileImageUseCase>(
+      () => UpdateProfileImageUseCase());
 }
 
 /// Registers all blocs
@@ -127,7 +135,7 @@ void _registerBlocs() {
   sl.registerLazySingleton<CurrencyBloc>(() => CurrencyBloc());
   sl.registerLazySingleton<DataSearchBloc>(() => DataSearchBloc());
   sl.registerLazySingleton<ProfileBloc>(
-    () => ProfileBloc(sl<ProfileApiService>(), sl<SharedPreferences>()),
+    () => ProfileBloc(),
   );
   sl.registerLazySingleton<AirportBloc>(() => AirportBloc());
   sl.registerLazySingleton<FlightBookingBloc>(() => FlightBookingBloc());

@@ -24,7 +24,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
   final TextEditingController _budgetNameController = TextEditingController();
   final BudgetController _budget =
       BudgetController(name: "", tripIsToMultipleDestinations: false);
-  Budget _selectedBudget = Budget(amount: 0.0, name: "");
+  // Budget _selectedBudget = Budget(amount: 0.0, name: "");
 
   @override
   void initState() {
@@ -167,13 +167,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 
   void _createBudget() {
-    Budget newBudget = Budget(
-      name: _budget.name,
-      amount: 0.0,
-      isForMultipleDestinations: _budget.tripIsToMultipleDestinations,
-    );
-    _selectedBudget = newBudget;
-    Provider.of<BudgetsData>(context, listen: false).addNewBudget(newBudget);
+    // Budget newBudget = Budget(
+    //   name: _budget.name,
+    //   amount: 0.0,
+    //   isForMultipleDestinations: _budget.tripIsToMultipleDestinations,
+    // );
+    // _selectedBudget = newBudget;
+    // Provider.of<BudgetsData>(context, listen: false).addNewBudget(newBudget);
   }
 
   void _showNewBudgetDialog(BuildContext context) {
@@ -255,7 +255,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                       context,
                       MaterialPageRoute(
                         builder: (context) => const SetBudgetScreen(),
-                        settings: RouteSettings(arguments: _selectedBudget),
+                        // settings: RouteSettings(arguments: _selectedBudget),
                       ),
                     );
                   },
@@ -300,12 +300,12 @@ class _BudgetScreenState extends State<BudgetScreen> {
         IconButton(
           icon: const Icon(Icons.settings_outlined, weight: 1, grade: 1),
           onPressed: () {
-            _selectedBudget = budget;
+            // _selectedBudget = budget;
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const SetBudgetScreen(),
-                settings: RouteSettings(arguments: _selectedBudget),
+                // settings: RouteSettings(arguments: _selectedBudget),
               ),
             );
           },

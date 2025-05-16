@@ -177,9 +177,9 @@ class _PricingState extends State<Pricing> {
       IntrinsicWidth(
         child: Container(
           padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               color: AppColors.defaultColor100,
-              borderRadius: const BorderRadius.all(Radius.circular(20))),
+              borderRadius: BorderRadius.all(Radius.circular(20))),
           child: Row(
             children: [
               _monthlyYearlyBtn("Monthly", isMonthly()),
@@ -217,7 +217,7 @@ class _PricingState extends State<Pricing> {
       List planFeatures) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 24),
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: AppColors.white,
           boxShadow: [
             BoxShadow(
@@ -225,7 +225,7 @@ class _PricingState extends State<Pricing> {
                 blurRadius: 10,
                 spreadRadius: 5)
           ],
-          borderRadius: const BorderRadius.all(Radius.circular(20))),
+          borderRadius: BorderRadius.all(Radius.circular(20))),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

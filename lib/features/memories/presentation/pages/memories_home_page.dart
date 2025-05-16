@@ -30,41 +30,46 @@ class _MemoriesHomePageState extends State<MemoriesHomePage> {
     return BlocBuilder<MemoriesBloc, MemoriesState>(
       builder: (context, state) {
         if (state is MemoriesLoaded) {
-          // Only show MemoryPage if it's the initial load and there are no memories
-          if (state.memories.isEmpty && state.currentPage == 1) {
+          // Only show MemoryPage if it's the initial load, there are no memories, and we're not searching
+          if (state.memories.isEmpty &&
+              state.currentPage == 1 &&
+              !state.isSearching) {
             return MemoryPage();
           }
-          return const MemoriesListPage();
         }
-
         if (state is MemoryError) {
-          return Scaffold(
-            body: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    state.message,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 16),
-                  ),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: _retryFetch,
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            ),
-          );
+          _retryFetch();
         }
+        return const MemoriesListPage();
+
+        // if (state is MemoryError) {
+        //   return Scaffold(
+        //     body: Center(
+        //       child: Column(
+        //         mainAxisAlignment: MainAxisAlignment.center,
+        //         children: [
+        //           Text(
+        //             state.message,
+        //             textAlign: TextAlign.center,
+        //             style: const TextStyle(fontSize: 16),
+        //           ),
+        //           const SizedBox(height: 16),
+        //           ElevatedButton(
+        //             onPressed: _retryFetch,
+        //             child: const Text('Retry'),
+        //           ),
+        //         ],
+        //       ),
+        //     ),
+        //   );
+        // }
 
         // Show loading or empty state while checking
-        return const Scaffold(
-          body: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
+        // return const Scaffold(
+        //   body: Center(
+        //     child: CircularProgressIndicator(),
+        //   ),
+        // );
       },
     );
   }

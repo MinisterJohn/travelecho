@@ -24,71 +24,73 @@ class EditableFieldsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final profile = (state as ProfileLoaded).profile;
     // if (state is! ProfileLoaded) return const SizedBox.shrink();
 
     return Column(
       children: [
         _buildEditableField(
           icon: LineIcons.home,
-          title: state.profile.location.isEmpty
+          title: profile.location.isEmpty
               ? "Where I live"
-              : state.profile.location,
+              : profile.location,
           onTap: () {
             if (!isLocationLoading) showWhereILiveDialog(context);
           },
           isLoading: isLocationLoading,
         ),
-        Divider(color: AppColors.defaultColor100),
+        const Divider(color: AppColors.defaultColor100),
         _buildEditableField(
           icon: LineIcons.briefcase,
-          title: state.profile.occupation.isEmpty
+          title: profile.occupation.isEmpty
               ? "My occupation"
-              : state.profile.occupation,
+              : profile.occupation,
           onTap: () {
             if (!isOccupationLoading) showWhereIWorkDialog(context);
           },
           isLoading: isOccupationLoading,
         ),
-        Divider(color: AppColors.defaultColor100),
+        const Divider(color: AppColors.defaultColor100),
         _buildEditableField(
           icon: LineIcons.graduationCap,
-          title: state.profile.school.name.isEmpty
+          title: profile.school.name.isEmpty
               ? "Where I schooled"
-              : "${state.profile.school.name} - ${state.profile.school.country}",
+              : "${profile.school.name} - ${profile.school.country}",
           onTap: () {
             if (!isSchoolLoading) showWhereISchooledDialog(context);
           },
           isLoading: isSchoolLoading,
         ),
-        Divider(color: AppColors.defaultColor100),
+        const Divider(color: AppColors.defaultColor100),
         _buildEditableField(
           icon: LineIcons.birthdayCake,
-          title: state.profile.dob.isBefore(
-                  DateTime.now().subtract(Duration(days: (5 * 365.25).round())))
-              ? formatDate(state.profile.dob)
+          title: profile.dateOfBirth != null &&
+                  profile.dateOfBirth!.isBefore(
+                      DateTime.now().subtract(Duration(days: (5 * 365.25).round())))
+              ? formatDate(profile.dateOfBirth as DateTime)
               : "Date of Birth",
           onTap: () {
             if (!isDobLoading) showDateDialog(context);
           },
           isLoading: isDobLoading,
         ),
-        Divider(color: AppColors.defaultColor100),
+        const Divider(color: AppColors.defaultColor100),
         _buildEditableField(
           icon: LineIcons.language,
-          title: state.profile.languages.isEmpty
+          title: profile.languages.isEmpty
               ? "Language I speak"
-              : state.profile.languages.map((lang) => lang).join(", "),
+              : profile.languages.map((lang) => lang).join(", "),
           onTap: () {
             if (!isLanguageLoading) showLanguageDialog(context);
           },
           isLoading: isLanguageLoading,
         ),
-        Divider(color: AppColors.defaultColor100),
+        const Divider(color: AppColors.defaultColor100),
         _buildEditableField(
           icon: LineIcons.shapes,
-          title: state.profile.interests.isEmpty
+          title: profile.interests.isEmpty
               ? "Interests"
-              : state.profile.interests.map((interest) => interest).join(", "),
+              : profile.interests.map((interest) => interest).join(", "),
           onTap: () {
             if (!isInterestsLoading) showInterestsDialog(context);
           },
@@ -119,7 +121,7 @@ class EditableFieldsSection extends StatelessWidget {
         style: const TextStyle(color: AppColors.secondaryColor),
       ),
       trailing: hasArrow
-          ? Icon(Icons.chevron_right, color: AppColors.defaultColor400)
+          ? const Icon(Icons.chevron_right, color: AppColors.defaultColor400)
           : null,
       onTap: isLoading ? () {} : onTap,
     );

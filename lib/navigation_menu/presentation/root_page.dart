@@ -9,7 +9,10 @@ import 'package:travelecho/features/budget/budget_tracker.dart';
 import 'package:line_icons/line_icons.dart';
 
 class RootPage extends StatefulWidget {
-  const RootPage({super.key});
+  final int? initialPage;
+  static const int MEMORIES_PAGE_INDEX = 3;
+
+  const RootPage({super.key, this.initialPage = 0});
 
   @override
   State<RootPage> createState() => _RootPageState();
@@ -17,6 +20,15 @@ class RootPage extends StatefulWidget {
 
 class _RootPageState extends State<RootPage> {
   int currentPage = 0;
+  @override
+  void initState() {
+    super.initState();
+    currentPage = widget.initialPage ?? 0;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      context.read<NavigationMenuCubit>().changePage(currentPage);
+    });
+  }
+
   final List<Widget> pages = [
     // Container(),
     const HomeScreen(),
@@ -32,10 +44,13 @@ class _RootPageState extends State<RootPage> {
     ), // Replace with your Budget page widget
     // Container(),
     MultiBlocProvider(providers: [
-    BlocProvider( 
-        create: (context) => sl<MemoriesBloc>(),),
-    BlocProvider(
-        create: (context) => sl<DataSearchBloc>(),),
+      BlocProvider(
+        create: (context) => sl<MemoriesBloc>(),
+      ),
+      BlocProvider(
+        create: (context) => sl<DataSearchBloc>(),
+      ),
+      BlocProvider(create: (context) => sl<ProfileBloc>()),
     ], child: const MemoriesHomePage()),
     // Container(),
     const CommunityPage(),

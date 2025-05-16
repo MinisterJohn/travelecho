@@ -7,7 +7,7 @@ import '../../profile_exports.dart';
 void showLanguageDialog(BuildContext context) {
   TextEditingController searchController = TextEditingController();
   Timer? debounce;
-  bool _isUpdating = false;
+  bool isUpdating = false;
 
   void searchForLanguages(String value) {
     if (debounce?.isActive ?? false) debounce!.cancel();
@@ -114,11 +114,11 @@ Widget _relatedLanguagesWidget(List<String> relatedLanguages,
     decoration: BoxDecoration(
       color: AppColors.white,
       borderRadius: BorderRadius.circular(20),
-      boxShadow: [
+      boxShadow: const [
         BoxShadow(
             color: AppColors.defaultColor100,
             blurRadius: 5,
-            offset: const Offset(0, 2))
+            offset: Offset(0, 2))
       ],
     ),
     constraints: const BoxConstraints(maxHeight: 250),
