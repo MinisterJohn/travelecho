@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../profile_exports.dart';
 
 void main() {
@@ -158,7 +158,8 @@ class PasswordInputPage extends StatefulWidget {
   final String title;
   final VoidCallback onConfirm;
 
-  const PasswordInputPage({super.key, required this.title, required this.onConfirm});
+  const PasswordInputPage(
+      {super.key, required this.title, required this.onConfirm});
 
   @override
   _PasswordInputPageState createState() => _PasswordInputPageState();
@@ -167,57 +168,57 @@ class PasswordInputPage extends StatefulWidget {
 class _PasswordInputPageState extends State<PasswordInputPage> {
   final List<String> password = List.filled(6, '');
 
-    @override
-    Widget build(BuildContext context) {
-      return Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.title,
-              style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.title,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(
-                6,
-                (index) => CircleInputField(
-                  onChanged: (value) {
-                    setState(() {
-                      password[index] = value;
-                    });
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 32),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  if (password.every((element) => element.isNotEmpty)) {
-                    widget.onConfirm();
-                  }
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(
+              6,
+              (index) => CircleInputField(
+                onChanged: (value) {
+                  setState(() {
+                    password[index] = value;
+                  });
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  minimumSize: const Size(300, 50), // Increase width and height here
-                ),
-                child: const Text(
-                  'Confirm',
-                  style: TextStyle(color: Colors.white),
-                ),
               ),
             ),
-          ],
-        ),
-      );
-    }
-
+          ),
+          const SizedBox(height: 32),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {
+                if (password.every((element) => element.isNotEmpty)) {
+                  widget.onConfirm();
+                }
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.purple,
+                minimumSize:
+                    const Size(300, 50), // Increase width and height here
+              ),
+              child: const Text(
+                'Confirm',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class CircleInputField extends StatelessWidget {

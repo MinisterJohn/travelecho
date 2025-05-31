@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/core/constants/constants.dart';

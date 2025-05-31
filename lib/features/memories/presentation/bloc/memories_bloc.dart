@@ -88,7 +88,6 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
   ) async {
     try {
       final totalImages = event.imagePaths.length;
-      var currentImage = 0;
 
       // Emit initial progress
       emit(UploadProgress(
@@ -127,9 +126,7 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
   ) async {
     try {
       final currentState = state;
-      if (currentState is! MemoriesLoaded) {
-        emit(const MemoriesLoading());
-      }
+      emit(const MemoriesLoading());
 
       final result = await _getMemoriesUseCase(
         GetMemoriesParams(
@@ -144,15 +141,26 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
       );
 
       result.fold(
-        (error) => emit(MemoryError(error)),
+        (error) {
+          print('Error fetching memories: $error'); // Log the error
+          emit(MemoryError(error));
+        },
         (memories) {
+          print(
+              'Fetched memories: ${memories.length}'); // Log the number of fetched memories
           final currentMemories = currentState is MemoriesLoaded
               ? currentState.memories
               : <MemoryModel>[];
 
-          final allMemories = event.skip == 0 || event.search != null
-              ? memories
-              : [...currentMemories, ...memories];
+          print(
+              'Current memories before append: ${currentMemories.length}'); // Log the current memories count
+
+          final allMemories = event.append
+              ? [...currentMemories, ...memories] // Append new memories
+              : memories; // Replace the list if not appending
+
+          print(
+              'All memories after append: ${allMemories.length}'); // Log the total memories count
 
           final hasMore = memories.length == event.limit;
           emit(MemoriesLoaded(
@@ -160,6 +168,7 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
             hasMore: hasMore,
             currentPage: event.skip ~/ event.limit + 1,
             isSearching: event.search != null,
+            append: event.append, // Pass the append parameter
           ));
         },
       );

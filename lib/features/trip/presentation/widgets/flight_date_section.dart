@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
 
@@ -41,7 +41,7 @@ class FlightDateSection extends StatelessWidget {
                   "Flight Date",
                   style: TextStyle(color: Colors.black),
                 ),
-                WidgetsSpacer.horinzontalSpacer8,
+                WidgetsSpacer.horizontalSpacer8,
                 Row(
                   children: [
                     const Icon(

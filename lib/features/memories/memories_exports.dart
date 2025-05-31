@@ -17,6 +17,10 @@ export 'domain/usecases/edit_memory_usecase.dart';
 // Data
 export 'data/repositories/memories_repository_impl.dart';
 export 'data/sources/memories_api_service.dart';
+// export 'data/sources/image_upload_handler.dart';
+// export 'data/sources/memory_image_handler.dart';
+export 'data/sources/mobile_image_upload_handler.dart';
+export 'data/sources/web_image_upload_handler.dart';
 
 // Presentation
 export 'presentation/bloc/memories_bloc.dart';

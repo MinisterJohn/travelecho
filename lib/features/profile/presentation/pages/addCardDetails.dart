@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../profile_exports.dart';
-
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -49,7 +48,8 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                   border: Border.all(color: Colors.purple, width: 2),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // Align text to the left, icon to the right
+                  mainAxisAlignment: MainAxisAlignment
+                      .spaceBetween, // Align text to the left, icon to the right
                   children: [
                     const Expanded(
                       child: Text(
@@ -63,7 +63,8 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                         color: Colors.purple,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.check, color: Colors.white, size: 18),
+                      child: const Icon(Icons.check,
+                          color: Colors.white, size: 18),
                     ),
                   ],
                 ),
@@ -81,7 +82,8 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                       _selectedLogo = 'assets/images/profile/visa.png';
                     });
                   },
-                  child: Image.asset('assets/images/profile/visa.png', height: 20),
+                  child:
+                      Image.asset('assets/images/profile/visa.png', height: 20),
                 ),
                 const SizedBox(width: 10),
                 GestureDetector(
@@ -90,7 +92,8 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                       _selectedLogo = 'assets/images/profile/master.png';
                     });
                   },
-                  child: Image.asset('assets/images/profile/master.png', height: 20),
+                  child: Image.asset('assets/images/profile/master.png',
+                      height: 20),
                 ),
               ],
             ),
@@ -172,7 +175,8 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
-                  padding: const EdgeInsets.symmetric(horizontal: 150, vertical: 15),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 150, vertical: 15),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

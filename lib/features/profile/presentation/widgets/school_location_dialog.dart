@@ -1,9 +1,8 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../profile_exports.dart';
-
 
 void showWhereISchooledDialog(BuildContext context) {
   final TextEditingController schoolNameController = TextEditingController();
@@ -181,7 +180,7 @@ Widget _selectedSchoolWidget(SchoolModel selectedSchool) {
       children: [
         Text(selectedSchool.name,
             style: const TextStyle(fontWeight: FontWeight.bold)),
-        WidgetsSpacer.horinzontalSpacer8,
+        WidgetsSpacer.horizontalSpacer8,
         Text(selectedSchool.country, style: const TextStyle(fontSize: 12)),
       ],
     ),

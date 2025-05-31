@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,12 +36,10 @@ class _ProfilePageState extends State<ProfilePage> {
                   builder: (context, authState) {
                     if (authState is AuthSuccess ||
                         authState is AuthLoginSuccess) {
-                      return BlocProvider(
-                        create: (context) =>
-                            sl<ProfileBloc>()..add(ProfileLoadRequested()),
+                      return BlocProvider.value(
+                        value: sl<ProfileBloc>()..add(ProfileLoadRequested()),
                         child: BlocBuilder<ProfileBloc, ProfileState>(
                           builder: (context, profileState) {
-                            
                             return Column(
                               children: [
                                 ScreenContainer(
@@ -313,8 +311,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           SizedBox(
                             width: 16,
                             height: 16,
-                            child: Icon(Icons.refresh,
-                                color: Colors.white),
+                            child: Icon(Icons.refresh, color: Colors.white),
                           ),
                           SizedBox(width: 8),
                           Text(
@@ -382,6 +379,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     TextButton(
                       onPressed: () {
+                        context.read<AuthBloc>().add(LogoutEvent());
                         AppNavigator.pushReplacement(
                             context, const LoginPage());
                       },

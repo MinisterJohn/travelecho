@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class FeaturesPage extends StatelessWidget {
   const FeaturesPage({super.key});
@@ -33,7 +33,8 @@ class FeaturesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("App Features", style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text("App Features",
+            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
       ),
@@ -68,7 +69,10 @@ class FeaturesPage extends StatelessWidget {
               // Free Features Section
               const Text(
                 "Free Features",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87),
               ),
               const SizedBox(height: 8),
               ...freeFeatures.map(
@@ -83,7 +87,8 @@ class FeaturesPage extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.check_circle_outline, color: Colors.green),
+                        const Icon(Icons.check_circle_outline,
+                            color: Colors.green),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
@@ -100,7 +105,10 @@ class FeaturesPage extends StatelessWidget {
               // Premium Features Section
               const Text(
                 "Premium Features",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black87),
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87),
               ),
               const SizedBox(height: 8),
               ...premiumFeatures.map(

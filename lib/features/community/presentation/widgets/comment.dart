@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:travelecho/core/constants/font_size_constants.dart';
 
 class PostComment extends StatelessWidget {

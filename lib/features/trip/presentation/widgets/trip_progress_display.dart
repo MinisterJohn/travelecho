@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../trip_exports.dart';
 
 class TripProgressDisplay extends StatelessWidget {
@@ -31,14 +31,14 @@ class TripProgressDisplay extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(progressKey,
-              style: const TextStyle(color: AppColors.defaultColor400, fontSize: 12)),
+              style: const TextStyle(
+                  color: AppColors.defaultColor400, fontSize: 12)),
           WidgetsSpacer.verticalSpacer8,
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Icon(progressIcon, size: 24, color: AppColors.defaultColor400),
-              WidgetsSpacer.horinzontalSpacer8,
-              
+              WidgetsSpacer.horizontalSpacer8,
               Text(
                 progressValue,
                 style: const TextStyle(

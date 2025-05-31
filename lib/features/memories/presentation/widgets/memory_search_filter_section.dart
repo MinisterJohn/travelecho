@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
 import '../../memories_exports.dart';
 import 'memory_filter_dialog.dart';
@@ -37,7 +37,7 @@ class MemorySearchFilterSection extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 5),
           child: Row(
             children: [
               Expanded(

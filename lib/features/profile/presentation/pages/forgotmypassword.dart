@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -97,7 +97,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               if (email == null || email.isEmpty) {
                 return 'Please enter an email address';
               }
-              final emailRegex = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+              final emailRegex =
+                  RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
               if (!emailRegex.hasMatch(email)) {
                 return 'Email is invalid';
               }
@@ -118,7 +119,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               if (emailFormKey.currentState?.validate() ?? false) {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const CodeValidationPage()),
+                  MaterialPageRoute(
+                      builder: (context) => const CodeValidationPage()),
                 );
                 print('Password reset link sent to ${_emailController.text}');
               } else {

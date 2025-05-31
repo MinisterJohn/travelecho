@@ -1,0 +1,2 @@
+C:/Users/HP/OneDrive/Desktop/Projects/travelecho_new/android/app/.cxx/Debug/12f2z463/x86/CMakeFiles/edit_cache.dir
+C:/Users/HP/OneDrive/Desktop/Projects/travelecho_new/android/app/.cxx/Debug/12f2z463/x86/CMakeFiles/rebuild_cache.dir

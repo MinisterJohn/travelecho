@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:line_icons/line_icons.dart';
 import 'budget_screen.dart';
@@ -92,7 +92,7 @@ class _BudgetTrackerState extends State<BudgetTracker> {
                 ? Border.all(color: const Color.fromRGBO(0, 0, 0, 0.1))
                 : null,
             color: currentBudgetTool == label
-                ?  AppColors.primaryColor
+                ? AppColors.primaryColor
                 : Colors.transparent,
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),

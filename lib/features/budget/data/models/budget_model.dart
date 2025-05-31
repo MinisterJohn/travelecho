@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:travelecho/features/budget/data/models/expense_model.dart';
 
 class Budget extends ChangeNotifier {

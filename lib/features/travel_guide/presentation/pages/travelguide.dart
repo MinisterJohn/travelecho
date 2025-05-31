@@ -1,10 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
-import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/core/constants/appbar.dart';
-import 'package:travelecho/core/constants/constants.dart';
-import 'package:travelecho/core/hoc/containerWidget.dart';
-import 'exploreguide.dart';
+import '../../travel_guide_exports.dart';
 
 class TravelGuidePage extends StatelessWidget {
   const TravelGuidePage({super.key});
@@ -102,7 +98,7 @@ class TravelGuidePage extends StatelessWidget {
                         color: AppColors.primaryColor,
                         size: 30,
                       ),
-                      WidgetsSpacer.horinzontalSpacer8,
+                      WidgetsSpacer.horizontalSpacer8,
                       Expanded(
                         child: Text(
                           guideFeatures[index]["title"],

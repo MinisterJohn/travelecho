@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../../trip_exports.dart';
 
 class FlightInfoCard extends StatelessWidget {
@@ -126,17 +126,17 @@ class FlightInfoCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(
-            children: [
-              Icon(icon, size: 18, color: Colors.grey),
-              const SizedBox(width: 8),
-              Text(
-            label,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.grey,
+          Row(children: [
+            Icon(icon, size: 18, color: Colors.grey),
+            const SizedBox(width: 8),
+            Text(
+              label,
+              style: const TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
             ),
-          ),]),
+          ]),
           // const Spacer(),
           Flexible(
             child: Text(

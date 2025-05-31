@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../memories_exports.dart';
 import 'dart:async';
 import 'package:line_icons/line_icons.dart';
@@ -39,10 +39,18 @@ class _MemorySearchBarState extends State<MemorySearchBar> {
       controller: widget.controller,
       decoration: InputDecoration(
         hintText: 'Search memories...',
-        prefixIcon: const Icon(Icons.search, color: AppColors.defaultColor400,),
+        prefixIcon: const Icon(
+          Icons.search,
+          color: AppColors.defaultColor400,
+          size: 20,
+        ),
         suffixIcon: widget.controller.text.isNotEmpty
             ? IconButton(
-                icon: const Icon(LineIcons.times, color: AppColors.defaultColor400,),
+                icon: const Icon(
+                  LineIcons.times,
+                  color: AppColors.defaultColor400,
+                  size: 20,
+                ),
                 onPressed: () {
                   widget.controller.clear();
                   widget.onSearch('');
@@ -64,7 +72,7 @@ class _MemorySearchBarState extends State<MemorySearchBar> {
         filled: true,
         fillColor: AppColors.primaryColor100,
         contentPadding:
-            const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
       ),
       onChanged: _onSearchChanged,
     );

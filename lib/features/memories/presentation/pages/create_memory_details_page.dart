@@ -1,5 +1,4 @@
-// import 'package:flutter_carousel_widget/flutter_carousel_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../memories_exports.dart';
@@ -28,7 +27,7 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
   DateTime? _selectedDate;
   bool _isPublic = true;
   List<String> _tags = [];
-  String? _memoryId;
+  String _memoryId = '';
   bool _isLoading = false;
 
   @override
@@ -195,18 +194,27 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
                   isLoading: _isLoading,
                   isEditing: widget.isEditing,
                   onCreateUpdate: () async {
+                    if (_titleController.text.isEmpty) {
+                      DisplayMessage.errorMessage(
+                          'Please enter a title', context);
+                      return;
+                    }
                     await _handlePost();
                     // ignore: use_build_context_synchronously
                     AppNavigator.pop(context);
                   },
                   onAddUpdatePictures: () async {
-                    if (_memoryId != null) {
+                    print("pictures");
+                    await _handlePost();
+                    final currentState = context.read<MemoriesBloc>().state;
+                    print(currentState);
+                   
                       AppNavigator.push(
                         context,
                         BlocProvider.value(
                           value: context.read<MemoriesBloc>(),
                           child: AddDetailsToMemoryPage(
-                            memoryId: _memoryId!,
+                            memoryId: widget.memory!.id,
                             isEditing: widget.isEditing,
                             existingImages:
                                 widget.isEditing && widget.memory != null
@@ -215,14 +223,7 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
                           ),
                         ),
                       );
-                    } else {
-                      if (_titleController.text.isEmpty) {
-                        DisplayMessage.errorMessage(
-                            'Please enter a title', context);
-                        return;
-                      }
-                      await _handlePost();
-                    }
+                    
                   },
                 ),
                 WidgetsSpacer.verticalSpacer32,

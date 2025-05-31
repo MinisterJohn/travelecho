@@ -18,5 +18,7 @@ export 'connection/network_info.dart';
 export 'utils/validators/date_formatter.dart';
 export 'utils/validators/field_validator.dart';
 export 'utils/image_handler.dart';
+export 'utils/image_handler_mobile.dart';
+export 'utils/image_handler_web.dart';
 
 export 'usecases/usecases.dart';

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../profile_exports.dart';
 
 Future showDraggableBottomModal(BuildContext context, Widget widget) {

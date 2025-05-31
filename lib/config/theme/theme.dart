@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:travelecho/config/theme/colors.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import 'colors.dart';
+import '../../core/core_exports.dart';
 import "package:flutter/services.dart";
 
 class AppTheme {
@@ -37,7 +37,7 @@ class AppTheme {
     snackBarTheme: SnackBarThemeData(
       backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
         side: const BorderSide(color: AppColors.primaryColor),
       ),
       contentTextStyle: const TextStyle(
@@ -61,38 +61,68 @@ class AppTheme {
       ),
       contentPadding: const EdgeInsets.all(16),
       border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(10),
         borderSide: const BorderSide(width: 1, color: AppColors.secondaryColor),
       ),
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.secondaryColor),
+      enabledBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: AppColors.secondaryColor),
       ),
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: AppColors.primaryColor),
+      focusedBorder: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
+        borderSide: const BorderSide(color: AppColors.primaryColor),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryColor,
-          foregroundColor: AppColors.white,
-          elevation: 5,
-          shadowColor: AppColors.primaryColor100,
-          textStyle: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w400,
-              color: AppColors.white),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(5),
-          ),
-          minimumSize: Size(375.w, 50)),
+        backgroundColor: AppColors.primaryColor,
+        foregroundColor: AppColors.white, // ✅ Needed for button text
+        elevation: 5,
+        shadowColor: AppColors.primaryColor100,
+        textStyle: TextStyle(
+          fontSize: FontSize.size18,
+          fontWeight: FontWeight.w400,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      ),
     ),
-    appBarTheme: const AppBarTheme(
+
+    textButtonTheme: TextButtonThemeData(
+      style: TextButton.styleFrom(
+        foregroundColor: AppColors.primaryColor, // ✅ Added
+        textStyle: TextStyle(
+          fontSize: FontSize.size18,
+          fontWeight: FontWeight.w400,
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      ),
+    ),
+
+    outlinedButtonTheme: OutlinedButtonThemeData(
+      style: OutlinedButton.styleFrom(
+        foregroundColor: AppColors.primaryColor, // ✅ Added
+        textStyle: TextStyle(
+          fontSize: FontSize.size18,
+          fontWeight: FontWeight.w400,
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        side: const BorderSide(color: AppColors.primaryColor),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+    ),
+
+    appBarTheme: AppBarTheme(
       backgroundColor: AppColors.white,
       systemOverlayStyle: SystemUiOverlayStyle.dark,
-      iconTheme: IconThemeData(color: AppColors.white),
+      iconTheme: const IconThemeData(color: AppColors.white),
       titleTextStyle: TextStyle(
         color: AppColors.defaultColor,
-        fontSize: 20,
+        fontSize: FontSize.size18,
         fontWeight: FontWeight.w600,
       ),
     ),

@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth_exports.dart';
 
@@ -23,45 +23,35 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: WidgetsSpacer.pagePadding,
-          child: BlocConsumer<AuthBloc, AuthState>(
-            listener: (context, state) {
-              if (state is AuthSignupSuccess) {
-                // Navigate to verification page with email
-                AppNavigator.push(
-                  context,
-                  OtpForm(
-                    email: state.email,
-                    isSignup: true,
-                  ),
-                );
-              } else if (state is AuthFailure) {
-                DisplayMessage.errorMessage(state.error, context);
-              }
-            },
-            builder: (context, state) {
-              if (state is AuthLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _signupTitleText(),
-                  WidgetsSpacer.verticalSpacer8,
-                  _signupDescriptionText(),
-
-                  WidgetsSpacer.verticalSpacer32,
-
-                  _signupForm(context),
-                  WidgetsSpacer.verticalSpacer16,
-                  _signInText(context),
-                  // Footer with Login link
-                ],
-              );
-            },
+    return BlocListener<AuthBloc, AuthState>(
+      listener: (context, state) {
+        if (state is AuthSignupSuccess) {
+          AppNavigator.push(
+            context,
+            OtpForm(
+              email: state.email,
+              isSignup: true,
+            ),
+          );
+        } else if (state is AuthFailure) {
+          DisplayMessage.errorMessage(state.error, context);
+        }
+      },
+      child: Scaffold(
+        body: ScreenContainer(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _signupTitleText(),
+                WidgetsSpacer.verticalSpacer8,
+                _signupDescriptionText(),
+                WidgetsSpacer.verticalSpacer32,
+                _signupForm(context),
+                WidgetsSpacer.verticalSpacer16,
+                _signInText(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -100,7 +90,8 @@ class _SignUpPageState extends State<SignUpPage> {
             autovalidateMode: AutovalidateMode.onUserInteraction,
             decoration: const InputDecoration(
               labelText: 'Full Name',
-              // border: OutlineInputBorder(),
+              prefixIcon: Icon(Icons.person_outline),
+              prefixIconColor: AppColors.primaryColor300,
             ),
             validator: (value) {
               if (value!.isEmpty) return "Please enter a username";
@@ -114,6 +105,8 @@ class _SignUpPageState extends State<SignUpPage> {
             controller: _emailController,
             decoration: const InputDecoration(
               hintText: 'Email Address',
+              prefixIcon: Icon(Icons.email_outlined),
+              prefixIconColor: AppColors.primaryColor300,
             ),
             keyboardType: TextInputType.emailAddress,
             validator: (value) {
@@ -130,10 +123,11 @@ class _SignUpPageState extends State<SignUpPage> {
             validator: (value) {
               if (value!.isEmpty) return "Please enter password";
               return null;
-            }, // Toggle password visibility
+            },
             decoration: InputDecoration(
               labelText: 'Password',
-              // border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.lock_outline),
+              prefixIconColor: AppColors.primaryColor300,
               suffixIcon: IconButton(
                 icon: Icon(
                   _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
@@ -141,8 +135,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    _isPasswordVisible =
-                        !_isPasswordVisible; // Toggle visibility
+                    _isPasswordVisible = !_isPasswordVisible;
                   });
                 },
               ),
@@ -153,11 +146,11 @@ class _SignUpPageState extends State<SignUpPage> {
           // Confirm Password Field
           TextFormField(
             controller: _confirmPasswordController,
-            obscureText:
-                !_isConfirmPasswordVisible, // Toggle confirm password visibility
+            obscureText: !_isConfirmPasswordVisible,
             decoration: InputDecoration(
               labelText: 'Confirm Password',
-              // border: const OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.lock_outline),
+              prefixIconColor: AppColors.primaryColor300,
               suffixIcon: IconButton(
                 icon: Icon(
                   _isConfirmPasswordVisible
@@ -167,8 +160,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 onPressed: () {
                   setState(() {
-                    _isConfirmPasswordVisible =
-                        !_isConfirmPasswordVisible; // Toggle visibility
+                    _isConfirmPasswordVisible = !_isConfirmPasswordVisible;
                   });
                 },
               ),
@@ -181,29 +173,45 @@ class _SignUpPageState extends State<SignUpPage> {
           WidgetsSpacer.verticalSpacer32,
 
           // Sign Up Button
-          ElevatedButton(
-            onPressed: () async {
-              if (form.currentState!.validate()) {
-                if (_passwordController.text ==
-                    _confirmPasswordController.text) {
-                  context.read<AuthBloc>().add(
-                        SignupEvent(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                          name: _fullNameController.text,
+          BlocBuilder<AuthBloc, AuthState>(
+            builder: (context, state) {
+              return ElevatedButton(
+                onPressed: state is AuthLoading
+                    ? null
+                    : () async {
+                        if (form.currentState!.validate()) {
+                          if (_passwordController.text ==
+                              _confirmPasswordController.text) {
+                            context.read<AuthBloc>().add(
+                                  SignupEvent(
+                                    email: _emailController.text,
+                                    password: _passwordController.text,
+                                    name: _fullNameController.text,
+                                  ),
+                                );
+                          } else {
+                            DisplayMessage.errorMessage(
+                                'Passwords do not match', context);
+                          }
+                        }
+                      },
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                ),
+                child: state is AuthLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor:
+                              AlwaysStoppedAnimation<Color>(AppColors.white),
                         ),
-                      );
-                } else {
-                  DisplayMessage.errorMessage(
-                      'Passwords do not match', context);
-                }
-              }
+                      )
+                    : const Text('Sign Up',
+                        style: TextStyle(color: AppColors.white)),
+              );
             },
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
-            ),
-            child:
-                const Text('Sign Up', style: TextStyle(color: AppColors.white)),
           ),
 
           WidgetsSpacer.verticalSpacer32,
@@ -230,7 +238,7 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -253,7 +261,7 @@ class _SignUpPageState extends State<SignUpPage> {
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
               decoration: BoxDecoration(
                 border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,

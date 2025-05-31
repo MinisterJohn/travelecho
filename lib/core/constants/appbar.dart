@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
 import "../../features/features_exports.dart";
 

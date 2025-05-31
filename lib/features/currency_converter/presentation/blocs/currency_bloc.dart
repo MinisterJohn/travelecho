@@ -11,12 +11,12 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
 
       final result = await sl<ConvertCurrency>()
           .execute(event.base, event.target, event.amount);
-      print("|Yeah");
+      print("Yeah");
       result.fold(
         (failure) => emit(CurrencyError(failure)),
         (convertedRate) => emit(CurrencyLoaded(convertedRate)),
       );
-      print("|Yeah2");
+      print("Yeah2");
     });
     on<CurrencyListRequested>((event, emit) async {
       // Corrected event name

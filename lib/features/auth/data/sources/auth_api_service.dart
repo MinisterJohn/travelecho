@@ -34,7 +34,11 @@ class AuthApiServiceImpl implements AuthApiService {
         return "No internet connection. Please check your network and try again.";
       case DioExceptionType.badResponse:
         if (e.response?.statusCode == 500) {
+          _logger.e('Server error details: ${e.response?.data}');
           return "Server error. Our team has been notified. Please try again later.";
+        }
+        if (e.response?.statusCode == 503) {
+          return "The server is currently unavailable (503). Please try again later.";
         }
         final message = e.response?.data?["message"];
         if (message != null) return message.toString();
@@ -68,31 +72,29 @@ class AuthApiServiceImpl implements AuthApiService {
         data: params.toMap(),
       );
 
-      if (response.statusCode == 401) {
-        _logger.w('Invalid credentials for email: ${params.email}');
-        return const Left("Invalid email or password");
-      } else if (response.statusCode == 404) {
-        _logger.w('User not found for email: ${params.email}');
-        return const Left("User not found");
-      } else if (response.statusCode == 400) {
-        _logger.w('Bad request: ${response.data["message"]}');
-        return const Left("Invalid request format");
-      } else if (response.statusCode != 200) {
+      if (response.statusCode == 402) {
         _logger.w('Login failed with status: ${response.statusCode}');
-        return const Left("Login failed. Please try again.");
+        return Right({...response.data, "verified": false});
+      }
+      if (response.statusCode != 200) {
+        _logger.w('Login failed with status: ${response.statusCode}');
+        return Left(response.data["message"] ?? "Login failed");
       }
 
       final data = response.data;
-      if (data == null ||
-          !data.containsKey('success') ||
-          !data.containsKey('user')) {
+      if (data == null || data is! Map<String, dynamic>) {
         _logger.e('Invalid response format: $data');
         return const Left("Server returned invalid data format");
       }
 
+      if (!data.containsKey('success') || !data.containsKey('user')) {
+        _logger.e('Missing required keys in response: $data');
+        return const Left("Server returned incomplete data");
+      }
+
       final Map userData = data['user'];
       if (!userData.containsKey('token')) {
-        _logger.e('Missing token in response');
+        _logger.e('Missing token in response: $userData');
         return const Left("Authentication data not found in response");
       }
       _logger.i(userData);
@@ -138,7 +140,7 @@ class AuthApiServiceImpl implements AuthApiService {
       } else {
         _logger.w(
             'Signup failed with status: ${response.statusCode}, ${response.data["message"]?.toString()}');
-        return const Left("Signup failed. Please try again.");
+        return Left(response.data["message"]);
       }
     } on DioException catch (e) {
       return Left(_handleError(e));
@@ -153,16 +155,26 @@ class AuthApiServiceImpl implements AuthApiService {
     try {
       _logger.i('Sending OTP to email: $email');
       final response = await _dioClient.post(
-        ApiUrl.fullUrl(ApiUrl.sendOtpURL),
+        ApiUrl.sendOtpURL,
         data: {'email': email},
       );
-
+      _logger.i(response);
       if (response.statusCode == 200) {
-        _logger.i('OTP sent successfully to: $email');
-        return const Right(true);
+        final responseData = response.data;
+        if (responseData is Map<String, dynamic> &&
+            responseData['success'] == true) {
+          _logger.i('OTP sent successfully to: $email');
+          return const Right(true);
+        } else {
+          _logger.w('Unexpected response format: $responseData');
+          return Left(
+              "Failed to send OTP: Unexpected response format: $responseData");
+        }
       } else {
-        _logger.w('Failed to send OTP: ${response.data["message"]}');
-        return const Left("Failed to send OTP");
+        final errorMessage = response.data?['message'] ?? 'Unknown error';
+        _logger.w(
+            'Failed to send OTP. Status code: ${response.statusCode}, Message: $errorMessage');
+        return Left("Failed to send OTP: $errorMessage");
       }
     } on DioException catch (e) {
       return Left(_handleError(e));
@@ -186,7 +198,7 @@ class AuthApiServiceImpl implements AuthApiService {
         return const Right(true);
       } else {
         _logger.w('OTP verification failed: ${response.data["message"]}');
-        return const Left("Failed to verify OTP");
+        return Left(response.data["message"] ?? "Failed to verify OTP");
       }
     } on DioException catch (e) {
       return Left(_handleError(e));

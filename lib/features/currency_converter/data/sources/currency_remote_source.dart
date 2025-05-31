@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import '../../currency_converter_exports.dart';
 
-
 abstract class CurrencyRemoteSource {
   Future<CurrencyModel> fetchExchangeRates(String baseCurrency);
   Future<CurrencyListModel> fetchCurrencyList();
@@ -15,11 +14,11 @@ class CurrencyRemoteSourceImpl extends CurrencyRemoteSource {
     final response = await dio.get(
         "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/$baseCurrency.json");
 
-    try{
-    Logger().d("Convert API Response: ${response.data}");
+    try {
+      Logger().d("Convert API Response: ${response.data}");
 
       return CurrencyModel.fromJson(response.data, baseCurrency);
-    } catch(e) {
+    } catch (e) {
       throw Exception("Failed to load exchange rates ${e.toString()}");
     }
   }

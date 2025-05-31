@@ -1,5 +1,5 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
@@ -96,7 +96,7 @@ Widget _progressDisplay() {
                         BlocProvider.value(value: sl<FlightBookingBloc>()),
                       ], child: const TripScreen()));
                 }),
-            WidgetsSpacer.horinzontalSpacer8,
+            WidgetsSpacer.horizontalSpacer8,
             TripProgressDisplay(
                 progressIcon: Icons.flight_land_outlined,
                 progressKey: "Destination Airport",
@@ -288,30 +288,30 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
         height: 400,
         child: isDateMode
             ? RangeDatePicker(
-          centerLeadingDate: true,
+                centerLeadingDate: true,
                 initialDate: selectedRange.start,
-          minDate: DateTime.now(),
-          maxDate: DateTime(2050, 10, 30),
-          enabledCellsTextStyle: const TextStyle(fontSize: 14),
+                minDate: DateTime.now(),
+                maxDate: DateTime(2050, 10, 30),
+                enabledCellsTextStyle: const TextStyle(fontSize: 14),
                 currentDateTextStyle: const TextStyle(
                     fontSize: 14, color: AppColors.primaryColor),
-          singleSelectedCellTextStyle:
-              const TextStyle(fontSize: 14, color: Colors.white),
+                singleSelectedCellTextStyle:
+                    const TextStyle(fontSize: 14, color: Colors.white),
                 selectedCellsTextStyle: const TextStyle(fontSize: 14),
-          disabledCellsTextStyle: const TextStyle(
-              fontSize: 14, color: Color.fromRGBO(200, 200, 200, 1)),
-          currentDateDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(width: 1, color: AppColors.primaryColor),
-          ),
-          singleSelectedCellDecoration: BoxDecoration(
-            color: AppColors.primaryColor,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          onRangeSelected: (value) {
-            setState(() {
+                disabledCellsTextStyle: const TextStyle(
+                    fontSize: 14, color: Color.fromRGBO(200, 200, 200, 1)),
+                currentDateDecoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(6),
+                  border: Border.all(width: 1, color: AppColors.primaryColor),
+                ),
+                singleSelectedCellDecoration: BoxDecoration(
+                  color: AppColors.primaryColor,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                onRangeSelected: (value) {
+                  setState(() {
                     selectedRange = value;
                   });
                   _onDateRangeSelected(value);
@@ -353,30 +353,30 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
               ),
       ),
       if (isDateMode)
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text("How many days will you like to stay?"),
-          Row(
-            children: [
-              IconButton(
-                onPressed: decrementRange,
-                icon: const Icon(LineIcons.minusSquare),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                "${getNumberOfDays()}",
-                style: const TextStyle(fontSize: 16),
-              ),
-              const SizedBox(width: 4),
-              IconButton(
-                onPressed: incrementRange,
-                icon: const Icon(LineIcons.plusSquare),
-              ),
-            ],
-          )
-        ],
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("How many days will you like to stay?"),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: decrementRange,
+                  icon: const Icon(LineIcons.minusSquare),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "${getNumberOfDays()}",
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(width: 4),
+                IconButton(
+                  onPressed: incrementRange,
+                  icon: const Icon(LineIcons.plusSquare),
+                ),
+              ],
+            )
+          ],
+        ),
     ]);
   }
 }

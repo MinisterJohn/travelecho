@@ -1,5 +1,5 @@
 import 'package:date_picker_plus/date_picker_plus.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import 'dart:math';
@@ -95,7 +95,7 @@ Widget _progressDisplay() {
                           value: sl<FlightBookingBloc>(),
                           child: const TripScreen()));
                 }),
-            WidgetsSpacer.horinzontalSpacer8,
+            WidgetsSpacer.horizontalSpacer8,
             TripProgressDisplay(
                 progressIcon: Icons.flight_land_outlined,
                 progressKey: "Destination Airport",

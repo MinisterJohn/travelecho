@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class TakePhotoPage extends StatelessWidget {
   const TakePhotoPage({super.key});

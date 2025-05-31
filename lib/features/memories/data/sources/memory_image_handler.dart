@@ -2,20 +2,23 @@ import 'dart:convert';
 import 'package:dartz/dartz.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'image_upload_handler.dart';
-import 'web_image_upload_handler.dart';
-import 'mobile_image_upload_handler.dart';
-import "../../memories_exports.dart";
+import 'image_upload_handler.dart'
+    if (dart.library.html) 'web_image_upload_handler.dart';
+import '../../memories_exports.dart';
+
+ImageUploadHandler getImageUploadHandler() {
+  // if (kIsWeb) {
+  //   return WebImageUploadHandler();
+  // } else {
+    return MobileImageUploadHandler();
+  // }
+}
 
 class MemoryImageHandler {
   final SharedPreferences _prefs = sl<SharedPreferences>();
   final ImageUploadHandler _imageUploadHandler;
 
-  MemoryImageHandler()
-      : _imageUploadHandler = kIsWeb
-            ? WebImageUploadHandler()
-            : MobileImageUploadHandler();
+  MemoryImageHandler() : _imageUploadHandler = getImageUploadHandler();
 
   Future<String?> _getToken() async {
     final token = _prefs.getString('token');
@@ -38,8 +41,8 @@ class MemoryImageHandler {
 
       for (var i = 0; i < imagePaths.length; i++) {
         try {
-          final multipartFile =
-              await _imageUploadHandler.createMultipartFile(imagePaths[i], 'image[]');
+          final multipartFile = await _imageUploadHandler.createMultipartFile(
+              imagePaths[i], 'image[]');
           request.files.add(multipartFile);
         } catch (e) {
           return Left('Failed to process image ${i + 1}: $e');

@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../memories_exports.dart';
-
 
 void upgradeToPro(BuildContext context) {
   showDialog(
@@ -74,7 +73,7 @@ void upgradeToPro(BuildContext context) {
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       Text("Upgrade to Pro"),
-                                      WidgetsSpacer.horinzontalSpacer8,
+                                      WidgetsSpacer.horizontalSpacer8,
                                       Icon(Icons.diamond_outlined)
                                     ])),
                             WidgetsSpacer.verticalSpacer16,

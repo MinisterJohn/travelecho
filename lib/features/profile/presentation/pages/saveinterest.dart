@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../profile_exports.dart';
 
@@ -87,14 +87,11 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
 
           BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
             final List<String> selectedInterests =
-                state is ProfileLoaded
-                    ? (state).profile.interests
-                    : <String>[];
+                state is ProfileLoaded ? (state).profile.interests : <String>[];
             return BlocBuilder<DataSearchBloc, DataSearchState>(
                 builder: (context, state) {
-              List<String> relatedInterests = state is InterestsLoaded
-                  ? state.interests
-                  : <String>[];
+              List<String> relatedInterests =
+                  state is InterestsLoaded ? state.interests : <String>[];
               return _buildInterestsList(
                   relatedInterests, selectedInterests, context);
             });
@@ -186,11 +183,11 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
                     }))));
   }
 
-  Widget _interestsListWidget(List<String> interests,
-      List<String> selectedInterests, int index) {
+  Widget _interestsListWidget(
+      List<String> interests, List<String> selectedInterests, int index) {
     String interest = interests[index];
-    bool isSelected = selectedInterests.any(
-        (selectedInterest) => selectedInterest == interest);
+    bool isSelected = selectedInterests
+        .any((selectedInterest) => selectedInterest == interest);
     return ElevatedButton(
       onPressed: () {
         context

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class UrbanExplorerPage extends StatelessWidget {
   const UrbanExplorerPage({super.key});
@@ -15,9 +15,11 @@ class UrbanExplorerPage extends StatelessWidget {
         ),
         title: const Text(""),
         elevation: 0, // Remove AppBar shadow for a cleaner look
-        backgroundColor: Colors.transparent, // Make AppBar background transparent
+        backgroundColor:
+            Colors.transparent, // Make AppBar background transparent
       ),
-      body: SingleChildScrollView( // Enable scrolling
+      body: SingleChildScrollView(
+        // Enable scrolling
         padding: const EdgeInsets.all(20.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -34,19 +36,19 @@ class UrbanExplorerPage extends StatelessWidget {
             const SizedBox(height: 20),
 
             // Depth3 image with sharearrow beside it
-          Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min, // Ensures the row takes only as much space as needed
-              children: [
-                Image.asset(
-                  'assets/Depth3.png', // Replace with your image path
-                  width: 200,
-                  height: 200,
-                ),
-                
-              ],
+            Center(
+              child: Row(
+                mainAxisSize: MainAxisSize
+                    .min, // Ensures the row takes only as much space as needed
+                children: [
+                  Image.asset(
+                    'assets/Depth3.png', // Replace with your image path
+                    width: 200,
+                    height: 200,
+                  ),
+                ],
+              ),
             ),
-          ),
             const SizedBox(height: 20),
 
             // Congratulations section

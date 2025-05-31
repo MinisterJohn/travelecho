@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:travelecho/core/constants/app_navigation.dart';
-import 'package:travelecho/core/constants/appbar.dart';
-import 'package:travelecho/features/community/presentation/pages/user_dashboard.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import "../../community_exports.dart";
 
 class UserProfilePage extends StatelessWidget {
   const UserProfilePage({super.key});
@@ -24,7 +22,8 @@ class UserProfilePage extends StatelessWidget {
             children: [
               const CircleAvatar(
                 radius: 50,
-                backgroundImage: AssetImage('assets/images/memories/rectangle1.png'),
+                backgroundImage:
+                    AssetImage('assets/images/memories/rectangle1.png'),
               ),
               const SizedBox(height: 20),
               const Text(

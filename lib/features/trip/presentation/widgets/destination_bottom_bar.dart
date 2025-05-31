@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import "../../trip_exports.dart";
-
 
 class DestinationBottomBar extends StatelessWidget {
   final VoidCallback onClear;

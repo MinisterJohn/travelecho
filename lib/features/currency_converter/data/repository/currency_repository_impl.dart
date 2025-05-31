@@ -3,7 +3,6 @@ import 'package:dartz/dartz.dart';
 import 'package:logger/logger.dart';
 import '../../currency_converter_exports.dart';
 
-
 class CurrencyRepositoryImpl implements CurrencyRepository {
   final logger = Logger();
   final CurrencyRemoteSource remoteSource = sl<CurrencyRemoteSource>();
@@ -23,7 +22,8 @@ class CurrencyRepositoryImpl implements CurrencyRepository {
     try {
       final currencies = await remoteSource
           .fetchCurrencyList(); // Assuming this returns CurrencyListModel
-      return Right(currencies.toList()); // ✅ Convert to List<String>
+      return Right(currencies.toList());
+      logger.i(currencies); // ✅ Convert to List<String>
     } catch (e) {
       logger.e("Error fetching exchange rates: $e");
       return const Left("Failed to get currency list"); // ❌ Handle failure

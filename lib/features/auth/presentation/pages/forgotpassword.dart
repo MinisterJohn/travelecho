@@ -1,5 +1,5 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth_exports.dart';
 
@@ -103,10 +103,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             },
           ),
           WidgetsSpacer.verticalSpacer8,
-          const Text(
+          Text(
             'A 6-digit code will be sent to your email',
             style: TextStyle(
-              fontSize: 12.0,
+              fontSize: FontSize.size14,
               color: AppColors.defaultColor400,
             ),
           ),
@@ -124,27 +124,15 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     }
                   },
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
               minimumSize: const Size(double.infinity, 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
             ),
             child: _isLoading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
+                ? const CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
                   )
                 : const Text(
                     'Send Code',
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 18.0,
-                    ),
                   ),
           ),
         ],

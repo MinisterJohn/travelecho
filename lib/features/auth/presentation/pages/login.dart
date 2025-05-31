@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:travelecho/navigation_menu/blocs/navigation_menu_cubit.dart';
 import '../../auth_exports.dart';
 
 class LoginPage extends StatefulWidget {
@@ -19,16 +20,31 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
       listener: (context, state) {
-        if (state is AuthLoginSuccess) {
-          AppNavigator.pushReplacement(context, const RootPage());
+        if (state is AuthUnverifiedUser) {
+          // Navigate to VerificationCodePage for unverified users
+          AppNavigator.push(
+            context,
+            OtpForm(
+              email: _emailController.text, // Pass the email if available in the state
+              isSignup: false,
+            ),
+          );
+        }  else if(state is AuthLoginSuccess) {
+            AppNavigator.pushReplacement(
+              context,
+              BlocProvider(
+                create: (context) => sl<NavigationMenuCubit>(),
+                child: const RootPage(),
+              ),
+            );
+          
         } else if (state is AuthFailure) {
           DisplayMessage.errorMessage(state.error, context);
         }
       },
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: WidgetsSpacer.pagePadding,
+        body: ScreenContainer(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -249,7 +265,9 @@ class _LoginPageState extends State<LoginPage> {
     if (email.isEmpty || password.isEmpty) {
       DisplayMessage.errorMessage("Please enter all fields", context);
     } else {
-      context.read<AuthBloc>().add(LoginEvent(email: email, password: password));
+      context
+          .read<AuthBloc>()
+          .add(LoginEvent(email: email, password: password));
     }
   }
 }

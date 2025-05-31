@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:travelecho/features/budget/data/budget_data.dart';
@@ -56,18 +56,27 @@ class _RootPageState extends State<RootPage> {
     const CommunityPage(),
     // Container(),
 
-    const ProfilePage(), // Replace with your Profile page widget
+    MultiBlocProvider(providers: [
+      BlocProvider(
+        create: (context) => sl<ProfileBloc>(),
+      ),
+    ], child: const ProfilePage()), // Replace with your Profile page widget
   ];
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => NavigationMenuCubit(),
+    return BlocProvider.value(
+      value: sl<NavigationMenuCubit>(),
       child: BlocBuilder<NavigationMenuCubit, NavigationMenuState>(
         builder: (context, state) {
           return Scaffold(
-            body: SizedBox.expand(
+            body: SafeArea(
+              child: SizedBox.expand(
                 child: IndexedStack(
-                    index: state.currentPageIndex, children: pages)),
+                  index: state.currentPageIndex,
+                  children: pages,
+                ),
+              ),
+            ),
             bottomNavigationBar: NavigationBar(
               height: 80,
               elevation: 0,

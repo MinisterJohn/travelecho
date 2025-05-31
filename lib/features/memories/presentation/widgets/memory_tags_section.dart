@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../memories_exports.dart';
 
 class MemoryTagsSection extends StatefulWidget {
@@ -26,16 +26,12 @@ class _MemoryTagsSectionState extends State<MemoryTagsSection> {
   }
 
   void _handleTagSubmission(BuildContext context) {
-    final tag = widget.tagController.text.trim();
+    final tag = widget.tagController.text.trim().toLowerCase();
     if (tag.isEmpty) return;
 
     if (_containsSpecialCharacters(tag)) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Tags cannot contain special characters'),
-          backgroundColor: AppColors.errorColor,
-        ),
-      );
+      DisplayMessage.errorMessage(
+          "Tags cannot contain special characters", context);
       return;
     }
 
@@ -74,7 +70,7 @@ class _MemoryTagsSectionState extends State<MemoryTagsSection> {
                 onEditingComplete: () => _handleTagSubmission(context),
               ),
             ),
-            WidgetsSpacer.horinzontalSpacer8,
+            WidgetsSpacer.horizontalSpacer8,
             ElevatedButton(
               onPressed: () => _handleTagSubmission(context),
               style: ElevatedButton.styleFrom(
@@ -103,9 +99,9 @@ class _MemoryTagsSectionState extends State<MemoryTagsSection> {
                 onDeleted: () => widget.onRemoveTag(tag),
                 deleteIconColor: AppColors.primaryColor,
                 shape: const StadiumBorder(
-                  side: BorderSide(color: AppColors.primaryColor),
+                  side: BorderSide(color: AppColors.primaryColor100),
                 ),
-                backgroundColor: AppColors.primaryColor.withOpacity(0.1),
+                backgroundColor: AppColors.primaryColor100,
                 labelStyle: const TextStyle(color: AppColors.primaryColor),
               );
             }).toList(),

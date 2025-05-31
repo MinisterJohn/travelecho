@@ -8,7 +8,9 @@ part 'user_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final SigninUseCase loginUseCase = sl<SigninUseCase>();
   final SignupUseCase signupUseCase = sl<SignupUseCase>();
+  final LogoutUseCase logoutUseCase = sl<LogoutUseCase>();
   final IsLoggedInUseCase isLoggedInUseCase = sl<IsLoggedInUseCase>();
+
   final VerifyOtpUseCase verifyOtpUseCase = sl<VerifyOtpUseCase>();
   final SendOtpUseCase sendOtpUseCase = sl<SendOtpUseCase>();
   final ResetPasswordUseCase resetPasswordUseCase = sl<ResetPasswordUseCase>();
@@ -30,23 +32,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           },
           (data) async {
             print("data $data");
+            print("data status code ${data['errorCode']}");
 
-            final Map userData = data['user'];
-            // Store user data in SharedPreferences
+            if (data['errorCode'] == 'EMAIL_NOT_VERIFIED') {
+              emit(AuthUnverifiedUser()); // Emit a state for unverified users
 
-            emit(AuthLoginSuccess(User(
-              id: userData['_id'],
-              token: userData['token'],
-              name: userData['name'],
-              email: userData['email'],
-              verified: userData['verified'],
-              plan: userData['plan'],
-              subscription: userData['subscription'],
-              profile: Profile.fromJson(userData['profile']),
-              createdAt: DateTime.parse(userData['createdAt']),
-              updatedAt: DateTime.parse(userData['updatedAt']),
-              role: userData['role'],
-            )));
+              // return; // Stop further processing
+            } else {
+              final Map userData = data['user'];
+              // Store user data in SharedPreferences
+
+              emit(AuthLoginSuccess(User(
+                id: userData['_id'],
+                token: userData['token'],
+                name: userData['name'],
+                email: userData['email'],
+                verified: userData['verified'],
+                plan: userData['plan'],
+                subscription: userData['subscription'],
+                profile: Profile.fromJson(userData['profile']),
+                createdAt: DateTime.parse(userData['createdAt']),
+                updatedAt: DateTime.parse(userData['updatedAt']),
+                role: userData['role'],
+              )));
+            }
           },
         );
       } catch (e) {
@@ -160,6 +169,18 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } catch (e) {
         print("Send OTP error: $e");
         emit(AuthFailure("Failed to send OTP: $e"));
+      }
+    });
+
+    on<LogoutEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        await prefs.clear(); // Clear all saved credentials
+        emit(AuthInitial()); // Emit initial state after logout
+      } catch (e) {
+        print("Logout error: $e");
+        emit(AuthFailure("Failed to logout: $e"));
       }
     });
   }

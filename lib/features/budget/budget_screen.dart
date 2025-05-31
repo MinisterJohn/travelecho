@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:provider/provider.dart';
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/features/budget/data/budget_data.dart';
@@ -81,7 +81,8 @@ class _BudgetScreenState extends State<BudgetScreen> {
             onPressed: () {
               _showNewBudgetDialog(context);
             },
-            style: ElevatedButton.styleFrom(backgroundColor: AppColors.primaryColor),
+            style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primaryColor),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [

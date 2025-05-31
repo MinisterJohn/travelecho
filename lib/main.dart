@@ -1,12 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import "package:flutter/services.dart";
 import "package:flutter_bloc/flutter_bloc.dart";
 import "package:flutter_screenutil/flutter_screenutil.dart";
-import "package:travelecho/config/theme/theme.dart";
-import "package:travelecho/features/auth/presentation/bloc/user_bloc.dart";
-import "package:travelecho/features/splashscreen/presentation/bloc/splash_cubit.dart";
-import "package:travelecho/features/splashscreen/presentation/pages/splashscreen.dart";
-import "package:travelecho/service_locator.dart";
+import "features/features_exports.dart";
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +39,7 @@ class MyApp extends StatelessWidget {
             theme: AppTheme.appTheme,
             // Define routes for navigation using aliases
 
-            home: const SplashScreen(), // Use alias for SignUpPage
+            home: const SplashScreen(), 
           ),
         ));
   }

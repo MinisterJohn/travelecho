@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class AppNavigator {
   static void pushReplacement(BuildContext context, Widget widget) {

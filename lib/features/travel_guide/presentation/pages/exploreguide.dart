@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class ExploreGuide extends StatefulWidget {
   const ExploreGuide({super.key});

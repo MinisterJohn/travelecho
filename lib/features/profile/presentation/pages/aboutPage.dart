@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -166,4 +166,3 @@ class AboutPage extends StatelessWidget {
     );
   }
 }
-

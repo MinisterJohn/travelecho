@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
 
@@ -125,15 +125,13 @@ class _FlightDetailState extends State<FlightDetail> {
                       ),
                     ),
                   ),
-                  ...outboundSegments
-                      .map((segment) => FlightSummaryCard(
-                            departure: segment['departure'],
-                            arrival: segment['arrival'],
-                            total: flightOfferPricing['price']['total'],
-                            carrierCode: segment['carrierCode'],
-                            flightNumber: segment['number'],
-                          ))
-                      ,
+                  ...outboundSegments.map((segment) => FlightSummaryCard(
+                        departure: segment['departure'],
+                        arrival: segment['arrival'],
+                        total: flightOfferPricing['price']['total'],
+                        carrierCode: segment['carrierCode'],
+                        flightNumber: segment['number'],
+                      )),
 
                   // Return Flight (if exists)
                   if (returnSegments.isNotEmpty) ...[
@@ -147,15 +145,13 @@ class _FlightDetailState extends State<FlightDetail> {
                         ),
                       ),
                     ),
-                    ...returnSegments
-                        .map((segment) => FlightSummaryCard(
-                              departure: segment['departure'],
-                              arrival: segment['arrival'],
-                              total: flightOfferPricing['price']['total'],
-                              carrierCode: segment['carrierCode'],
-                              flightNumber: segment['number'],
-                            ))
-                        ,
+                    ...returnSegments.map((segment) => FlightSummaryCard(
+                          departure: segment['departure'],
+                          arrival: segment['arrival'],
+                          total: flightOfferPricing['price']['total'],
+                          carrierCode: segment['carrierCode'],
+                          flightNumber: segment['number'],
+                        )),
                   ],
 
                   FlightInfoCard(

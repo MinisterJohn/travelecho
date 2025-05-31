@@ -1,9 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
-import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/core/constants/font_size_constants.dart';
-import 'package:travelecho/features/community/presentation/widgets/comment.dart';
-import 'package:travelecho/features/community/presentation/widgets/share.dart';
+import "../../community_exports.dart";
 
 class Post extends StatefulWidget {
   const Post({super.key});
@@ -31,7 +28,6 @@ class _PostState extends State<Post> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        
           Row(
             mainAxisAlignment: MainAxisAlignment.start, // Align to the edge
             children: [

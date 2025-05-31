@@ -38,7 +38,7 @@ class MemoryModel extends Equatable {
       description: json['description'] ?? '',
       location: json['location'] ?? '',
       date:
-          json['date'] != null ? DateTime.parse(json['date']) : DateTime.now(),
+          json['date'] != null ? DateTime.parse(json['date']) : DateTime.parse(json['createdAt']),
       images: List<dynamic>.from(json['images'] ?? []),
       tags: List<String>.from(json['tags'] ?? []),
       userId: json['userId']?.toString() ?? '',

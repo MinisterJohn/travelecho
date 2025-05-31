@@ -1,5 +1,6 @@
 import "package:dio/dio.dart";
 import "package:get_it/get_it.dart";
+import 'package:travelecho/navigation_menu/blocs/navigation_menu_cubit.dart';
 import 'features/features_exports.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:logger/logger.dart';
@@ -96,7 +97,7 @@ void _registerUseCases() {
   sl.registerSingleton<IsLoggedInUseCase>(IsLoggedInUseCase());
   sl.registerSingleton<IsNotNewUserUseCase>(IsNotNewUserUseCase());
   sl.registerSingleton<GetMemoryDetailsUseCase>(GetMemoryDetailsUseCase());
-  
+  sl.registerSingleton<LogoutUseCase>(LogoutUseCase());
 
   // Data use cases
   sl.registerLazySingleton(() => ConvertCurrency());
@@ -131,6 +132,8 @@ void _registerUseCases() {
 
 /// Registers all blocs
 void _registerBlocs() {
+  sl.registerLazySingleton<NavigationMenuCubit>(
+      () => NavigationMenuCubit());
   sl.registerLazySingleton<AuthBloc>(() => AuthBloc());
   sl.registerLazySingleton<CurrencyBloc>(() => CurrencyBloc());
   sl.registerLazySingleton<DataSearchBloc>(() => DataSearchBloc());

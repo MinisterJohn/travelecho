@@ -1,12 +1,13 @@
-// import 'package:carousel_slider/carousel_slider.dart';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:line_icons/line_icons.dart';
+import 'package:photo_view/photo_view.dart';
 import '../../memories_exports.dart';
 
 class AddDetailsToMemoryPage extends StatefulWidget {
@@ -29,17 +30,30 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
   final ImagePicker _picker = ImagePicker();
   List<dynamic> _selectedImages = [];
   bool _isUploading = false;
+  // late final String memoryId;
 
   @override
   void initState() {
     super.initState();
+    // final currentState = context.read<MemoriesBloc>().state;
+
+    // if (currentState is MemoryCreated) {
+    //   memoryId = currentState.memory['_id'] ?? currentState.memory['id'] ?? '';
+    // } else if (currentState is MemoryUpdated) {
+    //   memoryId = currentState.memory['_id'] ?? currentState.memory['id'] ?? '';
+    // } else {
+    //   memoryId = '';
+    // }
+
     if (widget.isEditing) {
       // Fetch memory details when in edit mode
       context.read<MemoriesBloc>().add(FetchMemoryDetails(widget.memoryId));
     }
+
     if (widget.existingImages != null) {
       _selectedImages = List.from(widget.existingImages!);
     }
+
     print("Existing Images: ${widget.existingImages}");
   }
 
@@ -108,8 +122,14 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
           DisplayMessage.successMessage(
               'Images ${widget.isEditing ? 'updated' : 'uploaded'} successfully',
               context);
-          AppNavigator.pushAndRemove(context,
-              const RootPage(initialPage: RootPage.MEMORIES_PAGE_INDEX));
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  const RootPage(initialPage: RootPage.MEMORIES_PAGE_INDEX),
+            ),
+            (route) => false,
+          );
         } else if (state is MemoryError) {
           setState(() {
             _isUploading = false;
@@ -172,23 +192,29 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                 if (_selectedImages.isNotEmpty) ...[
                   const SizedBox(height: 20),
                   SizedBox(
-                    height: 100,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
+                    height: 400.h,
+                    child: GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount:
+                            (MediaQuery.of(context).size.width ~/ 150).clamp(
+                                2, 4), // Adjust columns based on screen width
+                        crossAxisSpacing: 8.0,
+                        mainAxisSpacing: 8.0,
+                      ),
                       itemCount: _selectedImages.length,
                       itemBuilder: (context, index) {
                         final image = _selectedImages[index];
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                          padding: const EdgeInsets.all(4.0),
                           child: Stack(
                             children: [
                               // Handle both network images (existing) and local files (new)
                               if (image is XFile && !kIsWeb)
                                 Image.file(
                                   File(image.path),
-                                  width: 100,
-                                  height: 100,
                                   fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
                                 )
                               else if (image is XFile && kIsWeb)
                                 FutureBuilder<Uint8List>(
@@ -199,38 +225,109 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                                         snapshot.hasData) {
                                       return Image.memory(
                                         snapshot.data!,
-                                        width: 100,
-                                        height: 100,
                                         fit: BoxFit.cover,
+                                        width: double.infinity,
+                                        height: double.infinity,
                                       );
                                     } else {
-                                      return const SizedBox(
-                                        width: 100,
-                                        height: 100,
-                                        child: Center(
-                                          child: CircularProgressIndicator(),
-                                        ),
+                                      return const Center(
+                                        child: CircularProgressIndicator(),
                                       );
                                     }
                                   },
                                 )
                               else
                                 Image.network(
-                                  image.toString(),
-                                  width: 100,
-                                  height: 100,
+                                  image['url'].toString(),
                                   fit: BoxFit.cover,
+                                  width: double.infinity,
+                                  height: double.infinity,
                                 ),
                               Positioned(
-                                right: 0,
-                                child: IconButton(
-                                  icon: const Icon(LineIcons.trash,
-                                      color: AppColors.primaryColor),
-                                  onPressed: () {
-                                    setState(() {
-                                      _selectedImages.removeAt(index);
-                                    });
-                                  },
+                                bottom: 0,
+                                child: Container(
+                                  width: MediaQuery.of(context).size.width /
+                                      (MediaQuery.of(context).size.width ~/ 150)
+                                          .clamp(2,
+                                              4), // Match the width of each grid item
+                                  padding: const EdgeInsets.all(1),
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color:
+                                        AppColors.defaultColor.withAlpha(200),
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      IconButton(
+                                        icon: const Icon(
+                                            Icons.remove_red_eye_outlined,
+                                            color: Color.fromARGB(
+                                                146, 255, 255, 255)),
+                                        onPressed: () {
+                                          showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Dialog(
+                                                child: SizedBox(
+                                                  width: double.infinity,
+                                                  height: double.infinity,
+                                                  child:
+                                                      image is XFile && kIsWeb
+                                                          ? FutureBuilder<
+                                                              Uint8List>(
+                                                              future: image
+                                                                  .readAsBytes(),
+                                                              builder: (context,
+                                                                  snapshot) {
+                                                                if (snapshot.connectionState ==
+                                                                        ConnectionState
+                                                                            .done &&
+                                                                    snapshot
+                                                                        .hasData) {
+                                                                  return PhotoView(
+                                                                    imageProvider:
+                                                                        MemoryImage(
+                                                                            snapshot.data!),
+                                                                  );
+                                                                } else {
+                                                                  return const Center(
+                                                                    child:
+                                                                        CircularProgressIndicator(),
+                                                                  );
+                                                                }
+                                                              },
+                                                            )
+                                                          : PhotoView(
+                                                              imageProvider: image
+                                                                          is XFile &&
+                                                                      !kIsWeb
+                                                                  ? FileImage(
+                                                                      File(image
+                                                                          .path))
+                                                                  : NetworkImage(
+                                                                          image['url']
+                                                                              .toString())
+                                                                      as ImageProvider,
+                                                            ),
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ),
+                                      IconButton(
+                                        icon: const Icon(LineIcons.times,
+                                            color: Color.fromARGB(
+                                                146, 255, 255, 255)),
+                                        onPressed: () {
+                                          setState(() {
+                                            _selectedImages.removeAt(index);
+                                          });
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ],
@@ -241,68 +338,65 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                   ),
                 ],
                 const Spacer(),
-                Column(
+                Row(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     GestureDetector(
-                      onTap: () => _requestPermission(context),
+                      onTap: _takePicture,
                       child: Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        margin: const EdgeInsets.symmetric(horizontal: 8.0),
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        padding: const EdgeInsets.all(14.0),
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
-                          borderRadius: BorderRadius.circular(10),
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        child: const Text(
-                          'Take a photo',
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child: Icon(Icons.camera_alt_outlined,
+                            color: AppColors.white, size: 30.sp),
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    WidgetsSpacer.horizontalSpacer20,
                     GestureDetector(
-                      onTap: () => _selectImagesFromGallery(),
-                      child: const Text(
-                        'Upload from gallery',
-                        style: TextStyle(
-                          color: AppColors.primaryColor,
-                          fontSize: 14,
-                          decoration: TextDecoration.underline,
+                      onTap: _selectImagesFromGallery,
+                      child: Container(
+                        padding: const EdgeInsets.all(14.0),
+                        decoration: BoxDecoration(
+                          color: AppColors.primaryColor100,
+                          borderRadius: BorderRadius.circular(50),
                         ),
+                        child: Icon(Icons.photo_library_outlined,
+                            color: AppColors.primaryColor, size: 30.sp),
                       ),
                     ),
-                    const SizedBox(height: 20),
+                  ],
+                ),
+                WidgetsSpacer.verticalSpacer16,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     if (_selectedImages.isNotEmpty)
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            _selectedImages.clear();
+                          });
+                        },
+                        child: const Text(
+                          'Clear Images',
+                        ),
+                      ),
+                    WidgetsSpacer.horizontalSpacer8,
+                    if (_selectedImages.isNotEmpty &&
+                        (!_areImagesEqual(
+                            _selectedImages, widget.existingImages)))
                       ElevatedButton(
                         onPressed: _isUploading ? null : _uploadImages,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.primaryColor,
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 32,
-                            vertical: 12,
-                          ),
-                        ),
                         child: _isUploading
-                            ? const SizedBox(
-                                width: 20,
-                                height: 20,
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                  strokeWidth: 2,
-                                ),
+                            ? const CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2,
                               )
                             : const Text(
                                 'Upload Images',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                ),
                               ),
                       ),
                   ],
@@ -382,5 +476,35 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
         );
       },
     );
+  }
+
+  bool _areImagesEqual(
+      List<dynamic> selectedImages, List<dynamic>? existingImages) {
+    if (selectedImages.length != (existingImages?.length ?? 0)) {
+      return false;
+    }
+
+    for (int i = 0; i < selectedImages.length; i++) {
+      final selectedImage = selectedImages[i];
+      final existingImage = existingImages![i];
+
+      // Compare based on type (File or Network Image) and content
+      if (selectedImage is XFile && existingImage is XFile) {
+        // Compare local file paths
+        if (selectedImage.path != existingImage.path) {
+          return false;
+        }
+      } else if (selectedImage is Map<String, dynamic> &&
+          existingImage is Map<String, dynamic>) {
+        // Compare network image URLs
+        if (selectedImage['url'] != existingImage['url']) {
+          return false;
+        }
+      } else {
+        return false; // Different types, not equal
+      }
+    }
+
+    return true; // All checks passed, images are equal
   }
 }

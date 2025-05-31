@@ -13,12 +13,48 @@ class AuthRepositoryImpl implements AuthRepository {
       SigninReqParams params) async {
     try {
       final result = await _authApiService.signin(params);
+      _logger.i(result);
       return result.fold(
         (error) {
           _logger.e('Signin Error: $error');
           return Left('Signin Error: $error');
         },
         (data) async {
+          // if (data == null || !(data is Map) || data['user'] == null) {
+          //   _logger.e('Signin Error: Invalid or missing user data in response.');
+          //   return Left('Signin Error: Invalid or missing user data in response.');
+          // }
+
+          // if (data['user'] == null) {
+          //   _logger.e('Signin Error: Missing user data in response.');
+          //   return Left('Signin Error: Missing user data in response.');
+          // }
+           
+          
+
+          if (data['navigateToVerification'] == true) {
+            // Send OTP if email is not verified
+            final otpResult = await sendOtp(params.email);
+            return otpResult.fold(
+              (otpError) {
+                _logger.e('OTP Error: $otpError');
+                return Left(
+                    'Signin successful but failed to send OTP: $otpError');
+              },
+              (_) {
+                _logger.i('OTP sent successfully to: ${params.email}');
+                return Right({
+                  'email': params.email,
+                  'navigateToVerification': true,
+                });
+              },
+            );
+          }
+
+          // if (data == null || !(data is Map) || data['user'] == null) {
+          //   _logger.e('Signin Error: Invalid or missing user data in response.');
+          //   return Left('Signin Error: Invalid or missing user data in response.');
+          // }
           // Fetch and save user profile
           return Right(data);
         },
@@ -44,14 +80,13 @@ class AuthRepositoryImpl implements AuthRepository {
         // Send OTP after successful signup using the email from params
         final otpResult = await sendOtp(params.email);
         return otpResult.fold(
-          (otpResponse) {
-            _logger.i('OTP Response: $otpResponse');
-            // Return the email for navigation to verification page
-            return Right({'email': params.email, 'isSignup': true});
-          },
           (error) {
             _logger.e('OTP Error: $error');
-            return const Left('Signup successful but failed to send OTP');
+            return Left('Signup successful but failed to send OTP: $error');
+          },
+          (_) {
+            _logger.i('OTP sent successfully to: ${params.email}');
+            return Right({'email': params.email, 'isSignup': true});
           },
         );
       } catch (e) {

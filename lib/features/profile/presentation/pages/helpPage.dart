@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class FAQItem {
   final String question;
@@ -52,7 +52,8 @@ class HelpPage extends StatelessWidget {
           "The free tier includes community building features that allow you to meet travel buddies via code verifications.",
     ),
     FAQItem(
-      question: "What are Milestones recognition and rewards in the free version?",
+      question:
+          "What are Milestones recognition and rewards in the free version?",
       answer:
           "Free users receive limited badges and rewards when they reach travel milestones, motivating exploration.",
     ),
@@ -77,7 +78,8 @@ class HelpPage extends StatelessWidget {
           "It provides increased storage capacity for photos and memories, along with album organization features.",
     ),
     FAQItem(
-      question: "What additional benefits does the Advanced Currency Converter offer?",
+      question:
+          "What additional benefits does the Advanced Currency Converter offer?",
       answer:
           "It supports a broader range of currencies and provides live exchange rates to help you manage your travel budget more efficiently.",
     ),
@@ -87,7 +89,8 @@ class HelpPage extends StatelessWidget {
           "It offers both basic and advanced budget planning tools, complete with detailed analytics to keep your travel finances in check.",
     ),
     FAQItem(
-      question: "What kind of Visa and Immigration Info is available in premium?",
+      question:
+          "What kind of Visa and Immigration Info is available in premium?",
       answer:
           "Premium users have access to comprehensive visa and immigration tips, detailed document checklists, and even visa concierge services.",
     ),
@@ -97,7 +100,8 @@ class HelpPage extends StatelessWidget {
           "Premium reservations come with personalized support and advanced travel recommendations tailored to your preferences.",
     ),
     FAQItem(
-      question: "What are the benefits of Milestones and achievements in premium?",
+      question:
+          "What are the benefits of Milestones and achievements in premium?",
       answer:
           "Premium users enjoy unlimited rewards, badges, and exclusive member recognition as they reach travel milestones.",
     ),
@@ -107,7 +111,8 @@ class HelpPage extends StatelessWidget {
           "Premium users receive suggested places to visit, real-time insights, and VIP-only travel tips to enhance their experience.",
     ),
     FAQItem(
-      question: "What enhancements are available in the premium Language and Culture Guide?",
+      question:
+          "What enhancements are available in the premium Language and Culture Guide?",
       answer:
           "Premium access includes expanded language support, deeper cultural insights, local expert access, and advanced language practice tools.",
     ),
@@ -153,7 +158,8 @@ class HelpPage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: ExpansionTile(
-                    leading: const Icon(Icons.help_outline, color: Colors.deepPurple),
+                    leading: const Icon(Icons.help_outline,
+                        color: Colors.deepPurple),
                     title: Text(
                       faq.question,
                       style: const TextStyle(
@@ -167,7 +173,8 @@ class HelpPage extends StatelessWidget {
                         padding: const EdgeInsets.all(16.0),
                         child: Text(
                           faq.answer,
-                          style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[800]),
                         ),
                       )
                     ],

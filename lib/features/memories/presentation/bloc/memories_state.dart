@@ -126,6 +126,7 @@ class MemoriesLoaded extends MemoriesState {
   final int currentPage;
   final String? deletingMemoryId;
   final bool isSearching;
+  final bool append; // New property to indicate appending
 
   const MemoriesLoaded({
     required this.memories,
@@ -133,11 +134,18 @@ class MemoriesLoaded extends MemoriesState {
     required this.currentPage,
     this.deletingMemoryId,
     this.isSearching = false,
+    this.append = false, // Default to false
   });
 
   @override
-  List<Object> get props =>
-      [memories, hasMore, currentPage, deletingMemoryId ?? '', isSearching];
+  List<Object> get props => [
+        memories,
+        hasMore,
+        currentPage,
+        deletingMemoryId ?? '',
+        isSearching,
+        append
+      ];
 }
 
 class MemoryError extends MemoriesState {

@@ -1,8 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/core/constants/appbar.dart';
-import 'package:travelecho/core/constants/constants.dart';
-import 'package:travelecho/features/community/presentation/widgets/post.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import "../../community_exports.dart";
 
 class UserDashboard extends StatefulWidget {
   const UserDashboard({super.key});

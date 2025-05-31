@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/core/constants/app_navigation.dart';
-import 'package:travelecho/features/community/presentation/pages/profile_id.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import "../../community_exports.dart";
 
 class CommunityPage extends StatelessWidget {
   const CommunityPage({super.key});
@@ -29,24 +27,27 @@ class CommunityPage extends StatelessWidget {
             children: [
               Transform.rotate(
                 angle: -0.2,
-                child: Image.asset('assets/images/memories/rectangle1.png', width: 100),
+                child: Image.asset('assets/images/memories/rectangle1.png',
+                    width: 100),
               ),
               Positioned(
                 left: 30,
-                child: Image.asset('assets/images/memories/rectangle2.png', width: 100),
+                child: Image.asset('assets/images/memories/rectangle2.png',
+                    width: 100),
               ),
               Positioned(
                 right: 0,
                 child: Transform.rotate(
                   angle: 0.1,
-                  child: Image.asset('assets/images/memories/rectangle3.png', width: 100),
+                  child: Image.asset('assets/images/memories/rectangle3.png',
+                      width: 100),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 20),
           const Text(
-            'Meet Travel Buddies',  
+            'Meet Travel Buddies',
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
           ),
@@ -77,4 +78,3 @@ class CommunityPage extends StatelessWidget {
     );
   }
 }
- 

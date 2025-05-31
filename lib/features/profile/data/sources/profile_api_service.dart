@@ -13,7 +13,8 @@ abstract class ProfileApiService {
 class ProfileApiServiceImpl implements ProfileApiService {
   final DioClient _dioClient;
   final SharedPreferences _prefs;
-  final ImageHandler _imageHandler = ImageHandler();
+  // kIsWeb ? ImageHandlerWeb() :
+  final ImageHandler _imageHandler =  ImageHandlerMobile();
 
   ProfileApiServiceImpl(this._dioClient, this._prefs);
 

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import "../../memories_exports.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -124,7 +124,8 @@ class MemoryFormFields extends StatelessWidget {
           ),
         ),
         WidgetsSpacer.verticalSpacer16,
-        SwitchListTile(
+        ListTile(
+          contentPadding: EdgeInsets.zero,
           title: const Text(
             'Make this memory public',
             style: TextStyle(
@@ -132,11 +133,23 @@ class MemoryFormFields extends StatelessWidget {
               fontWeight: FontWeight.w500,
             ),
           ),
-          value: isPublic,
-          onChanged: onPublicChanged,
-          activeColor: AppColors.white,
-          activeTrackColor: AppColors.primaryColor,
-          contentPadding: EdgeInsets.zero,
+          trailing: Transform.scale(
+            scale: 0.75, // Adjust this to control switch size
+            child: Switch(
+              value: isPublic,
+              onChanged: onPublicChanged,
+              activeColor: AppColors.primaryColor,
+              activeTrackColor: AppColors.primaryColor100,
+              trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
+                (states) {
+                  if (states.contains(WidgetState.selected)) {
+                    return AppColors.primaryColor;
+                  }
+                  return AppColors.defaultColor;
+                },
+              ),
+            ),
+          ),
         ),
       ],
     );

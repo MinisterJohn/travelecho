@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../memories_exports.dart';
 
@@ -20,8 +20,9 @@ class MemoryPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 20),
-          CarouselSlider(
-            options: CarouselOptions(
+          carousel.CarouselSlider(
+            
+            options: carousel.CarouselOptions(
               height: 200.0,
               enableInfiniteScroll: false,
               viewportFraction: 0.8,

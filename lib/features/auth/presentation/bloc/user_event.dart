@@ -21,6 +21,8 @@ class SignupEvent extends AuthEvent {
   });
 }
 
+class LogoutEvent extends AuthEvent {}
+
 class VerifyOtpEvent extends AuthEvent {
   final String email;
   final String otp;

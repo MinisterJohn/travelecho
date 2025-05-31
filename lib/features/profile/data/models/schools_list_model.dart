@@ -8,8 +8,8 @@ class SchoolModel extends Equatable {
 
   factory SchoolModel.fromJson(Map<String, dynamic> json) {
     return SchoolModel(
-      name: json['name'] as String,
-      country: json['country'] as String,
+      name: json['name']?.toString() ?? '',
+      country: json['country']?.toString() ?? '',
     );
   }
 

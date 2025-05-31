@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'dart:math';
 import '../../currency_converter_exports.dart';
-
 
 class CurrencyConverterPage extends StatelessWidget {
   const CurrencyConverterPage({super.key});

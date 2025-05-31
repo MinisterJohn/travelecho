@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:line_icons/line_icons.dart';
 import '../features/features_exports.dart';
 
@@ -102,8 +102,9 @@ class _HomeScreenState extends State<HomeScreen2> {
 
                   WidgetsSpacer.verticalSpacer16,
 
-                  CarouselSlider(
-                    options: CarouselOptions(
+                  carousel.CarouselSlider(
+                    
+                    options: carousel.CarouselOptions(
                       height: 220,
                       autoPlay: true,
                       enlargeCenterPage: false,
@@ -120,8 +121,9 @@ class _HomeScreenState extends State<HomeScreen2> {
                   ),
                   WidgetsSpacer.verticalSpacer16,
 
-                  CarouselSlider(
-                    options: CarouselOptions(
+                  carousel.CarouselSlider(
+                    
+                    options: carousel.CarouselOptions(
                       height: 220,
                       autoPlay: false,
                       enlargeCenterPage: false,

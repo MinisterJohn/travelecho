@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../profile_exports.dart';
 
 class LoginAndSecurityPage extends StatelessWidget {
@@ -51,7 +51,7 @@ class LoginAndSecurityPage extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               // Add navigation logic here
-             AppNavigator.push(context, const PasswordSavingPreferencePage());
+              AppNavigator.push(context, const PasswordSavingPreferencePage());
             },
           ),
           const SizedBox(height: 24),

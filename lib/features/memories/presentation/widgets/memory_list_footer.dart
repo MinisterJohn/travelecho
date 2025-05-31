@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../memories_exports.dart';
 
 class MemoryListFooter extends StatelessWidget {

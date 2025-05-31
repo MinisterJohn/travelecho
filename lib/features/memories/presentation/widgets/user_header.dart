@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 
@@ -7,6 +7,7 @@ import '../../memories_exports.dart';
 class UserHeader extends StatelessWidget {
   final String username;
   final String? location;
+  final DateTime createdAt;
   final VoidCallback onView;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
@@ -14,6 +15,7 @@ class UserHeader extends StatelessWidget {
   const UserHeader({
     super.key,
     required this.username,
+    required this.createdAt,
     this.location,
     required this.onView,
     required this.onEdit,
@@ -25,6 +27,7 @@ class UserHeader extends StatelessWidget {
     return Row(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             BlocProvider.value(
               value: sl<ProfileBloc>(),
@@ -32,8 +35,8 @@ class UserHeader extends StatelessWidget {
                 builder: (context, profileState) {
                   return profileState is ProfileLoaded
                       ? Container(
-                          width: 60,
-                          height: 60,
+                          width: 40,
+                          height: 40,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: Colors.grey[300],
@@ -45,34 +48,32 @@ class UserHeader extends StatelessWidget {
                           ),
                         )
                       : const CircleAvatar(
-                          radius: 30,
+                          radius: 20,
                           // backgroundColor: AppColors.primaryColor,
                           child: Icon(
                             Icons.person_outline_outlined,
-                            size: 30,
+                            size: 20,
                             color: Colors.white,
                           ),
                         );
                 },
               ),
             ),
-            WidgetsSpacer.horinzontalSpacer8,
+            WidgetsSpacer.horizontalSpacer8,
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   username,
-                  style: const TextStyle(fontSize: 12),
+                  style: const TextStyle(fontSize: 14),
                 ),
-                SizedBox(
-                  width: 200, // adjust as needed
-                  child: Text(
-                    location ?? "",
-                    style: const TextStyle(color: AppColors.defaultColor400),
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                Text(
+                  "Posted: ${formatDate(createdAt)}",
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 12,
                   ),
-                )
+                ),
               ],
             ),
           ],

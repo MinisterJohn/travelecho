@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import "../../features/auth/presentation/pages/login.dart";
 import "../../features/auth/presentation/pages/signup.dart";
 

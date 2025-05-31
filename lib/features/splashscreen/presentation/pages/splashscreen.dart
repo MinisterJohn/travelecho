@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/splash_cubit.dart';
+import 'package:travelecho/navigation_menu/blocs/navigation_menu_cubit.dart';
 import '../../../features_exports.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -71,11 +71,19 @@ class SplashScreenState extends State<SplashScreen> {
                 ));
           } else if (state is Authenticated) {
             AppNavigator.pushReplacement(
-                context,
-                BlocProvider.value(
-                  value: sl<AuthBloc>()..add(CheckAuthStatus()),
-                  child: const RootPage(),
-                ));
+              context,
+              MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(
+                    value: sl<AuthBloc>()..add(CheckAuthStatus()),
+                  ),
+                  BlocProvider(
+                    create: (context) => sl<NavigationMenuCubit>(),
+                  ),
+                ],
+                child: const RootPage(),
+              ),
+            );
           } else if (state is FirstLaunch) {
             AppNavigator.pushReplacement(
                 context,
@@ -100,7 +108,7 @@ class SplashScreenState extends State<SplashScreen> {
                       child: Text(
                         "Travel echo"[index],
                         style: TextStyle(
-                            fontSize: FontSize.size32,
+                            fontSize: FontSize.size48,
                             fontWeight: FontWeight.bold,
                             color: AppColors.primaryColor,
                             fontFamily: "vaio_con_dios"),

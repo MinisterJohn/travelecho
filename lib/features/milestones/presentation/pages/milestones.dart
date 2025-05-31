@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../milestones_exports.dart';
-
 
 class MilestonesPage extends StatelessWidget {
   const MilestonesPage({super.key});
@@ -57,6 +56,8 @@ class MilestonesPage extends StatelessWidget {
                       "Special Solo Traveler"),
                   _badges(context, 'assets/images/milestones/tourist-titan.png',
                       "Tourist Titan"),
+                  _badges(context, 'assets/images/milestones/frequent-flyer.png',
+                      "Frequent Flyer"),
                 ],
               ),
             ),

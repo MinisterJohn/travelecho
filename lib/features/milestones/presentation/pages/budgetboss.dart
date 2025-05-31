@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../milestones_exports.dart';
-
 
 class BudgetBossPage extends StatefulWidget {
   const BudgetBossPage({super.key});

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:travelecho/config/theme/colors.dart';
 import 'package:travelecho/features/budget/data/models/budget_model.dart';
 import 'package:travelecho/features/budget/data/models/expense_model.dart';
@@ -57,7 +57,8 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
         expenseIsAdded: false),
   ];
 
-  final TextEditingController _customExpenseCategoryName = TextEditingController();
+  final TextEditingController _customExpenseCategoryName =
+      TextEditingController();
   final TextEditingController _customExpenseCategoryDescription =
       TextEditingController();
   String _searchExpenseQuery = "";

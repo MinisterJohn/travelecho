@@ -63,51 +63,57 @@ class Profile extends Equatable {
     required this.school,
   });
 
-  factory Profile.fromJson(Map<String, dynamic> json) {
-    try {
-      return Profile(
-        id: json['_id']?.toString() ?? '',
-        userId: json['user']?.toString() ?? '',
-        interests: List<String>.from(json['interests'] ?? []),
-        languages: List<String>.from(json['languages'] ?? []),
-        createdAt: DateTime.parse(
-            json['createdAt']?.toString() ?? DateTime.now().toIso8601String()),
-        updatedAt: DateTime.parse(
-            json['updatedAt']?.toString() ?? DateTime.now().toIso8601String()),
-        dateOfBirth: json['dateOfBirth'] != null
-            ? DateTime.parse(json['dateOfBirth'].toString())
-            : null,
-        // user: json['user'] != null ? ProfileUser.fromJson(json['user']) : null,
-        image: () {
-          final imageData = json['image'];
-          print('Image data type: ${imageData.runtimeType}');
-          print('Image data: $imageData');
-          if (imageData != null && imageData is Map<String, dynamic>) {
-            final url = imageData['url'];
-            print('URL from image: $url');
-            return url?.toString() ?? '';
-          }
-          return '';
-        }(),
-        location: json['location']?.toString() ?? '',
-        occupation: json['occupation']?.toString() ?? '',
-        school: SchoolModel.fromJson(json['school'] ?? {}),
-      );
-    } catch (e) {
-      print('Error parsing profile: $e');
-      // Return a default profile if parsing fails
-      return Profile(
-        id: '',
-        userId: '',
-        image: '',
-        interests: const [],
-        languages: const [],
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        school: SchoolModel.fromJson(const {}),
-      );
+ factory Profile.fromJson(Map<String, dynamic> json) {
+  print('Parsing Profile from JSON: $json');
+
+  try {
+    // Safely extract the image URL
+    String imageUrl = '';
+    if (json['image'] != null && json['image'] is Map<String, dynamic>) {
+      final imageData = json['image'] as Map<String, dynamic>;
+      imageUrl = imageData['url']?.toString() ?? '';
     }
+
+    return Profile(
+      id: json['_id'] != null ? json['_id'].toString() : '',
+      userId: json['user'] != null ? json['user'].toString() : '',
+      interests: (json['interests'] is List)
+          ? List<String>.from(json['interests'].map((e) => e.toString()))
+          : [],
+      languages: (json['languages'] is List)
+          ? List<String>.from(json['languages'].map((e) => e.toString()))
+          : [],
+      createdAt: json['createdAt'] != null
+          ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      updatedAt: json['updatedAt'] != null
+          ? DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now()
+          : DateTime.now(),
+      dateOfBirth: json['dateOfBirth'] != null
+          ? DateTime.tryParse(json['dateOfBirth'].toString())
+          : null,
+      image: imageUrl,
+      location: json['location'] != null ? json['location'].toString() : '',
+      occupation:
+          json['occupation'] != null ? json['occupation'].toString() : '',
+      school: json['school'] != null
+          ? SchoolModel.fromJson(json['school'])
+          : SchoolModel.fromJson({}),
+    );
+  } catch (e, stackTrace) {
+    print('Error parsing profile: $e\n$stackTrace');
+    // Return a default profile if parsing fails
+    return Profile(
+      id: '',
+      userId: '',
+      interests: const [],
+      languages: const [],
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+      school: SchoolModel.fromJson(const {}),
+    );
   }
+}
 
   Map<String, dynamic> toJson() {
     return {

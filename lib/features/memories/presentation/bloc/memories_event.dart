@@ -62,6 +62,7 @@ class FetchMemories extends MemoriesEvent {
   final String? sort;
   final int limit;
   final int skip;
+  final bool append; // New parameter to indicate appending
 
   const FetchMemories({
     this.search,
@@ -71,10 +72,11 @@ class FetchMemories extends MemoriesEvent {
     this.sort,
     this.limit = 10,
     this.skip = 0,
+    this.append = false, // Default to false
   });
 
   @override
-  List<Object> get props => [limit, skip];
+  List<Object> get props => [limit, skip, append];
 }
 
 class DeleteMemory extends MemoriesEvent {

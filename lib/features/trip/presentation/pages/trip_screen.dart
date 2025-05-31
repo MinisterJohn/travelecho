@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
 
@@ -35,12 +35,12 @@ class TripScreen extends StatelessWidget {
         appBar: setAppBar("Trip", context),
         body: SingleChildScrollView(
           child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
                 const TravelPlanSection(),
-              WidgetsSpacer.verticalSpacer16,
+                WidgetsSpacer.verticalSpacer16,
                 BlocBuilder<FlightBookingBloc, FlightBookingState>(
                     builder: (context, state) {
                   String? selectedAirportCode;
@@ -63,7 +63,7 @@ class TripScreen extends StatelessWidget {
                     onAirportSelected: (airport) => _onOriginAirportSelected(
                         context, airport, originAirportSearchController),
                     title: "Origin Airport",
-                  hintText: "Enter your location",
+                    hintText: "Enter your location",
                     isDestination: false,
                     searchController: originAirportSearchController,
                     selectedAirportCode: selectedAirportCode,
@@ -76,7 +76,7 @@ class TripScreen extends StatelessWidget {
                     if (state is FlightBookingSuccess &&
                         state.flightBooking.originDestinations.isNotEmpty) {
                       return OutlinedButton(
-                onPressed: () {
+                        onPressed: () {
                           AppNavigator.push(
                             context,
                             MultiBlocProvider(
@@ -102,11 +102,11 @@ class TripScreen extends StatelessWidget {
                         child: const Text(
                           "Select Destination",
                           style: TextStyle(color: Colors.white),
-                  ),
-                );
-              }
-              return const SizedBox.shrink();
-            },
+                        ),
+                      );
+                    }
+                    return const SizedBox.shrink();
+                  },
                 ),
               ],
             ),

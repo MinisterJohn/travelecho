@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../auth_exports.dart';
 
@@ -49,12 +49,12 @@ class NewUserWelcomePage extends StatelessWidget {
                 WidgetsSpacer.verticalSpacer48,
                 ElevatedButton(
                   onPressed: () {
-                    AppNavigator.pushAndRemove(context, const RootPage());
+                    AppNavigator.pushAndRemove(context, const LoginPage());
                   },
                   style: ElevatedButton.styleFrom(
                       minimumSize: const Size(double.infinity, 50)),
                   child: Text(
-                    "Get Started",
+                    "Login",
                     style: TextStyle(
                         color: AppColors.white, fontSize: FontSize.size16),
                   ),

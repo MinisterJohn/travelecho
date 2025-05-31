@@ -1,7 +1,6 @@
-import 'package:flutter/material.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import '../../memories_exports.dart';
 
 class MemoryCard extends StatelessWidget {
@@ -34,6 +33,7 @@ class MemoryCard extends StatelessWidget {
               child: UserHeader(
                 username: username as String,
                 location: memory.location,
+                createdAt: memory.date,
                 onView: onView,
                 onEdit: onEdit,
                 onDelete: onDelete,
@@ -42,31 +42,45 @@ class MemoryCard extends StatelessWidget {
           ],
         ),
         WidgetsSpacer.verticalSpacer8,
-        Text(
-          formatDate(memory.createdAt),
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
-            
-          ),
-        ),
+        _buildMemoryContent(),
         WidgetsSpacer.verticalSpacer16,
-
         if (memory.images.isNotEmpty) ...[
           _buildImageCarousel(),
           WidgetsSpacer.verticalSpacer8,
           _buildCarouselDots(),
           WidgetsSpacer.verticalSpacer16,
         ],
-        _buildMemoryContent(),
+        if (memory.location != '')
+          SizedBox(
+            width: 280,
+            child: Text(
+              "Location: ${memory.location}",
+              style: const TextStyle(color: AppColors.defaultColor400),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 1,
+            ),
+          ),
+        if (memory.tags.isNotEmpty) ...[
+          // const SizedBox(height: 8),
+          Wrap(
+            spacing: 8,
+            children: memory.tags
+                .map((tag) => Text(
+                      "#$tag",
+                      style: const TextStyle(
+                          color: Color.fromARGB(255, 163, 140, 182)),
+                    ))
+                .toList(),
+          ),
+        ],
         WidgetsSpacer.verticalSpacer32,
       ],
     );
   }
 
   Widget _buildImageCarousel() {
-    return CarouselSlider(
-      options: CarouselOptions(
+    return carousel.CarouselSlider(
+      options: carousel.CarouselOptions(
         height: 200.0,
         enableInfiniteScroll: false,
         viewportFraction: 0.8,
@@ -118,29 +132,15 @@ class MemoryCard extends StatelessWidget {
       children: [
         Text(
           memory.title,
-          style: const TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+          style: TextStyle(
+            fontSize: FontSize.size16,
+            fontWeight: FontWeight.w400,
           ),
         ),
-        ...[
-        const SizedBox(height: 8),
-        Text(
-          memory.description,
-          style: const TextStyle(fontSize: 14),
-        ),
-      ],
-        if (memory.tags.isNotEmpty) ...[
-          const SizedBox(height: 8),
-          Wrap(
-            spacing: 8,
-            children: memory.tags
-                .map((tag) => Text(
-                      "#$tag",
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 163, 140, 182)),
-                    ))
-                .toList(),
+        if (memory.description != '') ...[
+          Text(
+            memory.description,
+            style: TextStyle(fontSize: FontSize.size16),
           ),
         ],
       ],

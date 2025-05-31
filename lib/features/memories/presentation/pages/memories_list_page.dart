@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../memories_exports.dart';
@@ -50,7 +50,7 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
       if (_currentSearch == null &&
           _currentLocation == null &&
           _currentSort == null) {
-        _fetchMemories();
+        _fetchMemories(append: true);
       }
     }
   }
@@ -73,39 +73,25 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
     _fetchMemories();
   }
 
-  void _fetchMemories() {
-    final currentState = context.read<MemoriesBloc>().state;
-    if (currentState is MemoriesLoaded &&
-        _currentSearch == null &&
-        _currentLocation == null &&
-        _currentSort == null) {
-      if ((_memories.length % 10) == 0) return;
-      context.read<MemoriesBloc>().add(
-            FetchMemories(
-              search: _currentSearch,
-              title: _currentTitle,
-              location: _currentLocation,
-              tag: _currentTag,
-              sort: _currentSort,
-              skip: currentState.memories.length,
-            ),
-          );
-    } else {
-      context.read<MemoriesBloc>().add(
-            FetchMemories(
-              search: _currentSearch,
-              title: _currentTitle,
-              location: _currentLocation,
-              tag: _currentTag,
-              sort: _currentSort,
-              skip: 0,
-            ),
-          );
+  void _fetchMemories({bool append = false}) {
+    if (append && (_memories.length % 10) != 0) {
+      return;
     }
+
+    context.read<MemoriesBloc>().add(
+          FetchMemories(
+            search: _currentSearch,
+            title: _currentTitle,
+            location: _currentLocation,
+            tag: _currentTag,
+            sort: _currentSort,
+            skip: append ? _memories.length : 0,
+            append: append,
+          ),
+        );
   }
 
   void _handleViewMemory(MemoryModel memory) {
-    // TODO: Implement view memory functionality
     DisplayMessage.successMessage(
         'View memory functionality coming soon', context);
   }
@@ -157,14 +143,22 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
   Widget build(BuildContext context) {
     return BlocListener<MemoriesBloc, MemoriesState>(
       listener: (context, state) {
-        if (state is MemoryDeleted) {
+        if (state is MemoriesLoaded) {
+          setState(() {
+            if (state.append) {
+              _memories.addAll(state.memories);
+            } else {
+              _memories = state.memories;
+            }
+          });
+        } else if (state is MemoryDeleted) {
           DisplayMessage.successMessage('Memory deleted successfully', context);
-        } else if (state is MemoryUpdated) {
+        } else if (state is MemoryUpdated ||
+            state is MultipleMemoryImagesUploaded) {
           DisplayMessage.successMessage('Memory updated successfully', context);
           _fetchMemories();
         } else if (state is MemoryError) {
           DisplayMessage.errorMessage(state.message, context);
-          _fetchMemories();
         }
       },
       child: Scaffold(
@@ -217,11 +211,11 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
                             memories: _memories,
                             username: _username,
                             state: state,
+                            onRetry: _fetchMemories,
                             scrollController: _scrollController,
                             onView: _handleViewMemory,
                             onEdit: _handleEditMemory,
                             onDelete: _handleDeleteMemory,
-                            onRetry: _fetchMemories,
                           );
                         },
                       ),

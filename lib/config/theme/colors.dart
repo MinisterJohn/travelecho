@@ -1,9 +1,9 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 
 class AppColors {
-  static const Color primaryColor = Color(0xff930BFF); // Example color code
+  static const Color primaryColor = Color.fromARGB(255, 147, 11, 255); // Example color code
   static const Color primaryColor300 = Color.fromARGB(77, 145, 11, 255);
-  static const Color primaryColor100 = Color.fromARGB(26, 145, 11, 255);
+  static const Color primaryColor100 = Color.fromARGB(13, 147, 11, 255);
   static const Color secondaryColor = Color.fromARGB(255, 150, 150, 150);
   static const Color errorColor = Colors.red;
   static final Color errorColor300 = Colors.red.shade300;

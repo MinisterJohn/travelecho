@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../trip_exports.dart';
 
@@ -71,7 +71,7 @@ class _FlightOffersState extends State<FlightOffers> {
                       Row(
                         children: [
                           const Icon(Icons.person_outline_outlined),
-                          WidgetsSpacer.horinzontalSpacer8,
+                          WidgetsSpacer.horizontalSpacer8,
                           Text(
                             "${booking.travelers.length} ${booking.travelers.length == 1 ? "Traveler" : "Travelers"}",
                             style: const TextStyle(
@@ -320,7 +320,7 @@ class _FlightOffersState extends State<FlightOffers> {
                             BlocProvider.value(value: sl<FlightOffersBloc>())
                           ], child: const TripScreen()));
                     }),
-                WidgetsSpacer.horinzontalSpacer8,
+                WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
                     progressIcon: Icons.flight_land_outlined,
                     progressKey: "Destination Airport",
@@ -333,7 +333,7 @@ class _FlightOffersState extends State<FlightOffers> {
                             BlocProvider.value(value: sl<FlightBookingBloc>())
                           ], child: const SetDestination()));
                     }),
-                WidgetsSpacer.horinzontalSpacer8,
+                WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
                     progressIcon: Icons.calendar_month_outlined,
                     progressKey: "Date",
@@ -346,7 +346,7 @@ class _FlightOffersState extends State<FlightOffers> {
                               value: sl<FlightBookingBloc>(),
                               child: const FlightDate()));
                     }),
-                WidgetsSpacer.horinzontalSpacer8,
+                WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
                     progressIcon: Icons.access_time_outlined,
                     progressKey: "Departure Time",

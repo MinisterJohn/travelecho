@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:pinput/pinput.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth_exports.dart';
@@ -97,7 +97,7 @@ class _OtpFormState extends State<OtpForm> {
 
       if (widget.isSignup) {
         // For signup, navigate to welcome page
-        AppNavigator.pushAndRemove(context, const NewUserWelcomePage());
+        AppNavigator.pushAndRemove(context,  const NewUserWelcomePage());
       } else if (widget.isPasswordReset) {
         // For password reset, navigate to reset password page
         AppNavigator.push(context, ResetPasswordPage(email: widget.email));

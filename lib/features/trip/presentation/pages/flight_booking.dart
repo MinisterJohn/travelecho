@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../trip_exports.dart';
@@ -141,7 +141,7 @@ class _FlightBookingState extends State<FlightBooking> {
                               value: sl<FlightBookingBloc>(),
                               child: const TripScreen()));
                     }),
-                WidgetsSpacer.horinzontalSpacer8,
+                WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
                     progressIcon: Icons.flight_land_outlined,
                     progressKey: "Destination Airport",
@@ -153,7 +153,7 @@ class _FlightBookingState extends State<FlightBooking> {
                               value: sl<FlightBookingBloc>(),
                               child: const SetDestination()));
                     }),
-                WidgetsSpacer.horinzontalSpacer8,
+                WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
                     progressIcon: Icons.calendar_month_outlined,
                     progressKey: "Date",
@@ -166,7 +166,7 @@ class _FlightBookingState extends State<FlightBooking> {
                               value: sl<FlightBookingBloc>(),
                               child: const FlightDate()));
                     }),
-                WidgetsSpacer.horinzontalSpacer8,
+                WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
                     progressIcon: Icons.access_time_outlined,
                     progressKey: "Departure Time",

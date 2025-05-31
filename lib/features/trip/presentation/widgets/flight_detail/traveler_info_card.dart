@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../trip_exports.dart';
 
@@ -15,8 +15,9 @@ class TravelerInfoCard extends StatelessWidget {
     return BlocBuilder<FlightBookingBloc, FlightBookingState>(
       builder: (context, state) {
         if (state is FlightBookingSuccess) {
-          final travelerDetailsMap = context.read<FlightBookingBloc>().travelerDetailsMap;
-          
+          final travelerDetailsMap =
+              context.read<FlightBookingBloc>().travelerDetailsMap;
+
           return _buildSectionCard(
             'Traveler Information',
             Icons.people,
@@ -32,7 +33,7 @@ class TravelerInfoCard extends StatelessWidget {
             ],
           );
         }
-        
+
         // Fallback if state is not FlightBookingSuccess
         return _buildSectionCard(
           'Traveler Information',
@@ -87,15 +88,15 @@ class TravelerInfoCard extends StatelessWidget {
 
   Widget _buildTravelerRow(
     String travelerId,
-    String travelerType, 
-    String fareOption, 
+    String travelerType,
+    String fareOption,
     Map price,
     TravelerDetails? travelerDetails,
   ) {
-    final String displayName = travelerDetails != null 
+    final String displayName = travelerDetails != null
         ? '${travelerDetails.name.firstName} ${travelerDetails.name.lastName}'
         : 'Not specified';
-        
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(

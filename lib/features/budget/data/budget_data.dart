@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:travelecho/features/budget/data/models/budget_model.dart';
 
 class BudgetsData extends ChangeNotifier {
@@ -16,12 +16,12 @@ class BudgetsData extends ChangeNotifier {
     notifyListeners();
   }
 
- Budget getBudget(Budget selectedbudget) {
-  return allBudgets.firstWhere(
-    (budget) => budget.name == selectedbudget.name,
-    orElse: () => throw Exception("Budget not found"),
-  );
-}
+  Budget getBudget(Budget selectedbudget) {
+    return allBudgets.firstWhere(
+      (budget) => budget.name == selectedbudget.name,
+      orElse: () => throw Exception("Budget not found"),
+    );
+  }
 
   // delete budget
   void deleteBudget(String name) {

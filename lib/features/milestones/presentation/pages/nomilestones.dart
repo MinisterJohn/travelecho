@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../milestones_exports.dart';
 
 class NoMileStonePage extends StatelessWidget {
@@ -38,7 +38,8 @@ class NoMileStonePage extends StatelessWidget {
             const Center(
               child: Text(
                 "You do not have any milestones or\n achievements yet",
-                textAlign: TextAlign.center, // Ensures the text itself is centered
+                textAlign:
+                    TextAlign.center, // Ensures the text itself is centered
                 style: TextStyle(
                   fontSize: 12,
                   color: Colors.black,

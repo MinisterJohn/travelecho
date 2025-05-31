@@ -1,6 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import '../../memories_exports.dart';
-
 
 class AddTagPage extends StatefulWidget {
   const AddTagPage({super.key});

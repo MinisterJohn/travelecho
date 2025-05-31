@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:travelecho/core/constants/appbar.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import "../../visa_and_immigration_exports.dart";
 
 class VisaImmigrationPage extends StatelessWidget {
   const VisaImmigrationPage({super.key});
@@ -17,17 +17,30 @@ class VisaImmigrationSearchPage extends StatefulWidget {
   const VisaImmigrationSearchPage({super.key});
 
   @override
-  _VisaImmigrationSearchPageState createState() => _VisaImmigrationSearchPageState();
+  _VisaImmigrationSearchPageState createState() =>
+      _VisaImmigrationSearchPageState();
 }
 
 class _VisaImmigrationSearchPageState extends State<VisaImmigrationSearchPage> {
   final TextEditingController _searchController = TextEditingController();
   final List<VisaImmigrationDetail> _allDetails = [
-    VisaImmigrationDetail(country: 'USA', details: 'Visa info for USA: Tourist, Student, Work visas available.'),
-    VisaImmigrationDetail(country: 'Canada', details: 'Visa info for Canada: Express Entry, Study, Work visas available.'),
-    VisaImmigrationDetail(country: 'UK', details: 'Visa info for UK: Visitor, Work, Student visas available.'),
-    VisaImmigrationDetail(country: 'Australia', details: 'Visa info for Australia: Working Holiday, Student, Skilled visas available.'),
-    VisaImmigrationDetail(country: 'India', details: 'Visa info for India: Tourist and Business visas available.'),
+    VisaImmigrationDetail(
+        country: 'USA',
+        details: 'Visa info for USA: Tourist, Student, Work visas available.'),
+    VisaImmigrationDetail(
+        country: 'Canada',
+        details:
+            'Visa info for Canada: Express Entry, Study, Work visas available.'),
+    VisaImmigrationDetail(
+        country: 'UK',
+        details: 'Visa info for UK: Visitor, Work, Student visas available.'),
+    VisaImmigrationDetail(
+        country: 'Australia',
+        details:
+            'Visa info for Australia: Working Holiday, Student, Skilled visas available.'),
+    VisaImmigrationDetail(
+        country: 'India',
+        details: 'Visa info for India: Tourist and Business visas available.'),
   ];
 
   List<VisaImmigrationDetail> _filteredDetails = [];

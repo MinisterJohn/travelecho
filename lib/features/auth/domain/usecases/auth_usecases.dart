@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import "../../auth_exports.dart";
 
 class SigninUseCase
@@ -62,5 +63,13 @@ class ResetPasswordUseCase extends UseCases<
       params['password']!,
       params['confirmPassword']!,
     );
+  }
+}
+
+class LogoutUseCase extends UseCases<void, void> {
+  @override
+  Future<void> call({void params}) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); // Clear all saved credentials
   }
 }

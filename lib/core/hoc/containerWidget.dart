@@ -11,11 +11,13 @@ class ScreenContainer extends StatefulWidget {
 class _ScreenContainerState extends State<ScreenContainer> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 375.w,
-      margin: EdgeInsets.only(top: 10.h),
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: widget.child,
+    return SafeArea(
+      child: Container(
+        width: 375.w,
+        margin: EdgeInsets.only(top: 10.h),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: widget.child,
+      ),
     );
   }
 }

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
 import '../../profile_exports.dart';
 
@@ -31,9 +31,7 @@ class EditableFieldsSection extends StatelessWidget {
       children: [
         _buildEditableField(
           icon: LineIcons.home,
-          title: profile.location.isEmpty
-              ? "Where I live"
-              : profile.location,
+          title: profile.location.isEmpty ? "Where I live" : profile.location,
           onTap: () {
             if (!isLocationLoading) showWhereILiveDialog(context);
           },
@@ -42,9 +40,8 @@ class EditableFieldsSection extends StatelessWidget {
         const Divider(color: AppColors.defaultColor100),
         _buildEditableField(
           icon: LineIcons.briefcase,
-          title: profile.occupation.isEmpty
-              ? "My occupation"
-              : profile.occupation,
+          title:
+              profile.occupation.isEmpty ? "My occupation" : profile.occupation,
           onTap: () {
             if (!isOccupationLoading) showWhereIWorkDialog(context);
           },
@@ -65,8 +62,8 @@ class EditableFieldsSection extends StatelessWidget {
         _buildEditableField(
           icon: LineIcons.birthdayCake,
           title: profile.dateOfBirth != null &&
-                  profile.dateOfBirth!.isBefore(
-                      DateTime.now().subtract(Duration(days: (5 * 365.25).round())))
+                  profile.dateOfBirth!.isBefore(DateTime.now()
+                      .subtract(Duration(days: (5 * 365.25).round())))
               ? formatDate(profile.dateOfBirth as DateTime)
               : "Date of Birth",
           onTap: () {

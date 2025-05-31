@@ -18,7 +18,9 @@ class AuthSignupSuccess extends AuthState {
 class AuthSuccess extends AuthState {
 
 }
-
+class AuthUnverifiedUser extends AuthState {
+  AuthUnverifiedUser();
+}
 class AuthFailure extends AuthState {
   final String error;
   AuthFailure(this.error);

@@ -1,9 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/core/constants/app_navigation.dart';
-import 'package:travelecho/core/constants/appbar.dart';
-import 'package:travelecho/core/constants/constants.dart';
-import 'package:travelecho/features/community/presentation/pages/user_profile.dart';
+import 'package:flutter/material.dart' hide CarouselController;
+import "../../community_exports.dart";
 
 class ProfileIDPage extends StatelessWidget {
   const ProfileIDPage({super.key});
@@ -27,9 +23,8 @@ class ProfileIDPage extends StatelessWidget {
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16, color: AppColors.defaultColor400),
           ),
-                    WidgetsSpacer.verticalSpacer48,
+          WidgetsSpacer.verticalSpacer48,
           WidgetsSpacer.verticalSpacer16,
-
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
@@ -37,7 +32,7 @@ class ProfileIDPage extends StatelessWidget {
                 AppNavigator.push(context, const UserProfilePage());
               },
               style: ElevatedButton.styleFrom(
-                              minimumSize: const Size(double.infinity, 50),
+                minimumSize: const Size(double.infinity, 50),
               ),
               child: const Text(
                 'Next',

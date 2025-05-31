@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../memories_exports.dart';
@@ -126,7 +126,8 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(LineIcons.calendar, color: AppColors.defaultColor400),
+                    const Icon(LineIcons.calendar,
+                        color: AppColors.defaultColor400),
                     const SizedBox(width: 8),
                     Text(
                       _selectedDate != null

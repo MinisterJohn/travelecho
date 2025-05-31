@@ -1,8 +1,9 @@
 import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../features_exports.dart';
+
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
 
@@ -42,23 +43,122 @@ class _WelcomePageState extends State<WelcomePage> {
         body: BlocBuilder<OnboardingPageCubit, OnboardingPageState>(
           builder: (context, state) {
             return ScreenContainer(
-                child: Stack(children: [
-              PageView(
-                  controller: _pageController,
-                  onPageChanged: (currentPageIndex) {
-                    // print(current_page_index);
-                    context
-                        .read<OnboardingPageCubit>()
-                        .changePageIndex(currentPageIndex);
-                    // state.currentPage,
-                  },
-                  children: [
-                    _page(0, context),
-                    _page(1, context),
-                    _page(2, context),
-                    _page(3, context),
-                  ])
-            ]));
+              child: Column(
+                children: [
+                  // Expanded PageView takes the top part
+                  Expanded(
+                    child: PageView(
+                      controller: _pageController,
+                      onPageChanged: (currentPageIndex) {
+                        context
+                            .read<OnboardingPageCubit>()
+                            .changePageIndex(currentPageIndex);
+                      },
+                      children: List.generate(
+                          _pages.length, (index) => _page(index, context)),
+                    ),
+                  ),
+
+                  // 👇 This part is fixed at the bottom
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.w, vertical: 50.h),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Row(
+                          mainAxisAlignment:
+                              state.currentPage == _pages.length - 1
+                                  ? MainAxisAlignment.center
+                                  : MainAxisAlignment.start,
+                          children: [
+                            ElevatedButton(
+                              onPressed: () {
+                                if (state.currentPage < _pages.length - 1) {
+                                  _pageController.animateToPage(
+                                    state.currentPage + 1,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.ease,
+                                  );
+                                } else {
+                                  AppNavigator.pushReplacement(
+                                      context, const SignUpPage());
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                minimumSize:
+                                    state.currentPage == _pages.length - 1
+                                        ? const Size(200, 75)
+                                        : const Size(125, 55),
+                              ),
+                              child: Text(
+                                state.currentPage == _pages.length - 1
+                                    ? 'Get Started'
+                                    : 'Next',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize:
+                                      state.currentPage == _pages.length - 1
+                                          ? FontSize.size24
+                                          : FontSize.size16,
+                                ),
+                              ),
+                            ),
+                            if (state.currentPage < _pages.length - 1)
+                              WidgetsSpacer.horizontalSpacer20,
+                            if (state.currentPage < _pages.length - 1)
+                              OutlinedButton(
+                                onPressed: () {
+                                  AppNavigator.pushReplacement(
+                                      context, const SignUpPage());
+                                },
+                                style: OutlinedButton.styleFrom(
+                                  side: const BorderSide(
+                                    color: AppColors.primaryColor,
+                                    width: 1,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  minimumSize: const Size(125, 55),
+                                ),
+                                child: Text(
+                                  'Skip',
+                                  style: TextStyle(
+                                    color: AppColors.primaryColor,
+                                    fontSize: FontSize.size16,
+                                  ),
+                                ),
+                              ),
+                          ],
+                        ),
+                        WidgetsSpacer.verticalSpacer16,
+                        if (state.currentPage == _pages.length - 1)
+                          Center(
+                            child: Text.rich(
+                              TextSpan(children: [
+                                const TextSpan(text: 'You have an account? '),
+                                TextSpan(
+                                  text: "Login",
+                                  style: const TextStyle(
+                                    color: AppColors.primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      AppNavigator.push(
+                                          context, const LoginPage());
+                                    },
+                                ),
+                              ]),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
           },
         ),
       ),
@@ -114,81 +214,6 @@ class _WelcomePageState extends State<WelcomePage> {
             ),
             WidgetsSpacer.verticalSpacer32,
             // Buttons (next and previous)
-            Row(
-              mainAxisAlignment: pageIndex == _pages.length - 1
-                  ? MainAxisAlignment.center
-                  : MainAxisAlignment.start, // Center buttons
-              children: [
-                ElevatedButton(
-                    onPressed: () {
-                      if (pageIndex < _pages.length - 1) {
-                        _pageController.animateToPage(pageIndex + 1,
-                            duration: const Duration(seconds: 1),
-                            curve: Curves.ease);
-                      } else {
-                        AppNavigator.pushReplacement(
-                            context, const SignUpPage());
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: pageIndex == _pages.length - 1
-                          ? Size(200.w, 75.h)
-                          : Size(55.w, 55.h),
-                    ),
-                    child: Text(
-                      pageIndex == _pages.length - 1 ? 'Get Started' : 'Next',
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: pageIndex == _pages.length - 1
-                              ? FontSize.size24
-                              : FontSize.size16),
-                    )),
-                WidgetsSpacer.horinzontalSpacer20,
-                if (pageIndex < _pages.length - 1)
-                  OutlinedButton(
-                    onPressed: () {
-                      // Navigate to signup page
-                      AppNavigator.pushReplacement(context, const SignUpPage());
-                    },
-                    style: OutlinedButton.styleFrom(
-                      side: const BorderSide(
-                        color: AppColors.primaryColor, // Border color
-                        width: 1, // Border width
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(10), // Apply border radius
-                      ),
-                      minimumSize: Size(55.w, 55.h), // Button size
-                    ),
-                    child: Text(
-                      'Skip',
-                      style: TextStyle(
-                        color: AppColors
-                            .primaryColor, // Text color to match the border color
-                        fontSize: FontSize.size16,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            WidgetsSpacer.verticalSpacer16,
-
-            // Add some space at the bottom
-            if (pageIndex == _pages.length - 1)
-              Center(
-                  child: Text.rich(TextSpan(children: [
-                const TextSpan(text: 'You have an account? '),
-                TextSpan(
-                    text: "Login",
-                    style: const TextStyle(
-                        color: AppColors.primaryColor,
-                        fontWeight: FontWeight.bold),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        AppNavigator.push(context, const LoginPage());
-                      })
-              ]))),
           ],
         ),
       ),
