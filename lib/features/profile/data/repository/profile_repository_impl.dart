@@ -22,9 +22,19 @@ class ProfileRepositoryImpl implements ProfileRepository {
 
   @override
   Future<Either<String, Map<String, dynamic>>> updateProfileImage(
-      dynamic imageFile) {
+    dynamic imageFile,
+  ) {
     try {
       return _apiService.updateProfileImage(imageFile);
+    } catch (e) {
+      return Future.value(Left(e.toString()));
+    }
+  }
+
+  @override
+  Future<Either<String, Profile>> updateUserProfile(Map<String, dynamic> data) {
+    try {
+      return _apiService.updateUserProfile(data);
     } catch (e) {
       return Future.value(Left(e.toString()));
     }

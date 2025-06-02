@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:travelecho/features/budget/data/budget_data.dart';
 import "../../features/features_exports.dart";
 import 'package:travelecho/navigation_menu/blocs/navigation_menu_cubit.dart';
 import 'package:travelecho/features/home/presentation/pages/homescreen.dart';
-import 'package:travelecho/features/budget/budget_tracker.dart';
 import 'package:line_icons/line_icons.dart';
 
 class RootPage extends StatefulWidget {
@@ -33,34 +30,34 @@ class _RootPageState extends State<RootPage> {
     // Container(),
     const HomeScreen(),
     // Container(),
-    MultiBlocProvider(providers: [
-      BlocProvider(create: (context) => sl<AirportBloc>()),
-      BlocProvider(create: (context) => sl<FlightBookingBloc>()),
-    ], child: const TripScreen()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<AirportBloc>()),
+        BlocProvider(create: (context) => sl<FlightBookingBloc>()),
+      ],
+      child: const TripScreen(),
+    ),
     // Container(),
-    ChangeNotifierProvider(
-      create: (context) => BudgetsData(), // No semicolon here
+    MultiBlocProvider(
+      providers: [BlocProvider(create: (context) => sl<BudgetBloc>())],
       child: const BudgetTracker(), // Your Budget page widget
     ), // Replace with your Budget page widget
-    // Container(),
-    MultiBlocProvider(providers: [
-      BlocProvider(
-        create: (context) => sl<MemoriesBloc>(),
-      ),
-      BlocProvider(
-        create: (context) => sl<DataSearchBloc>(),
-      ),
-      BlocProvider(create: (context) => sl<ProfileBloc>()),
-    ], child: const MemoriesHomePage()),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => sl<MemoriesBloc>()),
+        BlocProvider(create: (context) => sl<DataSearchBloc>()),
+        BlocProvider(create: (context) => sl<ProfileBloc>()),
+      ],
+      child: const MemoriesHomePage(),
+    ),
     // Container(),
     const CommunityPage(),
-    // Container(),
 
-    MultiBlocProvider(providers: [
-      BlocProvider(
-        create: (context) => sl<ProfileBloc>(),
-      ),
-    ], child: const ProfilePage()), // Replace with your Profile page widget
+    // Container(),
+    MultiBlocProvider(
+      providers: [BlocProvider(create: (context) => sl<ProfileBloc>())],
+      child: const ProfilePage(),
+    ), // Replace with your Profile page widget
   ];
   @override
   Widget build(BuildContext context) {
@@ -82,7 +79,9 @@ class _RootPageState extends State<RootPage> {
               elevation: 0,
               destinations: const [
                 NavigationDestination(
-                    icon: Icon(LineIcons.home), label: "Explore"),
+                  icon: Icon(LineIcons.home),
+                  label: "Explore",
+                ),
                 NavigationDestination(
                   icon: Icon(LineIcons.plane),
                   label: "Trip",
@@ -92,11 +91,17 @@ class _RootPageState extends State<RootPage> {
                   label: "Budget",
                 ),
                 NavigationDestination(
-                    icon: Icon(LineIcons.image), label: "Memories"),
+                  icon: Icon(LineIcons.image),
+                  label: "Memories",
+                ),
                 NavigationDestination(
-                    icon: Icon(LineIcons.users), label: "Community"),
+                  icon: Icon(LineIcons.users),
+                  label: "Community",
+                ),
                 NavigationDestination(
-                    icon: Icon(LineIcons.userCircle), label: "Profile"),
+                  icon: Icon(LineIcons.userCircle),
+                  label: "Profile",
+                ),
               ],
               onDestinationSelected: (int index) {
                 context.read<NavigationMenuCubit>().changePage(index);

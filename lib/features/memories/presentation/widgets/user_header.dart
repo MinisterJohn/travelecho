@@ -35,27 +35,27 @@ class UserHeader extends StatelessWidget {
                 builder: (context, profileState) {
                   return profileState is ProfileLoaded
                       ? Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.grey[300],
-                            image: DecorationImage(
-                              image: NetworkImage(profileState.profile.image),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                            ),
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: Colors.grey[300],
+                          image: DecorationImage(
+                            image: NetworkImage(profileState.profile.image),
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
                           ),
-                        )
+                        ),
+                      )
                       : const CircleAvatar(
-                          radius: 20,
-                          // backgroundColor: AppColors.primaryColor,
-                          child: Icon(
-                            Icons.person_outline_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                        );
+                        radius: 20,
+                        // backgroundColor: AppColors.primaryColor,
+                        child: Icon(
+                          Icons.person_outline_outlined,
+                          size: 20,
+                          color: Colors.white,
+                        ),
+                      );
                 },
               ),
             ),
@@ -63,16 +63,10 @@ class UserHeader extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  username,
-                  style: const TextStyle(fontSize: 14),
-                ),
+                Text(username, style: const TextStyle(fontSize: 14)),
                 Text(
                   "Posted: ${formatDate(createdAt)}",
-                  style: TextStyle(
-                    color: Colors.grey[600],
-                    fontSize: 12,
-                  ),
+                  style: TextStyle(color: Colors.grey[600], fontSize: 12),
                 ),
               ],
             ),
@@ -115,25 +109,25 @@ class UserHeader extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          _buildOptionButton(
-                            context,
-                            'View Memory',
-                            LineIcons.eye,
-                            onView,
+                          OptionButton(
+                            context: context,
+                            text: 'View Memory',
+                            icon: LineIcons.eye,
+                            onTap: onView,
                           ),
                           const Divider(color: AppColors.defaultColor100),
-                          _buildOptionButton(
-                            context,
-                            'Edit Memory',
-                            LineIcons.editAlt,
-                            onEdit,
+                          OptionButton(
+                            context: context,
+                            text: 'Edit Memory',
+                            icon: LineIcons.editAlt,
+                            onTap: onEdit,
                           ),
                           const Divider(color: AppColors.defaultColor100),
-                          _buildOptionButton(
-                            context,
-                            'Delete Memory',
-                            LineIcons.alternateTrash,
-                            onDelete,
+                          OptionButton(
+                            context: context,
+                            text: 'Delete Memory',
+                            icon: LineIcons.alternateTrash,
+                            onTap: onDelete,
                             isDelete: true,
                           ),
                         ],
@@ -146,43 +140,6 @@ class UserHeader extends StatelessWidget {
           },
         ),
       ],
-    );
-  }
-
-  Widget _buildOptionButton(
-    BuildContext context,
-    String text,
-    IconData icon,
-    VoidCallback onTap, {
-    bool isDelete = false,
-  }) {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-        onTap();
-      },
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Icon(
-            //   icon,
-            //   color: isDelete ? Colors.red : AppColors.defaultColor,
-            //   size: 24,
-            // ),
-            // WidgetsSpacer.verticalSpacer8,
-            Text(
-              text,
-              style: TextStyle(
-                fontSize: 16,
-                color: isDelete ? Colors.red : AppColors.defaultColor,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

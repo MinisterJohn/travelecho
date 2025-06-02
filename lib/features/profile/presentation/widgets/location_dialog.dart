@@ -15,19 +15,24 @@ class _LocationDialogState extends State<LocationDialog> {
   final TextEditingController locationController = TextEditingController();
   Timer? debounce;
   bool _isUpdating = false;
+  String selectedLocation = "";
+  bool _showLocationSuggestions = false;
 
   void searchForLocations(String value) {
     if (debounce?.isActive ?? false) debounce!.cancel();
     debounce = Timer(const Duration(milliseconds: 500), () {
       if (!context.mounted) return;
       if (value.isEmpty || value.length <= 1) {
-        context
-            .read<DataSearchBloc>()
-            .add(const ClearSearchResults(type: SearchType.location));
+        setState(() => _showLocationSuggestions = false);
+
+        context.read<DataSearchBloc>().add(
+          const ClearSearchResults(type: SearchType.location),
+        );
       } else {
-        context
-            .read<DataSearchBloc>()
-            .add(LocationListRequested(locationHint: value));
+        setState(() => _showLocationSuggestions = true);
+        context.read<DataSearchBloc>().add(
+          LocationListRequested(locationHint: value),
+        );
       }
     });
   }
@@ -36,9 +41,10 @@ class _LocationDialogState extends State<LocationDialog> {
     if (_isUpdating) return;
     setState(() => _isUpdating = true);
     try {
+      // pr/int()
       context.read<ProfileBloc>().add(
-            ProfileUpdateRequested(location, ProfileUpdateKey.location),
-          );
+        ProfileUpdateRequested(location, ProfileUpdateKey.location),
+      );
       if (context.mounted) {
         Navigator.of(context).pop();
       }
@@ -59,52 +65,81 @@ class _LocationDialogState extends State<LocationDialog> {
       children: [
         Text(
           "Where I live",
-          style:
-              TextStyle(fontSize: FontSize.size16, fontWeight: FontWeight.bold),
+          style: TextStyle(
+            fontSize: FontSize.size16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         GestureDetector(
           onTap: () => Navigator.of(context).pop(),
-          child: const Icon(LineIcons.timesCircleAlt,
-              color: AppColors.primaryColor),
+          child: const Icon(
+            LineIcons.timesCircleAlt,
+            color: AppColors.primaryColor,
+          ),
         ),
       ],
     );
   }
 
   Widget _buildLocationField() {
-    return TextField(
-      controller: locationController,
-      enabled: !_isUpdating,
-      decoration: InputDecoration(
-        fillColor: AppColors.primaryColor100,
-        filled: true,
-        prefixIcon: _isUpdating
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                ),
-              )
-            : const Icon(LineIcons.mapMarker, color: AppColors.primaryColor),
-        hintText: "Enter your location",
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50),
-          borderSide: const BorderSide(color: AppColors.primaryColor),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(50),
-          borderSide: const BorderSide(color: AppColors.primaryColor),
-        ),
-      ),
+    return BlocBuilder<DataSearchBloc, DataSearchState>(
+      builder: (context, state) {
+        return TextField(
+          controller: locationController,
+          enabled: !_isUpdating,
+          onChanged: searchForLocations,
+          decoration: InputDecoration(
+            fillColor: AppColors.primaryColor100,
+            filled: true,
+            suffixIcon:
+                state is DataSearchLoading
+                    ? Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                            AppColors.primaryColor,
+                          ),
+                        ),
+                      ),
+                    )
+                    : null,
+            prefixIcon:
+                _isUpdating
+                    ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                    : const Icon(
+                      LineIcons.mapMarker,
+                      color: AppColors.primaryColor,
+                    ),
+            hintText: "Enter your location",
+
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide: const BorderSide(color: AppColors.primaryColor),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(50),
+              borderSide: const BorderSide(color: AppColors.primaryColor),
+            ),
+          ),
+        );
+      },
     );
   }
 
   Widget _relatedLocationsWidget(
-      List<LocationModel> locations,
-      BuildContext context,
-      TextEditingController locationController,
-      bool isUpdating) {
+    List<LocationModel> locations,
+    BuildContext context,
+    TextEditingController locationController,
+    bool isUpdating,
+  ) {
     if (locations.isEmpty) {
       return Center(
         child: Column(
@@ -112,14 +147,17 @@ class _LocationDialogState extends State<LocationDialog> {
             const Text("No locations found"),
             WidgetsSpacer.verticalSpacer16,
             OutlinedButton(
-              onPressed: isUpdating
-                  ? null
-                  : () {
-                      final location = locationController.text.trim();
-                      if (location.isNotEmpty) {
-                        _updateLocation(location);
-                      }
-                    },
+              onPressed:
+                  isUpdating
+                      ? null
+                      : () {
+                        final location = locationController.text.trim();
+                        if (location.isNotEmpty) {
+                          setState(() {
+                            selectedLocation = location;
+                          });
+                        }
+                      },
               style: OutlinedButton.styleFrom(
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
@@ -160,14 +198,19 @@ class _LocationDialogState extends State<LocationDialog> {
                 style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               contentPadding: EdgeInsets.zero,
-              onTap: isUpdating
-                  ? null
-                  : () {
-                      locationController.clear();
-                      _updateLocation(location.location);
-                      context.read<DataSearchBloc>().add(
-                          const ClearSearchResults(type: SearchType.location));
-                    },
+              onTap:
+                  isUpdating
+                      ? null
+                      : () {
+                        locationController.clear();
+                        setState(() {
+                          selectedLocation = location.location;
+                          _showLocationSuggestions = false;
+                        });
+                        context.read<DataSearchBloc>().add(
+                          const ClearSearchResults(type: SearchType.location),
+                        );
+                      },
             );
           },
         ),
@@ -188,41 +231,43 @@ class _LocationDialogState extends State<LocationDialog> {
 
   Widget _buildAddButton() {
     return GestureDetector(
-      onTap: _isUpdating
-          ? null
-          : () {
-              final location = locationController.text.trim();
-              if (location.isNotEmpty) {
-                _updateLocation(location);
-              }
-            },
+      onTap:
+          _isUpdating
+              ? null
+              : () {
+                if (selectedLocation.isNotEmpty) {
+                  _updateLocation(selectedLocation);
+                }
+              },
       child: Container(
         width: double.infinity,
         padding: const EdgeInsets.symmetric(vertical: 12.0),
         decoration: BoxDecoration(
-          color: _isUpdating
-              ? AppColors.primaryColor.withOpacity(0.5)
-              : AppColors.primaryColor,
+          color:
+              _isUpdating
+                  ? AppColors.primaryColor.withOpacity(0.5)
+                  : AppColors.primaryColor,
           borderRadius: BorderRadius.circular(8.0),
         ),
         child: Center(
-          child: _isUpdating
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(
-                    strokeWidth: 2,
-                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          child:
+              _isUpdating
+                  ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    ),
+                  )
+                  : const Text(
+                    "Done",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                )
-              : const Text(
-                  "Done",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
         ),
       ),
     );
@@ -230,8 +275,11 @@ class _LocationDialogState extends State<LocationDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: sl<ProfileBloc>(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: sl<ProfileBloc>()),
+        BlocProvider.value(value: sl<DataSearchBloc>()),
+      ],
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -239,6 +287,28 @@ class _LocationDialogState extends State<LocationDialog> {
           _buildHeader(context),
           const SizedBox(height: 20.0),
           _buildLocationField(),
+          const SizedBox(height: 10.0),
+          if (_showLocationSuggestions)
+            BlocBuilder<DataSearchBloc, DataSearchState>(
+              builder: (context, state) {
+                if (state is LocationListLoaded) {
+                  return _relatedLocationsWidget(
+                    state.locations,
+                    context,
+                    locationController,
+                    _isUpdating,
+                  );
+                } else if (state is DataSearchError) {
+                  DisplayMessage.errorMessage(
+                    "Error: //${state.message}",
+                    context,
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+            ),
+          if (locationController.text.isEmpty && selectedLocation.isNotEmpty)
+            _selectedLocationWidget(selectedLocation),
           WidgetsSpacer.spacer,
           _buildAddButton(),
         ],
@@ -257,6 +327,12 @@ class _LocationDialogState extends State<LocationDialog> {
 void showWhereILiveDialog(BuildContext context) {
   showDraggableBottomModal(
     context,
-    const LocationDialog(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: sl<ProfileBloc>()),
+        BlocProvider.value(value: sl<DataSearchBloc>()),
+      ],
+      child: const LocationDialog(),
+    ),
   );
 }

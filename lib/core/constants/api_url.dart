@@ -23,6 +23,18 @@ class ApiUrl {
   static String dynamicMemoryImageURL(String memoryId, String imageId) =>
       "/users/me/memories/$memoryId/images/$imageId";
 
+  // Budget
+  static const budgetURL = "/users/me/budgets";
+  static String dynamicBudgetURL(String budgetId) =>
+      "/users/me/budgets/$budgetId";
+  static String dynamicBudgetWithExpensesURL(String budgetId) =>
+      "/users/me/budgets/$budgetId/expenses";
+  static const expenseURL = "/users/me/expenses";
+  static String dynamicExpenseURL(String expenseId) =>
+      "/users/me/expenses/$expenseId";
+  static String dynamicExpenseReceiptURL(String expenseId) =>
+      "/users/me/expenses/$expenseId/receipt";
+
   // Optional helper
   static String fullUrl(String path) {
     if (path.startsWith('/')) {

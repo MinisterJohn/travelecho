@@ -10,6 +10,7 @@ class CurrencyRepositoryImpl implements CurrencyRepository {
   Future<Either> getExchangeRates(String baseCurrency) async {
     try {
       final rates = await remoteSource.fetchExchangeRates(baseCurrency);
+      logger.i("Exchange rates fetched successfully: ${rates.rates}"); // Log the rates
       return Right(rates); // ✅ Success
     } catch (e) {
       logger.e("Error fetching exchange rates: $e");
@@ -20,13 +21,12 @@ class CurrencyRepositoryImpl implements CurrencyRepository {
   @override
   Future<Either<String, List<String>>> getCurrencyList() async {
     try {
-      final currencies = await remoteSource
-          .fetchCurrencyList(); // Assuming this returns CurrencyListModel
-      return Right(currencies.toList());
-      logger.i(currencies); // ✅ Convert to List<String>
+      final currencies = await remoteSource.fetchCurrencyList();
+      logger.i(currencies.currencies); // Log the currencies map
+      return Right(currencies.toList()); // Convert to List<String> with symbols
     } catch (e) {
-      logger.e("Error fetching exchange rates: $e");
-      return const Left("Failed to get currency list"); // ❌ Handle failure
+      logger.e("Error fetching currency list: $e");
+      return const Left("Failed to get currency list"); // Handle failure
     }
   }
 }

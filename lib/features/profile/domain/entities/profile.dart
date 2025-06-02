@@ -14,6 +14,7 @@ class Profile {
   final String? postalCode;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final String? occupation; // Added occupation field
 
   Profile({
     required this.id,
@@ -31,6 +32,7 @@ class Profile {
     this.postalCode,
     required this.createdAt,
     required this.updatedAt,
+    this.occupation,
   });
 
   factory Profile.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class Profile {
       postalCode: json['postal_code'] as String?,
       createdAt: DateTime.parse(json['created_at'] as String),
       updatedAt: DateTime.parse(json['updated_at'] as String),
+      occupation: json['occupation'] as String?,
     );
   }
 
@@ -72,6 +75,45 @@ class Profile {
       'postal_code': postalCode,
       'created_at': createdAt.toIso8601String(),
       'updated_at': updatedAt.toIso8601String(),
+      'occupation': occupation,
     };
+  }
+
+  Profile copyWith({
+    String? id,
+    String? username,
+    String? email,
+    String? firstName,
+    String? lastName,
+    String? profileImage,
+    String? bio,
+    DateTime? dateOfBirth,
+    String? phoneNumber,
+    String? address,
+    String? city,
+    String? country,
+    String? postalCode,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? occupation,
+  }) {
+    return Profile(
+      id: id ?? this.id,
+      username: username ?? this.username,
+      email: email ?? this.email,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      profileImage: profileImage ?? this.profileImage,
+      bio: bio ?? this.bio,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      address: address ?? this.address,
+      city: city ?? this.city,
+      country: country ?? this.country,
+      postalCode: postalCode ?? this.postalCode,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      occupation: occupation ?? this.occupation,
+    );
   }
 }

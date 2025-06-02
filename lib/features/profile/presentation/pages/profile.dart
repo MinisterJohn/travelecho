@@ -153,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   value: sl<ProfileBloc>(),
                                                 ),
                                               ],
-                                              child: const EditProfilePage(),
+                                              child: const EditPersonalInformation(),
                                             ),
                                           );
                                         },
@@ -307,6 +307,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                       child: const Row(
                         mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           SizedBox(
                             width: 16,

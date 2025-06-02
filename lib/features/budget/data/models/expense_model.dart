@@ -1,70 +1,108 @@
-class ExpenseCategory {
-  final String title;
-  final String description;
-  final String imagePath;
-  bool expenseIsAdded;
+import 'package:equatable/equatable.dart';
 
-  ExpenseCategory({
+class ExpenseModel extends Equatable {
+  final String id;
+  final String? tripId;
+  final String userId;
+  final String budgetId;
+  final String title;
+  final String category; // e.g., Food, Transport, Lodging
+  final double? plannedAmount; // optional
+  final double amount; // actual spent
+  final DateTime date;
+  final String? notes;
+  final String? receiptImageUrl;
+
+  const ExpenseModel({
+    required this.id,
+    required this.tripId,
+    required this.budgetId,
     required this.title,
-    required this.description,
-    required this.imagePath,
-    required this.expenseIsAdded,
+    required this.category,
+    required this.plannedAmount,
+    required this.amount,
+    required this.userId,
+    required this.date,
+    this.notes,
+    this.receiptImageUrl,
   });
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
+      'tripId': tripId,
+      'budgetId': budgetId,
       'title': title,
-      'description': description,
-      'imagePath': imagePath,
-      'expenseIsAdded': expenseIsAdded,
+      'category': category,
+      'plannedAmount': plannedAmount,
+      'amount': amount,
+      'userId': userId,
+      'date': date.toIso8601String(),
+      'notes': notes,
+      'receiptImageUrl': receiptImageUrl,
     };
   }
 
-  factory ExpenseCategory.fromJson(Map<String, dynamic> json) {
-    return ExpenseCategory(
-      title: json['title'] as String,
-      description: json['description'] as String,
-      imagePath: json['imagePath'] as String,
-      expenseIsAdded: json['expenseIsAdded'] as bool,
+  factory ExpenseModel.fromJson(Map<String, dynamic> map) {
+    return ExpenseModel(
+      id: map['id'],
+      tripId: map['tripId'],
+      budgetId: map['budgetId'],
+      title: map['title'],
+      category: map['category'],
+      plannedAmount: (map['plannedAmount'] as num?)?.toDouble(),
+      amount: (map['amount'] as num).toDouble(),
+      userId: map['userId'],
+      date: DateTime.parse(map['date']),
+      notes: map['notes'],
+      receiptImageUrl: map['receiptImageUrl'],
     );
   }
-}
 
-class ExpenseCategorySelected extends ExpenseCategory {
-  double amount;
-  bool showExpenseDropdown;
-
+  @override
+  List<Object?> get props => [
+        id,
+        tripId,
+        budgetId,
+        title,
+        category,
+        plannedAmount,
+        amount,
+        userId,
+        date,
+        notes,
+        receiptImageUrl,
+      ];
   @override
   String toString() {
-    return 'Expense(amount: $amount, name: $title, description: $description)';
+    return 'ExpenseModel(id: $id, tripId: $tripId, budgetId: $budgetId, title: $title, category: $category, plannedAmount: $plannedAmount, amount: $amount, userId: $userId, date: $date, notes: $notes, receiptImageUrl: $receiptImageUrl)';
   }
 
-  ExpenseCategorySelected({
-    required super.title,
-    required super.description,
-    required super.imagePath,
-    required super.expenseIsAdded,
-    required this.amount,
-    required this.showExpenseDropdown,
-  });
-
-  @override
-  Map<String, dynamic> toJson() {
-    return {
-      ...super.toJson(),
-      'amount': amount,
-      'showExpenseDropdown': showExpenseDropdown,
-    };
-  }
-
-  factory ExpenseCategorySelected.fromJson(Map<String, dynamic> json) {
-    return ExpenseCategorySelected(
-      title: json['title'] as String,
-      description: json['description'] as String,
-      imagePath: json['imagePath'] as String,
-      expenseIsAdded: json['expenseIsAdded'] as bool,
-      amount: json['amount'] as double,
-      showExpenseDropdown: json['showExpenseDropdown'] as bool,
+  ExpenseModel copyWith({
+    String? id,
+    String? tripId,
+    String? budgetId,
+    String? title,
+    String? category,
+    double? plannedAmount,
+    double? amount,
+    String? userId,
+    DateTime? date,
+    String? notes,
+    String? receiptImageUrl,
+  }) {
+    return ExpenseModel(
+      id: id ?? this.id,
+      tripId: tripId ?? this.tripId,
+      budgetId: budgetId ?? this.budgetId,
+      title: title ?? this.title,
+      category: category ?? this.category,
+      plannedAmount: plannedAmount ?? this.plannedAmount,
+      amount: amount ?? this.amount,
+      userId: userId ?? this.userId,
+      date: date ?? this.date,
+      notes: notes ?? this.notes,
+      receiptImageUrl: receiptImageUrl ?? this.receiptImageUrl,
     );
   }
 }

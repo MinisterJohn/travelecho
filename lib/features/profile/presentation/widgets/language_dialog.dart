@@ -5,24 +5,77 @@ import 'package:line_icons/line_icons.dart';
 import '../../profile_exports.dart';
 
 void showLanguageDialog(BuildContext context) {
-  TextEditingController searchController = TextEditingController();
+  showDraggableBottomModal(
+    context,
+    MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: sl<DataSearchBloc>()),
+        BlocProvider.value(value: sl<ProfileBloc>()),
+      ],
+      child: LanguageDialog(context: context),
+    ),
+  );
+}
+
+class LanguageDialog extends StatefulWidget {
+  final BuildContext context;
+
+  const LanguageDialog({Key? key, required this.context}) : super(key: key);
+
+  @override
+  _LanguageDialogState createState() => _LanguageDialogState();
+}
+
+class _LanguageDialogState extends State<LanguageDialog> {
+  late TextEditingController searchController;
   Timer? debounce;
-  bool isUpdating = false;
+  List<String> tempSelectedLanguages = [];
+
+  @override
+  void initState() {
+    super.initState();
+    searchController = TextEditingController();
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is ProfileLoaded) {
+      tempSelectedLanguages = List.from(profileState.profile.languages);
+    }
+  }
+
+  @override
+  void dispose() {
+    debounce?.cancel();
+    searchController.dispose();
+    super.dispose();
+  }
 
   void searchForLanguages(String value) {
     if (debounce?.isActive ?? false) debounce!.cancel();
     debounce = Timer(const Duration(milliseconds: 500), () {
-      context.read<DataSearchBloc>().add(
-            value.isEmpty
-                ? const ClearSearchResults(type: SearchType.language)
-                : LanguagesRequested(languageHint: value),
-          );
+      if (mounted) {
+        context.read<DataSearchBloc>().add(
+          value.isEmpty
+              ? const ClearSearchResults(type: SearchType.language)
+              : LanguagesRequested(languageHint: value),
+        );
+      }
     });
   }
 
-  showDraggableBottomModal(
-    context,
-    MultiBlocProvider(
+  void updateTempSelectedLangauges(isSelected, language) {
+    setState(() {
+      if (isSelected == true) {
+        if (!tempSelectedLanguages.contains(language)) {
+          tempSelectedLanguages.add(language);
+        }
+      } else {
+        tempSelectedLanguages.remove(language);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
       providers: [
         BlocProvider.value(value: sl<DataSearchBloc>()),
         BlocProvider.value(value: sl<ProfileBloc>()),
@@ -39,23 +92,29 @@ void showLanguageDialog(BuildContext context) {
             builder: (context, state) {
               final List<String> selectedLanguages =
                   state is ProfileLoaded ? state.profile.languages : <String>[];
-
               return BlocBuilder<DataSearchBloc, DataSearchState>(
-                builder: (context, state) {
+                builder: (context, dataState) {
                   final List<String> relatedLanguages =
-                      state is LanguagesLoaded ? state.languages : <String>[];
+                      dataState is LanguagesLoaded
+                          ? dataState.languages
+                          : <String>[];
                   return _buildLanguageList(
-                      relatedLanguages, selectedLanguages, context);
+                    relatedLanguages,
+                    selectedLanguages,
+                    tempSelectedLanguages,
+                    updateTempSelectedLangauges,
+                    context,
+                  );
                 },
               );
             },
           ),
           const Spacer(),
-          _buildNextButton(context),
+          _buildNextButton(context, tempSelectedLanguages),
         ],
       ),
-    ),
-  );
+    );
+  }
 }
 
 Widget _buildHeader(BuildContext context) {
@@ -64,51 +123,110 @@ Widget _buildHeader(BuildContext context) {
     children: [
       Text(
         "Languages you speak",
-        style:
-            TextStyle(fontSize: FontSize.size16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: FontSize.size16,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       GestureDetector(
         onTap: () => Navigator.of(context).pop(),
-        child:
-            const Icon(LineIcons.timesCircleAlt, color: AppColors.primaryColor),
+        child: const Icon(
+          LineIcons.timesCircleAlt,
+          color: AppColors.primaryColor,
+        ),
       ),
     ],
   );
 }
 
 Widget _buildSearchField(
-    TextEditingController controller, Function(String) onChanged) {
-  return TextField(
-    controller: controller,
-    onChanged: onChanged,
-    decoration: InputDecoration(
-      fillColor: AppColors.primaryColor100,
-      filled: true,
-      prefixIcon: const Icon(Icons.search, color: AppColors.primaryColor),
-      hintText: "Search for different languages",
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(50),
-        borderSide: const BorderSide(color: AppColors.primaryColor),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(50),
-        borderSide: const BorderSide(color: AppColors.primaryColor),
-      ),
-    ),
+  TextEditingController controller,
+  Function(String) onChanged,
+) {
+  return BlocBuilder<DataSearchBloc, DataSearchState>(
+    builder: (context, state) {
+      return TextField(
+        controller: controller,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          fillColor: AppColors.primaryColor100,
+          filled: true,
+          prefixIcon: const Icon(Icons.search, color: AppColors.primaryColor),
+          suffixIcon:
+              state is DataSearchLoading
+                  ? Padding(
+                    padding: const EdgeInsets.all(12.0),
+                    child: SizedBox(
+                      width: 16,
+                      height: 16,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primaryColor,
+                        ),
+                      ),
+                    ),
+                  )
+                  : controller.text.trim().isNotEmpty
+                  ? InkWell(
+                    onTap: () {
+                      controller.clear();
+                      context.read<DataSearchBloc>().add(
+                        const ClearSearchResults(type: SearchType.language),
+                      );
+                    },
+                    child: const Icon(
+                      Icons.clear,
+                      color: AppColors.primaryColor,
+                    ),
+                  )
+                  : null,
+          hintText: "Search for different languages",
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(50),
+            borderSide: const BorderSide(color: AppColors.primaryColor),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(50),
+            borderSide: const BorderSide(color: AppColors.primaryColor),
+          ),
+        ),
+      );
+    },
   );
 }
 
-Widget _buildLanguageList(List<String> relatedLanguages,
-    List<String> selectedLanguages, BuildContext context) {
+Widget _buildLanguageList(
+  List<String> relatedLanguages,
+  List<String> selectedLanguages,
+  List<String> tempSelectedLanguages,
+  Function updateTempSelectedLanguages,
+  BuildContext context,
+) {
   if (relatedLanguages.isNotEmpty) {
     return _relatedLanguagesWidget(
-        relatedLanguages, selectedLanguages, context);
+      relatedLanguages,
+      selectedLanguages,
+      tempSelectedLanguages,
+      updateTempSelectedLanguages,
+      context,
+    );
   }
-  return _selectedLanguagesWidget(selectedLanguages, context);
+  return _selectedLanguagesWidget(
+    selectedLanguages,
+    tempSelectedLanguages,
+    updateTempSelectedLanguages,
+    context,
+  );
 }
 
-Widget _relatedLanguagesWidget(List<String> relatedLanguages,
-    List<String> selectedLanguages, BuildContext context) {
+Widget _relatedLanguagesWidget(
+  List<String> relatedLanguages,
+  List<String> selectedLanguages,
+  List<String> tempSelectedLanguages,
+  Function updateTempSelectedLanguages,
+  BuildContext context,
+) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
     decoration: BoxDecoration(
@@ -116,9 +234,10 @@ Widget _relatedLanguagesWidget(List<String> relatedLanguages,
       borderRadius: BorderRadius.circular(20),
       boxShadow: const [
         BoxShadow(
-            color: AppColors.defaultColor100,
-            blurRadius: 5,
-            offset: Offset(0, 2))
+          color: AppColors.defaultColor100,
+          blurRadius: 5,
+          offset: Offset(0, 2),
+        ),
       ],
     ),
     constraints: const BoxConstraints(maxHeight: 250),
@@ -128,14 +247,14 @@ Widget _relatedLanguagesWidget(List<String> relatedLanguages,
         itemCount: relatedLanguages.length,
         itemBuilder: (context, index) {
           final language = relatedLanguages[index];
-          final isSelected = selectedLanguages.any((lang) => lang == language);
+          bool isnewSelected = tempSelectedLanguages.contains(language);
 
           return CheckboxListTile(
             title: Text(language),
-            value: isSelected,
+            value: isnewSelected,
             onChanged: (bool? isSelected) {
-              context.read<ProfileBloc>().add(
-                  ProfileUpdateRequested(language, ProfileUpdateKey.languages));
+              isnewSelected = isSelected ?? false;
+              updateTempSelectedLanguages(isSelected, language);
             },
           );
         },
@@ -145,31 +264,80 @@ Widget _relatedLanguagesWidget(List<String> relatedLanguages,
 }
 
 Widget _selectedLanguagesWidget(
-    List<String> selectedLanguages, BuildContext context) {
-  if (selectedLanguages.isEmpty) {
+  List<String> selectedLanguages,
+  List<String> tempSelectedLanguages,
+  Function updateTempSelectedLanguages,
+  BuildContext context,
+) {
+  if (tempSelectedLanguages.isEmpty) {
     return const Center(
-        child: Text("No languages selected. Start typing to search."));
+      child: Text("No languages selected. Start typing to search."),
+    );
   }
-  return ListView.builder(
-    shrinkWrap: true,
-    itemCount: selectedLanguages.length,
-    itemBuilder: (context, index) {
-      final language = selectedLanguages[index];
-      return CheckboxListTile(
-        title: Text(language),
-        value: true,
-        onChanged: (bool? isSelected) {
-          context.read<ProfileBloc>().add(
-              ProfileUpdateRequested(language, ProfileUpdateKey.languages));
+
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      // borderRadius: BorderRadius.circular(20),
+      // boxShadow: const [
+      //   BoxShadow(
+      //     color: AppColors.defaultColor100,
+      //     blurRadius: 5,
+      //     offset: Offset(0, 2),
+      //   ),
+      // ],
+    ),
+    constraints: const BoxConstraints(maxHeight: 250),
+    child: Scrollbar(
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: tempSelectedLanguages.length,
+        itemBuilder: (context, index) {
+          final language = tempSelectedLanguages[index];
+          final isSelected = tempSelectedLanguages.contains(language);
+
+          return CheckboxListTile(
+            title: Text(language),
+            value: isSelected,
+            onChanged: (bool? isSelected) {
+              updateTempSelectedLanguages(isSelected, language);
+            },
+          );
         },
-      );
-    },
+      ),
+    ),
   );
 }
 
-Widget _buildNextButton(BuildContext context) {
-  return ElevatedButton(
-    onPressed: () => Navigator.of(context).pop(),
-    child: const Text("Next"),
+Widget _buildNextButton(
+  BuildContext context,
+  List<String> tempSelectedLanguages,
+) {
+  return BlocBuilder<ProfileBloc, ProfileState>(
+    builder: (context, state) {
+      return ElevatedButton(
+        onPressed: () {
+          context.read<ProfileBloc>().add(
+            ProfileUpdateRequested(
+              tempSelectedLanguages,
+              ProfileUpdateKey.languages,
+            ),
+          );
+          context.read<DataSearchBloc>().add(
+            const ClearSearchResults(type: SearchType.language),
+          );
+          AppNavigator.pop(context);
+        },
+        style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+        child:
+            state is ProfileUpdating
+                ? CircularProgressIndicator(
+                  strokeWidth: 1.5,
+                  color: AppColors.white,
+                )
+                : const Text("Done"),
+      );
+    },
   );
 }

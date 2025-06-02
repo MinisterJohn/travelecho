@@ -8,6 +8,7 @@ export 'memories/memories_exports.dart';
 export 'visa_and_immigration/visa_and_immigration_exports.dart';
 export 'travel_guide/travel_guide_exports.dart';
 export 'trip/trip_exports.dart';
+export 'budget/budget_exports.dart';
 
 export 'splashscreen/presentation/pages/splashscreen.dart';
 export 'splashscreen/presentation/bloc/splash_cubit.dart';

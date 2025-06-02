@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
-import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/features/budget/data/models/budget_model.dart';
-import 'package:travelecho/features/budget/data/models/expense_model.dart';
-import 'addcategories.dart';
-import 'savebudget.dart';
+import '../../budget_exports.dart';
 
 class SetBudgetScreen extends StatefulWidget {
   const SetBudgetScreen({super.key});
@@ -15,14 +11,14 @@ class SetBudgetScreen extends StatefulWidget {
 }
 
 class _SetBudgetScreenState extends State<SetBudgetScreen> {
-  late Budget _budget;
+  late BudgetModel _budget;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
     // Retrieve the Budget object passed as arguments
-    final Budget passedBudget =
-        ModalRoute.of(context)!.settings.arguments as Budget;
+    final BudgetModel passedBudget =
+        ModalRoute.of(context)!.settings.arguments as BudgetModel;
     setState(() {
       _budget =
           passedBudget; // Store the passed Budget object in a local variable
@@ -53,7 +49,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
             },
           ),
           title: Text(
-            _budget.name,
+            _budget.createdAt.toString(),
             style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
@@ -83,9 +79,9 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
                         EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                   ),
                   keyboardType: TextInputType.number,
-                  onChanged: (value) {
-                    _budget.amount = double.parse(value);
-                  },
+                  // onChanged: (value) {
+                  //   _budget.plannedAmount = double.parse(value);
+                  // },
                 ),
                 const SizedBox(height: 5),
                 const Text(
@@ -127,21 +123,21 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
                 //     ],
                 //   ),
                 // ),
-                _budget.expenseList.isNotEmpty
-                    ? Column(
-                        children: _budget.getExpenses().map((expense) {
-                          return _buildCategoryDropdown(
-                            expense: expense,
-                            onTap: () {
-                              setState(() {
-                                expense.showExpenseDropdown =
-                                    !expense.showExpenseDropdown;
-                              });
-                            },
-                          );
-                        }).toList(),
-                      )
-                    : _showEmptyExpense(),
+                // _budget.expenseList.isNotEmpty
+                //     ? Column(
+                //         children: _budget.getExpenses().map((expense) {
+                //           return _buildCategoryDropdown(
+                //             expense: expense,
+                //             onTap: () {
+                //               setState(() {
+                //                 expense.showExpenseDropdown =
+                //                     !expense.showExpenseDropdown;
+                //               });
+                //             },
+                //           );
+                //         }).toList(),
+                //       )
+                //     : _showEmptyExpense(),
 
                 // SizedBox(height: 25),
 
@@ -191,17 +187,18 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
             ),
           ),
         ),
-        floatingActionButton: _budget.expenseList.isNotEmpty
-            ? FloatingActionButton(
-                backgroundColor: AppColors.primaryColor,
-                shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(50))),
-                onPressed: () {
-                  _showModal(context);
-                },
-                child: const Icon(Icons.add, color: Colors.white),
-              )
-            : null);
+        // floatingActionButton: _budget.expenseList.isNotEmpty
+        //     ? FloatingActionButton(
+        //         backgroundColor: AppColors.primaryColor,
+        //         shape: const RoundedRectangleBorder(
+        //             borderRadius: BorderRadius.all(Radius.circular(50))),
+        //         onPressed: () {
+        //           _showModal(context);
+        //         },
+        //         child: const Icon(Icons.add, color: Colors.white),
+        //       )
+        //     : null
+        );
   }
 
   void _showModal(BuildContext context) {
@@ -272,9 +269,9 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
             ),
             IconButton(
                 onPressed: () {
-                  setState(() {
-                    _budget.removeExpense(expense.title);
-                  });
+                  // setState(() {
+                  //   _budget.removeExpense(expense.title);
+                  // });
                 },
                 icon: const Icon(
                   Icons.delete_outlined,
@@ -297,9 +294,9 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
               border: OutlineInputBorder(),
             ),
             keyboardType: TextInputType.number,
-            onChanged: (amount) {
-              expense.amount = double.parse(amount);
-            },
+            // onChanged: (amount) {
+            //   expense.amount = double.parse(amount);
+            // },
           ),
           const SizedBox(height: 5),
           Text(

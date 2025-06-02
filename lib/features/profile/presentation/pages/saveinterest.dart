@@ -14,116 +14,175 @@ class InterestSelectionPage extends StatefulWidget {
 class _InterestSelectionPageState extends State<InterestSelectionPage> {
   TextEditingController interestController = TextEditingController();
   Timer? debounce;
+  List<String> selectedInterests = [];
+  List<String> tempSelectedInterests = [];
+
+  @override
+  void initState() {
+    super.initState();
+    final profileState = context.read<ProfileBloc>().state;
+    if (profileState is ProfileLoaded) {
+      tempSelectedInterests = List.from(profileState.profile.interests);
+    }
+  }
+
+  void updateTempSelectedInterests(String interest) {
+    setState(() {
+      if (!tempSelectedInterests.contains(interest)) {
+        tempSelectedInterests.add(interest);
+      } else {
+        tempSelectedInterests.remove(interest);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Heading and description
-          const Text(
-            "What are you into?",
-            style: TextStyle(
-              fontSize: 15.0,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10.0),
-          const Text(
-            "Pick up to 3 interests that you will love to show on your profile.",
-            style: TextStyle(
-              fontSize: 14.0,
-              color: Colors.grey,
-            ),
-          ),
-          const SizedBox(height: 10),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        // Heading and description
+        const Text(
+          "What are you into?",
+          style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10.0),
+        const Text(
+          "Pick up to 3 interests that you will love to show on your profile.",
+          style: TextStyle(fontSize: 14.0, color: Colors.grey),
+        ),
+        const SizedBox(height: 10),
 
-          // Custom interest input
-          Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: interestController,
-                  decoration: InputDecoration(
-                    hintText: "Search for interests",
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8.0),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0,
-                      horizontal: 12.0,
-                    ),
+        // Custom interest input
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: interestController,
+                decoration: InputDecoration(
+                  hintText: "Search for interests",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8.0),
                   ),
-                  onChanged: (value) {
-                    if (debounce?.isActive ?? false) debounce!.cancel();
-                    debounce = Timer(const Duration(milliseconds: 500), () {
-                      if (value.isEmpty) {
-                        context.read<DataSearchBloc>().add(
-                            const ClearSearchResults(
-                                type: SearchType.interest));
-                        return;
-                      }
-                      try {
-                        // Check if context is still valid before accessing it
-                        if (!context.mounted) return;
-                        context
-                            .read<DataSearchBloc>()
-                            .add(InterestsRequested(interestHint: value));
-                      } catch (e) {
-                        DisplayMessage.errorMessage(e.toString(), context);
-                      }
-                    });
-                  },
+                  prefixIcon: const Icon(
+                    Icons.search,
+                    color: AppColors.primaryColor,
+                  ),
+                  suffixIcon: IconButton(
+                    icon: interestController.text.trim().isNotEmpty
+                        ? const Icon(
+                            Icons.clear,
+                            color: AppColors.primaryColor,
+                          )
+                        : const SizedBox.shrink(),
+                    onPressed: () {
+                      interestController.clear();
+                      if (debounce?.isActive ?? false) debounce!.cancel();
+                      context.read<DataSearchBloc>().add(
+                        const ClearSearchResults(type: SearchType.interest),
+                      );
+                    },
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10.0,
+                    horizontal: 12.0,
+                  ),
                 ),
+                onChanged: (value) {
+                  if (debounce?.isActive ?? false) debounce!.cancel();
+                  debounce = Timer(const Duration(milliseconds: 500), () {
+                    if (value.isEmpty) {
+                      context.read<DataSearchBloc>().add(
+                        const ClearSearchResults(type: SearchType.interest),
+                      );
+                      return;
+                    }
+                    try {
+                      // Check if context is still valid before accessing it
+                      if (!context.mounted) return;
+                      context.read<DataSearchBloc>().add(
+                        InterestsRequested(interestHint: value),
+                      );
+                    } catch (e) {
+                      DisplayMessage.errorMessage(e.toString(), context);
+                    }
+                  });
+                },
               ),
-              const SizedBox(width: 10),
-              //
-            ],
-          ),
-          WidgetsSpacer.verticalSpacer16,
+            ),
+            const SizedBox(width: 10),
+            //
+          ],
+        ),
+        WidgetsSpacer.verticalSpacer16,
 
-          // Interest buttons in a grid
-
-          BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+        // Interest buttons in a grid
+        BlocBuilder<ProfileBloc, ProfileState>(
+          builder: (context, state) {
             final List<String> selectedInterests =
-                state is ProfileLoaded ? (state).profile.interests : <String>[];
+                state is ProfileLoaded ? state.profile.interests : <String>[];
+
             return BlocBuilder<DataSearchBloc, DataSearchState>(
-                builder: (context, state) {
-              List<String> relatedInterests =
-                  state is InterestsLoaded ? state.interests : <String>[];
-              return _buildInterestsList(
-                  relatedInterests, selectedInterests, context);
-            });
-          }),
+              builder: (context, dataState) {
+                final List<String> relatedInterests =
+                    dataState is InterestsLoaded
+                        ? dataState.interests
+                        : <String>[];
 
-          // const Spacer(),
+                return _buildInterestsList(
+                  relatedInterests,
+                  selectedInterests,
+                  context,
+                );
+              },
+            );
+          },
+        ),
 
-          ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(),
-              child: const Text("Done")),
-        ],
-      ),
+        const Spacer(),
+        ElevatedButton(
+          onPressed: () {
+            context.read<DataSearchBloc>().add(
+              const ClearSearchResults(type: SearchType.interest),
+            );
+            context.read<ProfileBloc>().add(
+              ProfileUpdateRequested(
+                tempSelectedInterests,
+                ProfileUpdateKey.interests,
+              ),
+            );
+            AppNavigator.pop(context);
+          },
+          style: ElevatedButton.styleFrom(
+            minimumSize: Size(double.infinity, 50),
+          ),
+
+          child: const Text("Done"),
+        ),
+      ],
     );
   }
 
-  Widget _buildInterestsList(List<String> relatedInterests,
-      List<String> selectedInterests, BuildContext context) {
+  Widget _buildInterestsList(
+    List<String> relatedInterests,
+    List<String> selectedInterests,
+    BuildContext context,
+  ) {
     if (relatedInterests.isNotEmpty) {
-      return _relatedInterestsWidget(
-          relatedInterests, selectedInterests, context);
+      return _relatedInterestsWidget(relatedInterests, context);
     }
-    return _selectedInterestsWidget(selectedInterests, context);
+    return _selectedInterestsWidget(context);
   }
 
-  Widget _relatedInterestsWidget(List<String> relatedInterests,
-      List<String> selectedInterests, BuildContext context) {
+  Widget _relatedInterestsWidget(
+    List<String> relatedInterests,
+    BuildContext context,
+  ) {
     if (relatedInterests.isEmpty) {
       return const Center(
-          child: CircularProgressIndicator(
-        color: AppColors.primaryColor,
-      ));
+        child: CircularProgressIndicator(color: AppColors.primaryColor),
+      );
     }
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -140,59 +199,56 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
       ),
       constraints: const BoxConstraints(maxHeight: 200),
       child: Scrollbar(
-          child: Expanded(
-              child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3, // Display 3 buttons in a row
-                    crossAxisSpacing: 10.0, // Space between columns
-                    mainAxisSpacing: 10.0, // Space between rows
-                    childAspectRatio: 2, // Adjusts the size of the buttons
-                  ),
-                  itemCount: relatedInterests.length,
-                  itemBuilder: (context, index) {
-                    return _interestsListWidget(
-                        relatedInterests, selectedInterests, index);
-                  }))),
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, // Display 3 buttons in a row
+            crossAxisSpacing: 10.0, // Space between columns
+            mainAxisSpacing: 10.0, // Space between rows
+            childAspectRatio: 2, // Adjusts the size of the buttons
+          ),
+          itemCount: relatedInterests.length,
+          itemBuilder: (context, index) {
+            return _interestsListWidget(relatedInterests, index);
+          },
+        ),
+      ),
     );
   }
 
-  Widget _selectedInterestsWidget(
-      List<String> selectedInterests, BuildContext context) {
-    if (selectedInterests.isEmpty) {
+  Widget _selectedInterestsWidget(BuildContext context) {
+    if (tempSelectedInterests.isEmpty) {
       return const Center(
-          child: Text(
-              "No interest selected. Start searching to select 3 interests"));
+        child: Text(
+          "No interest selected. Start searching to select 3 interests",
+        ),
+      );
     }
     return Container(
-        padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-        constraints: const BoxConstraints(maxHeight: 200),
-        child: Scrollbar(
-            child: Expanded(
-                child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3, // Display 3 buttons in a row
-                      crossAxisSpacing: 10.0, // Space between columns
-                      mainAxisSpacing: 10.0, // Space between rows
-                      childAspectRatio: 2, // Adjusts the size of the buttons
-                    ),
-                    itemCount: selectedInterests.length,
-                    itemBuilder: (context, index) {
-                      return _interestsListWidget(
-                          selectedInterests, selectedInterests, index);
-                    }))));
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      constraints: const BoxConstraints(maxHeight: 200),
+      child: Scrollbar(
+        child: GridView.builder(
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 3, // Display 3 buttons in a row
+            crossAxisSpacing: 10.0, // Space between columns
+            mainAxisSpacing: 10.0, // Space between rows
+            childAspectRatio: 2, // Adjusts the size of the buttons
+          ),
+          itemCount: tempSelectedInterests.length,
+          itemBuilder: (context, index) {
+            return _interestsListWidget(tempSelectedInterests, index);
+          },
+        ),
+      ),
+    );
   }
 
-  Widget _interestsListWidget(
-      List<String> interests, List<String> selectedInterests, int index) {
+  Widget _interestsListWidget(List<String> interests, int index) {
     String interest = interests[index];
-    bool isSelected = selectedInterests
-        .any((selectedInterest) => selectedInterest == interest);
+    bool isSelected = tempSelectedInterests.contains(interest);
     return ElevatedButton(
       onPressed: () {
-        context
-            .read<ProfileBloc>()
-            .add(ProfileUpdateRequested(interest, ProfileUpdateKey.interests));
+        updateTempSelectedInterests(interest);
       },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
@@ -200,10 +256,9 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
         minimumSize: const Size(0, 0),
         backgroundColor: AppColors.primaryColor100,
         side: BorderSide(
-            color: isSelected ? AppColors.primaryColor : Colors.transparent),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50),
+          color: isSelected ? AppColors.primaryColor : Colors.transparent,
         ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
       ),
       child: Text(
         interest,

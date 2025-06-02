@@ -10,7 +10,7 @@ void showWhereIWorkDialog(BuildContext context) {
   Timer? debounce;
 
   final profileState = context.read<ProfileBloc>().state;
-  String? selectedOccupation;
+  String selectedOccupation;
 
   if (profileState is ProfileLoaded) {
     selectedOccupation = profileState.profile.occupation.toUpperCase();
@@ -23,15 +23,15 @@ void showWhereIWorkDialog(BuildContext context) {
     debounce?.cancel();
     debounce = Timer(const Duration(milliseconds: 500), () {
       if (value.isEmpty) {
-        context
-            .read<DataSearchBloc>()
-            .add(const ClearSearchResults(type: SearchType.occupation));
+        context.read<DataSearchBloc>().add(
+          const ClearSearchResults(type: SearchType.occupation),
+        );
         return;
       }
       try {
-        context
-            .read<DataSearchBloc>()
-            .add(OccupationsRequested(occupationHint: value));
+        context.read<DataSearchBloc>().add(
+          OccupationsRequested(occupationHint: value),
+        );
       } catch (e) {
         DisplayMessage.errorMessage(e.toString(), context);
       }
@@ -52,8 +52,9 @@ void showWhereIWorkDialog(BuildContext context) {
               if (state is OccupationsLoaded) {
                 relatedOccupations.clear();
                 relatedOccupations.addAll(
-                  state.occupations.occupations
-                      .map((e) => e.toString().toUpperCase()),
+                  state.occupations.occupations.map(
+                    (e) => e.toString().toUpperCase(),
+                  ),
                 );
               }
             },
@@ -75,16 +76,22 @@ void showWhereIWorkDialog(BuildContext context) {
                 _buildHeader(context),
                 WidgetsSpacer.verticalSpacer16,
                 _buildSearchField(
-                    occupationController, searchForRelatedOccupations),
+                  occupationController,
+                  searchForRelatedOccupations,
+                ),
                 WidgetsSpacer.verticalSpacer16,
                 if (relatedOccupations.isNotEmpty)
                   _buildRelatedOccupations(
-                      relatedOccupations, context, occupationController),
+                    relatedOccupations,
+                    context,
+                    occupationController,
+                    selectedOccupation,
+                  ),
                 if (selectedOccupation!.isNotEmpty &&
                     occupationController.text.isEmpty)
-                  _buildSelectedOccupation(context),
+                  _buildSelectedOccupation(context, selectedOccupation),
                 WidgetsSpacer.spacer,
-                _buildSelectButton(context),
+                _buildSelectButton(context, selectedOccupation),
               ],
             );
           },
@@ -100,20 +107,26 @@ Widget _buildHeader(BuildContext context) {
     children: [
       Text(
         "Current Occupation",
-        style:
-            TextStyle(fontSize: FontSize.size16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: FontSize.size16,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       GestureDetector(
         onTap: () => Navigator.of(context).pop(),
-        child:
-            const Icon(LineIcons.timesCircleAlt, color: AppColors.primaryColor),
+        child: const Icon(
+          LineIcons.timesCircleAlt,
+          color: AppColors.primaryColor,
+        ),
       ),
     ],
   );
 }
 
 Widget _buildSearchField(
-    TextEditingController controller, Function(String) onChanged) {
+  TextEditingController controller,
+  Function(String) onChanged,
+) {
   return TextField(
     controller: controller,
     onChanged: onChanged,
@@ -134,8 +147,12 @@ Widget _buildSearchField(
   );
 }
 
-Widget _buildRelatedOccupations(List occupations, BuildContext context,
-    TextEditingController occupationController) {
+Widget _buildRelatedOccupations(
+  List occupations,
+  BuildContext context,
+  TextEditingController occupationController,
+  String selectedOccupation,
+) {
   return Container(
     padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
     decoration: BoxDecoration(
@@ -143,9 +160,10 @@ Widget _buildRelatedOccupations(List occupations, BuildContext context,
       borderRadius: BorderRadius.circular(20),
       boxShadow: const [
         BoxShadow(
-            color: AppColors.defaultColor100,
-            blurRadius: 5,
-            offset: Offset(0, 2))
+          color: AppColors.defaultColor100,
+          blurRadius: 5,
+          offset: Offset(0, 2),
+        ),
       ],
     ),
     constraints: const BoxConstraints(maxHeight: 250),
@@ -161,14 +179,11 @@ Widget _buildRelatedOccupations(List occupations, BuildContext context,
             ),
             contentPadding: EdgeInsets.zero,
             onTap: () {
-              context.read<ProfileBloc>().add(ProfileUpdateRequested(
-                    occupations[index],
-                    ProfileUpdateKey.occupation,
-                  ));
               occupationController.clear();
-              context
-                  .read<DataSearchBloc>()
-                  .add(const ClearSearchResults(type: SearchType.occupation));
+              selectedOccupation = occupations[index];
+              context.read<DataSearchBloc>().add(
+                const ClearSearchResults(type: SearchType.occupation),
+              );
             },
           );
         },
@@ -177,7 +192,10 @@ Widget _buildRelatedOccupations(List occupations, BuildContext context,
   );
 }
 
-Widget _buildSelectedOccupation(BuildContext context) {
+Widget _buildSelectedOccupation(
+  BuildContext context,
+  String selectedOccupation,
+) {
   return BlocBuilder<ProfileBloc, ProfileState>(
     builder: (context, state) {
       final profile = (state as ProfileLoaded).profile;
@@ -185,7 +203,7 @@ Widget _buildSelectedOccupation(BuildContext context) {
         color: AppColors.primaryColor100,
         padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 10),
         child: Text(
-          profile.occupation.toUpperCase(),
+          selectedOccupation.toUpperCase(),
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       );
@@ -193,9 +211,14 @@ Widget _buildSelectedOccupation(BuildContext context) {
   );
 }
 
-Widget _buildSelectButton(BuildContext context) {
+Widget _buildSelectButton(BuildContext context, String selectedOccupation) {
   return GestureDetector(
-    onTap: () => Navigator.of(context).pop(),
+    onTap: () {
+      context.read<ProfileBloc>().add(
+        ProfileUpdateRequested(selectedOccupation, ProfileUpdateKey.occupation),
+      );
+      AppNavigator.pop(context);
+    },
     child: Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -207,7 +230,10 @@ Widget _buildSelectButton(BuildContext context) {
         child: Text(
           "Done",
           style: TextStyle(
-              color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     ),

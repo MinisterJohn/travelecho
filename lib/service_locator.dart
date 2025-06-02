@@ -58,6 +58,8 @@ void _registerApiServices() {
   sl.registerLazySingleton<ProfileApiService>(
     () => ProfileApiServiceImpl(sl<DioClient>(), sl<SharedPreferences>()),
   );
+  sl.registerLazySingleton<BudgetRemoteDataSource>(
+      () => BudgetRemoteDataSourceImpl());
 }
 
 /// Registers all repositories
@@ -84,6 +86,9 @@ void _registerRepositories() {
   sl.registerLazySingleton<HotelBookingRepository>(
       () => HotelBookingRepositoryImpl());
   sl.registerLazySingleton<MemoriesRepository>(() => MemoriesRepositoryImpl());
+
+  //Budget repositories
+  sl.registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl());
 }
 
 /// Registers all use cases
@@ -125,15 +130,29 @@ void _registerUseCases() {
   sl.registerLazySingleton<EditMemoryUseCase>(() => EditMemoryUseCase());
   sl.registerLazySingleton<DeleteMultipleMemoriesUseCase>(
       () => DeleteMultipleMemoriesUseCase());
-  sl.registerLazySingleton<GetUserProfileUseCase>(() => GetUserProfileUseCase());
+  sl.registerLazySingleton<GetUserProfileUseCase>(
+      () => GetUserProfileUseCase());
   sl.registerLazySingleton<UpdateProfileImageUseCase>(
       () => UpdateProfileImageUseCase());
-}
+
+  //Budget usecases
+  sl.registerLazySingleton<CreateBudgetUseCase>(() => CreateBudgetUseCase());
+  sl.registerLazySingleton<UpdateBudgetUseCase>(() => UpdateBudgetUseCase());
+  sl.registerLazySingleton<GetBudgetsUseCase>(() => GetBudgetsUseCase());
+  sl.registerLazySingleton<GetAllBudgetsUseCase>(() => GetAllBudgetsUseCase());
+  sl.registerLazySingleton<GetBudgetByIdUseCase>(() => GetBudgetByIdUseCase());
+  sl.registerLazySingleton<GetBudgetWithExpensesUseCase>(
+      () => GetBudgetWithExpensesUseCase());
+  sl.registerLazySingleton<CreateExpenseUseCase>(() => CreateExpenseUseCase());
+  sl.registerLazySingleton<DeleteBudgetUseCase>(() => DeleteBudgetUseCase());
+  sl.registerLazySingleton<UpdateExpenseUseCase>(() => UpdateExpenseUseCase());
+  sl.registerLazySingleton<DeleteExpenseUseCase>(() => DeleteExpenseUseCase());
+  sl.registerLazySingleton<GetExpensesUseCase>(() => GetExpensesUseCase());
+  }
 
 /// Registers all blocs
 void _registerBlocs() {
-  sl.registerLazySingleton<NavigationMenuCubit>(
-      () => NavigationMenuCubit());
+  sl.registerLazySingleton<NavigationMenuCubit>(() => NavigationMenuCubit());
   sl.registerLazySingleton<AuthBloc>(() => AuthBloc());
   sl.registerLazySingleton<CurrencyBloc>(() => CurrencyBloc());
   sl.registerLazySingleton<DataSearchBloc>(() => DataSearchBloc());
@@ -145,6 +164,7 @@ void _registerBlocs() {
   sl.registerLazySingleton<FlightOffersBloc>(() => FlightOffersBloc());
   sl.registerLazySingleton<HotelBookingBloc>(() => HotelBookingBloc());
   sl.registerLazySingleton<MemoriesBloc>(() => MemoriesBloc());
+  sl.registerLazySingleton<BudgetBloc>(() => BudgetBloc());
 }
 
 /// Registers all cubits

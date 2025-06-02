@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide CarouselController;
-import 'package:travelecho/config/theme/colors.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
-import 'budget_screen.dart';
+import '../../budget_exports.dart';
 
 class BudgetTracker extends StatefulWidget {
   const BudgetTracker({super.key});
@@ -38,32 +38,30 @@ class _BudgetTrackerState extends State<BudgetTracker> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  _budgetTools(
-                    LineIcons.piggyBank,
-                    "Budget Overview",
-                  ),
-                  const SizedBox(
-                    width: 8.0,
-                  ),
-                  _budgetTools(
-                    LineIcons.clipboardList,
-                    "Expense Tracker",
-                  ),
+                  _budgetTools(LineIcons.piggyBank, "Budget Overview"),
+                  const SizedBox(width: 8.0),
+                  _budgetTools(LineIcons.clipboardList, "Expense Tracker"),
                 ],
               ),
               const SizedBox(height: 30),
-
-              currentBudgetTool == "Budget Overview"
-                  ? const BudgetScreen()
-                  : Container()
+              // currentBudgetTool == "Budget Overview"
+              BlocProvider.value(
+                value: sl<BudgetBloc>(),
+                child: BudgetScreen(),
+              ),
+              // : Container()
             ],
           ),
         ),
       ),
+
       // floatingActionButton: Positioned(
       //   bottom: 16, // Distance from the bottom of the screen
       //   left: 16, // Distance from the left of the screen
       //   child: FloatingActionButton(
+      //     shape: RoundedRectangleBorder(
+      //       borderRadius: BorderRadius.all(Radius.circular(50)), // Rounded corners
+      //     ),
       //     onPressed: () {
       //       // Add your onPressed logic here
       //     },
@@ -88,12 +86,14 @@ class _BudgetTrackerState extends State<BudgetTracker> {
         },
         child: Container(
           decoration: BoxDecoration(
-            border: currentBudgetTool != label
-                ? Border.all(color: const Color.fromRGBO(0, 0, 0, 0.1))
-                : null,
-            color: currentBudgetTool == label
-                ? AppColors.primaryColor
-                : Colors.transparent,
+            border:
+                currentBudgetTool != label
+                    ? Border.all(color: const Color.fromRGBO(0, 0, 0, 0.1))
+                    : null,
+            color:
+                currentBudgetTool == label
+                    ? AppColors.primaryColor
+                    : Colors.transparent,
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
           padding: const EdgeInsets.all(8.0),
@@ -101,18 +101,21 @@ class _BudgetTrackerState extends State<BudgetTracker> {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(icon,
-                    color: currentBudgetTool == label
-                        ? Colors.white
-                        : Colors.black,
-                    size: 50),
+                Icon(
+                  icon,
+                  color:
+                      currentBudgetTool == label ? Colors.white : Colors.black,
+                  size: 50,
+                ),
                 const SizedBox(height: 10),
                 Text(
                   label,
                   style: TextStyle(
-                      color: currentBudgetTool == label
-                          ? Colors.white
-                          : Colors.black),
+                    color:
+                        currentBudgetTool == label
+                            ? Colors.white
+                            : Colors.black,
+                  ),
                 ),
               ],
             ),

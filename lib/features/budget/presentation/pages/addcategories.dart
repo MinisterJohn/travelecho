@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart' hide CarouselController;
-import 'package:travelecho/config/theme/colors.dart';
-import 'package:travelecho/features/budget/data/models/budget_model.dart';
-import 'package:travelecho/features/budget/data/models/expense_model.dart';
-// import 'budget_model.dart'; // Your Budget model file
-// import 'expense_model.dart'; // Your ExpenseCategory model file
+import "../../budget_exports.dart";
 
 class AddCategoriesScreen extends StatefulWidget {
-  final Budget budget;
+  final BudgetModel budget;
   const AddCategoriesScreen({super.key, required this.budget});
 
   @override
@@ -64,12 +60,12 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
   String _searchExpenseQuery = "";
 
   void reset() {
-    setState(() {
-      for (var category in _expenseCategories) {
-        category.expenseIsAdded = false;
-      }
-      widget.budget.expenseList.clear();
-    });
+    // setState(() {
+    //   for (var category in _expenseCategories) {
+    //     category.expenseIsAdded = false;
+    //   }
+    //   widget.budget.expenseList.clear();
+    // });
   }
 
   @override
@@ -110,38 +106,39 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
             const SizedBox(height: 20),
             Column(
               children: filteredExpenseCategories.map((expenseCategory) {
-                bool isSelected = widget.budget.expenseList.any((expense) =>
-                    expense.title.toLowerCase() ==
-                    expenseCategory.title.toLowerCase());
+                // bool isSelected = widget.budget.expenseList.any((expense) =>
+                //     expense.title.toLowerCase() ==
+                //     expenseCategory.title.toLowerCase());
 
                 return _buildCategoryItem(
                   imagePath: 'assets/${expenseCategory.imagePath}',
                   title: expenseCategory.title,
                   subtitle: expenseCategory.description,
-                  isSelected: isSelected,
+                  isSelected: false,
                   onChanged: (value) {
-                    setState(() {
-                      if (value ?? false) {
-                        // Add to expenseList
-                        if (!widget.budget.expenseList.any((expense) =>
-                            expense.title.toLowerCase() ==
-                            expenseCategory.title.toLowerCase())) {
-                          widget.budget.addNewExpense(
-                            ExpenseCategorySelected(
-                              amount: 0.0,
-                              title: expenseCategory.title,
-                              description: expenseCategory.description,
-                              imagePath: 'assets/${expenseCategory.imagePath}',
-                              expenseIsAdded: true,
-                              showExpenseDropdown: false,
-                            ),
-                          );
-                        }
-                      } else {
-                        // Remove from expenseList
-                        widget.budget.removeExpense(expenseCategory.title);
-                      }
-                    });
+                    // setState(() {
+                    //   if (value ?? false) {
+                    //     // Add to expenseList
+                    //     if (!widget.budget.expenseList.any((expense) =>
+                    //         expense.title.toLowerCase() ==
+                    //         expenseCategory.title.toLowerCase())) {
+                    //       widget.budget.addNewExpense(
+                    //         ExpenseCategorySelected(
+                    //           amount: 0.0,
+                    //           title: expenseCategory.title,
+                    //           description: expenseCategory.description,
+                    //           imagePath: 'assets/${expenseCategory.imagePath}',
+                    //           expenseIsAdded: true,
+                    //           showExpenseDropdown: false,
+                    //         ),
+                    //       );
+                    //     }
+                    //   } else {
+                    //     // Remove from expenseList
+                    //     // widget.budget.removeExpense(expenseCategory.title);
+                    //   }
+                    // });
+                 
                   },
                 );
               }).toList(),
@@ -181,7 +178,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                 ElevatedButton(
                   onPressed: () {
                     // Implement save functionality
-                    print('Selected Expenses: ${widget.budget.expenseList}');
+                    // print('Selected Expenses: ${widget.budget.expenseList}');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF930BFF),
@@ -299,25 +296,25 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    if (!widget.budget.expenseList.any((expense) =>
-                        expense.title.toLowerCase() ==
-                        _customExpenseCategoryName.text.toLowerCase())) {
-                      widget.budget.addNewExpense(
-                        ExpenseCategorySelected(
-                          amount: 0.0,
-                          title: _customExpenseCategoryName.text,
-                          description: _customExpenseCategoryDescription.text,
-                          imagePath: 'assets/markicon.png',
-                          expenseIsAdded: true,
-                          showExpenseDropdown: false,
-                        ),
-                      );
-                      _expenseCategories.add(ExpenseCategory(
-                          title: _customExpenseCategoryName.text,
-                          description: _customExpenseCategoryDescription.text,
-                          imagePath: "markicon.png",
-                          expenseIsAdded: true));
-                    }
+                    // if (!widget.budget.expenseList.any((expense) =>
+                    //     expense.title.toLowerCase() ==
+                    //     _customExpenseCategoryName.text.toLowerCase())) {
+                    //   widget.budget.addNewExpense(
+                    //     ExpenseCategorySelected(
+                    //       amount: 0.0,
+                    //       title: _customExpenseCategoryName.text,
+                    //       description: _customExpenseCategoryDescription.text,
+                    //       imagePath: 'assets/markicon.png',
+                    //       expenseIsAdded: true,
+                    //       showExpenseDropdown: false,
+                    //     ),
+                    //   );
+                    //   _expenseCategories.add(ExpenseCategory(
+                    //       title: _customExpenseCategoryName.text,
+                    //       description: _customExpenseCategoryDescription.text,
+                    //       imagePath: "markicon.png",
+                    //       expenseIsAdded: true));
+                    // }
                     Navigator.pop(context);
                   },
                   style: ElevatedButton.styleFrom(

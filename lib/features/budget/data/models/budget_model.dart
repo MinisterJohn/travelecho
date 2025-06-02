@@ -1,81 +1,113 @@
-import 'package:flutter/material.dart' hide CarouselController;
-import 'package:travelecho/features/budget/data/models/expense_model.dart';
+import 'package:equatable/equatable.dart';
 
-class Budget extends ChangeNotifier {
-  final String id;
-  double amount;
-  String name;
-  bool isForMultipleDestinations;
-  List<ExpenseCategorySelected> expenseList;
-  DateTime createdAt;
-  DateTime? updatedAt;
+class BudgetModel extends Equatable {
+  final String id; // Unique ID for this budget record
+  final String userId;
+  final String name;
+  final String? tripId;
+  final double plannedAmount; // Total budget for the trip
+  final double spentAmount; // Total spent so far
+  final String currency; // e.g., USD, EUR, NGN
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final String? notes;
 
-  List<ExpenseCategorySelected> getExpenses() {
-    // print(allBudgets);
-    return expenseList;
-  }
-
-  void addNewExpense(ExpenseCategorySelected newExpense) {
-    expenseList.add(newExpense);
-    notifyListeners();
-  }
-
-  void removeExpense(String expenseName) {
-    expenseList.removeWhere((expense) => expense.title == expenseName);
-    notifyListeners();
-  }
-
-  // delete expense
-  // int getExpenses() {
-  //   return expenseList.toList().length;
-  //   // expenseList.remove(expenseToBeDeleted);
-  // }
-
-  @override
-  String toString() {
-    return 'Budget(id: $id, amount: $amount, name: $name, expenseList: ${expenseList.toString()})';
-  }
-
-  Budget({
+  const BudgetModel({
     required this.id,
-    required this.amount,
+    required this.userId,
+    required this.tripId,
     required this.name,
-    this.isForMultipleDestinations = false,
-    List<ExpenseCategorySelected>? expenseList,
-    DateTime? createdAt,
+    required this.plannedAmount,
+    required this.spentAmount,
+    required this.currency,
+    required this.createdAt,
     this.updatedAt,
-  })  : expenseList = expenseList ?? [],
-        createdAt = createdAt ?? DateTime.now();
+    this.notes,
+  });
 
-  // JSON Serialization
+  double get remaining => plannedAmount - spentAmount;
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'amount': amount,
+      'userId': userId,
+      'tripId': tripId,
       'name': name,
-      'isForMultipleDestinations': isForMultipleDestinations,
-      'expenseList': expenseList.map((e) => e.toJson()).toList(),
+      'plannedAmount': plannedAmount,
+      'spentAmount': spentAmount,
+      'currency': currency,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
+      'notes': notes,
     };
   }
 
-  factory Budget.fromJson(Map<String, dynamic> json) {
-    return Budget(
-      id: json['id'] as String,
-      amount: json['amount'] as double,
-      name: json['name'] as String,
-      isForMultipleDestinations:
-          json['isForMultipleDestinations'] as bool? ?? false,
-      expenseList: (json['expenseList'] as List?)
-          ?.map((e) => ExpenseCategorySelected.fromJson(e))
-          .toList(),
-      createdAt: DateTime.parse(json['createdAt'] as String),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'] as String)
-          : null,
+  factory BudgetModel.fromJson(Map<String, dynamic> map) {
+    return BudgetModel(
+      id: map['_id'] ?? "",
+      userId: map['user'] ?? "",
+      tripId: map['trip_id'] ?? "",
+      name: map['name'] ?? "",
+      plannedAmount:
+          map["plannedAmount"] != null
+              ? (map['plannedAmount'] as num).toDouble()
+              : 0.0,
+      spentAmount:
+          map["spentAmount"] != null
+              ? (map['spentAmount'] as num).toDouble()
+              : 0.0,
+      currency: map['currency'] ?? "",
+      createdAt:
+          map['createdAt'] != null
+              ? DateTime.parse(map['createdAt'])
+              : DateTime.now(),
+      updatedAt:
+          map['updatedAt'] != null
+              ? DateTime.parse(map['updatedAt'])
+              : DateTime.now(),
+      notes: map['notes'] ?? "",
+    );
+  }
+  @override
+  List<Object?> get props => [
+    id,
+    userId,
+    tripId,
+    plannedAmount,
+    spentAmount,
+    currency,
+    createdAt,
+    updatedAt,
+    notes,
+  ];
+  @override
+  String toString() {
+    return 'BudgetModel(id: $id, userId: $userId, tripId: $tripId, plannedAmount: $plannedAmount, spentAmount: $spentAmount, currency: $currency, createdAt: $createdAt, updatedAt: $updatedAt, notes: $notes)';
+  }
+
+  BudgetModel copyWith({
+    String? id,
+    String? userId,
+    String? tripId,
+    String? name,
+    double? plannedAmount,
+    double? spentAmount,
+    String? currency,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? notes,
+  }) {
+    return BudgetModel(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      tripId: tripId ?? this.tripId,
+      name: name ?? this.name,
+      plannedAmount: plannedAmount ?? this.plannedAmount,
+      spentAmount: spentAmount ?? this.spentAmount,
+      currency: currency ?? this.currency,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      notes: notes ?? this.notes,
     );
   }
 }
-
-// class SubBudget extends Budget {}

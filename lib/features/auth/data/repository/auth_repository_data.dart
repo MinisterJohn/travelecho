@@ -29,8 +29,6 @@ class AuthRepositoryImpl implements AuthRepository {
           //   _logger.e('Signin Error: Missing user data in response.');
           //   return Left('Signin Error: Missing user data in response.');
           // }
-           
-          
 
           if (data['navigateToVerification'] == true) {
             // Send OTP if email is not verified

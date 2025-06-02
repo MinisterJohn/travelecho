@@ -63,57 +63,63 @@ class Profile extends Equatable {
     required this.school,
   });
 
- factory Profile.fromJson(Map<String, dynamic> json) {
-  print('Parsing Profile from JSON: $json');
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    print('Parsing Profile from JSON: $json');
 
-  try {
-    // Safely extract the image URL
-    String imageUrl = '';
-    if (json['image'] != null && json['image'] is Map<String, dynamic>) {
-      final imageData = json['image'] as Map<String, dynamic>;
-      imageUrl = imageData['url']?.toString() ?? '';
+    try {
+      // Safely extract the image URL
+      String imageUrl = '';
+      if (json['image'] != null && json['image'] is Map<String, dynamic>) {
+        final imageData = json['image'] as Map<String, dynamic>;
+        imageUrl = imageData['url']?.toString() ?? '';
+      }
+
+      return Profile(
+        id: json['_id'] != null ? json['_id'].toString() : '',
+        userId: json['user'] != null ? json['user'].toString() : '',
+        interests:
+            (json['interests'] is List)
+                ? List<String>.from(json['interests'].map((e) => e.toString()))
+                : [],
+        languages:
+            (json['languages'] is List)
+                ? List<String>.from(json['languages'].map((e) => e.toString()))
+                : [],
+        createdAt:
+            json['createdAt'] != null
+                ? DateTime.parse(json['createdAt'])
+                : DateTime.now(),
+        updatedAt:
+            json['updatedAt'] != null
+                ? DateTime.parse(json['updatedAt'])
+                : DateTime.now(),
+        dateOfBirth:
+            json['dateOfBirth'] != null
+                ? DateTime.parse(json['dateOfBirth'])
+                : DateTime.now(),
+        image: imageUrl,
+        location: json['location'] != null ? json['location'].toString() : '',
+        occupation:
+            json['occupation'] != null ? json['occupation'].toString() : '',
+        school:
+            json['school'] != null
+                ? SchoolModel.fromJson(json['school'])
+                : SchoolModel.fromJson({}),
+      );
+    } catch (e, stackTrace) {
+      print('Error parsing profile: $e\n$stackTrace');
+      // Return a default profile if parsing fails
+      return Profile(
+        id: '',
+        userId: '',
+        interests: const [],
+        languages: const [],
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        school: SchoolModel.fromJson(const {}),
+      );
     }
-
-    return Profile(
-      id: json['_id'] != null ? json['_id'].toString() : '',
-      userId: json['user'] != null ? json['user'].toString() : '',
-      interests: (json['interests'] is List)
-          ? List<String>.from(json['interests'].map((e) => e.toString()))
-          : [],
-      languages: (json['languages'] is List)
-          ? List<String>.from(json['languages'].map((e) => e.toString()))
-          : [],
-      createdAt: json['createdAt'] != null
-          ? DateTime.tryParse(json['createdAt'].toString()) ?? DateTime.now()
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.tryParse(json['updatedAt'].toString()) ?? DateTime.now()
-          : DateTime.now(),
-      dateOfBirth: json['dateOfBirth'] != null
-          ? DateTime.tryParse(json['dateOfBirth'].toString())
-          : null,
-      image: imageUrl,
-      location: json['location'] != null ? json['location'].toString() : '',
-      occupation:
-          json['occupation'] != null ? json['occupation'].toString() : '',
-      school: json['school'] != null
-          ? SchoolModel.fromJson(json['school'])
-          : SchoolModel.fromJson({}),
-    );
-  } catch (e, stackTrace) {
-    print('Error parsing profile: $e\n$stackTrace');
-    // Return a default profile if parsing fails
-    return Profile(
-      id: '',
-      userId: '',
-      interests: const [],
-      languages: const [],
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      school: SchoolModel.fromJson(const {}),
-    );
   }
-}
 
   Map<String, dynamic> toJson() {
     return {
@@ -141,32 +147,33 @@ class Profile extends Equatable {
     required List<String> languages,
   }) {
     return Profile(
-        id: id,
-        userId: userId,
-        createdAt: createdAt,
-        updatedAt: updatedAt,
-        dateOfBirth: dateOfBirth,
-        image: image,
-        location: location,
-        school: school,
-        occupation: occupation,
-        interests: interests,
-        languages: languages);
+      id: id,
+      userId: userId,
+      createdAt: createdAt,
+      updatedAt: updatedAt,
+      dateOfBirth: dateOfBirth,
+      image: image,
+      location: location,
+      school: school,
+      occupation: occupation,
+      interests: interests,
+      languages: languages,
+    );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        userId,
-        interests,
-        languages,
-        createdAt,
-        updatedAt,
-        dateOfBirth,
-        // user,
-        image,
-        location,
-        occupation,
-        school
-      ];
+    id,
+    userId,
+    interests,
+    languages,
+    createdAt,
+    updatedAt,
+    dateOfBirth,
+    // user,
+    image,
+    location,
+    occupation,
+    school,
+  ];
 }

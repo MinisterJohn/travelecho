@@ -15,10 +15,11 @@ class CurrencyRemoteSourceImpl extends CurrencyRemoteSource {
         "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/$baseCurrency.json");
 
     try {
-      Logger().d("Convert API Response: ${response.data}");
+      Logger().d("fetchExchangeRates - Response: ${response.data}");
 
       return CurrencyModel.fromJson(response.data, baseCurrency);
     } catch (e) {
+      Logger().e("fetchExchangeRates - Error: ${e.toString()}");
       throw Exception("Failed to load exchange rates ${e.toString()}");
     }
   }

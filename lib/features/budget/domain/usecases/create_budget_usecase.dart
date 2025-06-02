@@ -1,39 +1,55 @@
 import 'package:dartz/dartz.dart';
 import '../../budget_exports.dart';
 
-class CreateBudgetParams {
+class BudgetParams {
   final String name;
-  final double amount;
-  final bool isForMultipleDestinations;
-  final List<ExpenseCategorySelected>? expenseList;
+  final String? notes;
+  final double? plannedAmount;
+  final String? currency;
 
-  const CreateBudgetParams({
+  const BudgetParams({
     required this.name,
-    required this.amount,
-    this.isForMultipleDestinations = false,
-    this.expenseList,
+    this.notes,
+    this.plannedAmount,
+    this.currency,
   });
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'notes': notes,
+      'plannedAmount': plannedAmount ?? 0.0,
+      'currency': currency,
+    };
+  }
 }
 
 class CreateBudgetUseCase {
-  final BudgetRepository _repository;
+  final BudgetRepository repository = sl<BudgetRepository>();
 
-  CreateBudgetUseCase({required BudgetRepository repository})
-      : _repository = repository;
+  CreateBudgetUseCase();
 
-  Future<Either<BudgetFailure, void>> call(CreateBudgetParams params) async {
-    try {
-      final budget = Budget(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        name: params.name,
-        amount: params.amount,
-        isForMultipleDestinations: params.isForMultipleDestinations,
-        expenseList: params.expenseList,
-      );
+  Future<Either<String, void>> call(BudgetParams budget) {
+    return repository.createBudget(budget);
+  }
+}
 
-      return await _repository.createBudget(budget);
-    } catch (e) {
-      return const Left(BudgetCreationFailure('Failed to create budget'));
-    }
+class UpdateBudgetUseCase {
+  final BudgetRepository repository = sl<BudgetRepository>();
+
+  UpdateBudgetUseCase();
+
+  Future<Either<String, void>> call(String id, BudgetParams budget) {
+    return repository.updateBudget(id, budget);
+  }
+}
+
+/// get all budgets
+class GetAllBudgetsUseCase {
+  final BudgetRepository repository = sl<BudgetRepository>();
+
+  GetAllBudgetsUseCase();
+
+  Future<Either<String, List<BudgetModel>>> call() {
+    return repository.getAllBudgets();
   }
 }
