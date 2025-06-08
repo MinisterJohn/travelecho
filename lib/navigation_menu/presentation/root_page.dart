@@ -39,7 +39,10 @@ class _RootPageState extends State<RootPage> {
     ),
     // Container(),
     MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => sl<BudgetBloc>())],
+      providers: [
+        BlocProvider(create: (context) => sl<BudgetBloc>()),
+        BlocProvider(create: (context) => sl<CurrencyBloc>()),
+      ],
       child: const BudgetTracker(), // Your Budget page widget
     ), // Replace with your Budget page widget
     MultiBlocProvider(

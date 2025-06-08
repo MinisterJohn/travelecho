@@ -23,9 +23,10 @@ class _BudgetBossPageState extends State<BudgetBossPage>
       vsync: this,
     )..repeat(reverse: true); // Repeats the animation back and forth
 
-    _animation = Tween<double>(begin: 0.0, end: 10.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = Tween<double>(
+      begin: 0.0,
+      end: 10.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -49,10 +50,7 @@ class _BudgetBossPageState extends State<BudgetBossPage>
               children: [
                 const Text(
                   "Milestones",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 Image.asset(
                   'assets/images/milestones/epoints.png', // Replace with your image path
@@ -61,7 +59,7 @@ class _BudgetBossPageState extends State<BudgetBossPage>
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Budget Boss Section
             Row(
@@ -84,15 +82,12 @@ class _BudgetBossPageState extends State<BudgetBossPage>
                       SizedBox(height: 15),
                       Text(
                         "You successfully stayed \nunder budget for 5 trips.",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                        ),
+                        style: TextStyle(fontSize: 14, color: Colors.black),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(width: 20),
+                WidgetsSpacer.horizontalSpacer20,
 
                 // Animated nodding image
                 AnimatedBuilder(
@@ -140,10 +135,7 @@ class _BudgetBossPageState extends State<BudgetBossPage>
               ),
               child: const Text(
                 "You can use EPoints to get discounts on flight and hotel bookings.",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.purple,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.purple),
               ),
             ),
           ],

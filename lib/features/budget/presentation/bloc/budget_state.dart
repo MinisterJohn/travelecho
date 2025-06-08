@@ -6,10 +6,15 @@ class BudgetInitial extends BudgetState {}
 
 class BudgetLoading extends BudgetState {}
 
-class BudgetLoaded extends BudgetState {
+class BudgetsLoaded extends BudgetState {
   final List<BudgetModel> budgets;
 
-  BudgetLoaded(this.budgets);
+  BudgetsLoaded(this.budgets);
+}
+class SingleBudgetLoaded extends BudgetState {
+  final BudgetModel budget;
+
+  SingleBudgetLoaded(this.budget);
 }
 
 class BudgetError extends BudgetState {

@@ -99,11 +99,11 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
       );
     } else {
       context.read<MemoriesBloc>().add(
-            UploadMultipleMemoryImages(
-              memoryId: widget.memoryId,
-              imagePaths: newImages,
-            ),
-          );
+        UploadMultipleMemoryImages(
+          memoryId: widget.memoryId,
+          imagePaths: newImages,
+        ),
+      );
     }
   }
 
@@ -120,13 +120,15 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
             _isUploading = false;
           });
           DisplayMessage.successMessage(
-              'Images ${widget.isEditing ? 'updated' : 'uploaded'} successfully',
-              context);
+            'Images ${widget.isEditing ? 'updated' : 'uploaded'} successfully',
+            context,
+          );
           Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  const RootPage(initialPage: RootPage.MEMORIES_PAGE_INDEX),
+              builder:
+                  (context) =>
+                      const RootPage(initialPage: RootPage.MEMORIES_PAGE_INDEX),
             ),
             (route) => false,
           );
@@ -138,14 +140,16 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
         }
       },
       child: Scaffold(
-        appBar:
-            setAppBar(widget.isEditing ? "Edit Images" : "Add Images", context),
+        appBar: setAppBar(
+          widget.isEditing ? "Edit Images" : "Add Images",
+          context,
+        ),
         body: BlocBuilder<MemoriesBloc, MemoriesState>(
           builder: (context, state) {
             return Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const SizedBox(height: 20),
+                WidgetsSpacer.verticalSpacer20,
                 Text(
                   widget.isEditing
                       ? 'Edit images for your memory'
@@ -165,7 +169,7 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                   ),
                 ),
                 if (state is UploadProgress) ...[
-                  const SizedBox(height: 20),
+                  WidgetsSpacer.verticalSpacer20,
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     child: Column(
@@ -177,7 +181,7 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                             AppColors.primaryColor,
                           ),
                         ),
-                        const SizedBox(height: 8),
+                        WidgetsSpacer.verticalSpacer8,
                         Text(
                           'Uploading image ${state.currentImage} of ${state.totalImages}',
                           style: const TextStyle(
@@ -190,14 +194,16 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                   ),
                 ],
                 if (_selectedImages.isNotEmpty) ...[
-                  const SizedBox(height: 20),
+                  WidgetsSpacer.verticalSpacer20,
                   SizedBox(
                     height: 400.h,
                     child: GridView.builder(
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount:
                             (MediaQuery.of(context).size.width ~/ 150).clamp(
-                                2, 4), // Adjust columns based on screen width
+                              2,
+                              4,
+                            ), // Adjust columns based on screen width
                         crossAxisSpacing: 8.0,
                         mainAxisSpacing: 8.0,
                       ),
@@ -246,24 +252,33 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                               Positioned(
                                 bottom: 0,
                                 child: Container(
-                                  width: MediaQuery.of(context).size.width /
+                                  width:
+                                      MediaQuery.of(context).size.width /
                                       (MediaQuery.of(context).size.width ~/ 150)
-                                          .clamp(2,
-                                              4), // Match the width of each grid item
+                                          .clamp(
+                                            2,
+                                            4,
+                                          ), // Match the width of each grid item
                                   padding: const EdgeInsets.all(1),
                                   height: 40,
                                   decoration: BoxDecoration(
-                                    color:
-                                        AppColors.defaultColor.withAlpha(200),
+                                    color: AppColors.defaultColor.withAlpha(
+                                      200,
+                                    ),
                                   ),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       IconButton(
                                         icon: const Icon(
-                                            Icons.remove_red_eye_outlined,
-                                            color: Color.fromARGB(
-                                                146, 255, 255, 255)),
+                                          Icons.remove_red_eye_outlined,
+                                          color: Color.fromARGB(
+                                            146,
+                                            255,
+                                            255,
+                                            255,
+                                          ),
+                                        ),
                                         onPressed: () {
                                           showDialog(
                                             context: context,
@@ -275,41 +290,51 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                                                   child:
                                                       image is XFile && kIsWeb
                                                           ? FutureBuilder<
-                                                              Uint8List>(
-                                                              future: image
-                                                                  .readAsBytes(),
-                                                              builder: (context,
-                                                                  snapshot) {
-                                                                if (snapshot.connectionState ==
-                                                                        ConnectionState
-                                                                            .done &&
-                                                                    snapshot
-                                                                        .hasData) {
-                                                                  return PhotoView(
-                                                                    imageProvider:
-                                                                        MemoryImage(
-                                                                            snapshot.data!),
-                                                                  );
-                                                                } else {
-                                                                  return const Center(
-                                                                    child:
-                                                                        CircularProgressIndicator(),
-                                                                  );
-                                                                }
-                                                              },
-                                                            )
+                                                            Uint8List
+                                                          >(
+                                                            future:
+                                                                image
+                                                                    .readAsBytes(),
+                                                            builder: (
+                                                              context,
+                                                              snapshot,
+                                                            ) {
+                                                              if (snapshot.connectionState ==
+                                                                      ConnectionState
+                                                                          .done &&
+                                                                  snapshot
+                                                                      .hasData) {
+                                                                return PhotoView(
+                                                                  imageProvider:
+                                                                      MemoryImage(
+                                                                        snapshot
+                                                                            .data!,
+                                                                      ),
+                                                                );
+                                                              } else {
+                                                                return const Center(
+                                                                  child:
+                                                                      CircularProgressIndicator(),
+                                                                );
+                                                              }
+                                                            },
+                                                          )
                                                           : PhotoView(
-                                                              imageProvider: image
-                                                                          is XFile &&
-                                                                      !kIsWeb
-                                                                  ? FileImage(
-                                                                      File(image
-                                                                          .path))
-                                                                  : NetworkImage(
+                                                            imageProvider:
+                                                                image is XFile &&
+                                                                        !kIsWeb
+                                                                    ? FileImage(
+                                                                      File(
+                                                                        image
+                                                                            .path,
+                                                                      ),
+                                                                    )
+                                                                    : NetworkImage(
                                                                           image['url']
-                                                                              .toString())
-                                                                      as ImageProvider,
-                                                            ),
+                                                                              .toString(),
+                                                                        )
+                                                                        as ImageProvider,
+                                                          ),
                                                 ),
                                               );
                                             },
@@ -317,9 +342,15 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                                         },
                                       ),
                                       IconButton(
-                                        icon: const Icon(LineIcons.times,
-                                            color: Color.fromARGB(
-                                                146, 255, 255, 255)),
+                                        icon: const Icon(
+                                          LineIcons.times,
+                                          color: Color.fromARGB(
+                                            146,
+                                            255,
+                                            255,
+                                            255,
+                                          ),
+                                        ),
                                         onPressed: () {
                                           setState(() {
                                             _selectedImages.removeAt(index);
@@ -350,8 +381,11 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                           color: AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(50),
                         ),
-                        child: Icon(Icons.camera_alt_outlined,
-                            color: AppColors.white, size: 30.sp),
+                        child: Icon(
+                          Icons.camera_alt_outlined,
+                          color: AppColors.white,
+                          size: 30.sp,
+                        ),
                       ),
                     ),
                     WidgetsSpacer.horizontalSpacer20,
@@ -363,8 +397,11 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                           color: AppColors.primaryColor100,
                           borderRadius: BorderRadius.circular(50),
                         ),
-                        child: Icon(Icons.photo_library_outlined,
-                            color: AppColors.primaryColor, size: 30.sp),
+                        child: Icon(
+                          Icons.photo_library_outlined,
+                          color: AppColors.primaryColor,
+                          size: 30.sp,
+                        ),
                       ),
                     ),
                   ],
@@ -380,24 +417,23 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                             _selectedImages.clear();
                           });
                         },
-                        child: const Text(
-                          'Clear Images',
-                        ),
+                        child: const Text('Clear Images'),
                       ),
                     WidgetsSpacer.horizontalSpacer8,
                     if (_selectedImages.isNotEmpty &&
                         (!_areImagesEqual(
-                            _selectedImages, widget.existingImages)))
+                          _selectedImages,
+                          widget.existingImages,
+                        )))
                       ElevatedButton(
                         onPressed: _isUploading ? null : _uploadImages,
-                        child: _isUploading
-                            ? const CircularProgressIndicator(
-                                color: Colors.white,
-                                strokeWidth: 2,
-                              )
-                            : const Text(
-                                'Upload Images',
-                              ),
+                        child:
+                            _isUploading
+                                ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                  strokeWidth: 2,
+                                )
+                                : const Text('Upload Images'),
                       ),
                   ],
                 ),
@@ -428,21 +464,15 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
               const Text(
                 'Allow access to camera',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 10),
               Text(
                 'Allow Travel Echo to access your camera to take photos.',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[700],
-                ),
+                style: TextStyle(fontSize: 16, color: Colors.grey[700]),
               ),
-              const SizedBox(height: 20),
+              WidgetsSpacer.verticalSpacer20,
               const Divider(color: Colors.grey),
               const SizedBox(height: 10),
               GestureDetector(
@@ -460,15 +490,12 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20),
+              WidgetsSpacer.verticalSpacer20,
               GestureDetector(
                 onTap: () => Navigator.pop(context),
                 child: const Text(
                   "Don't allow access to camera",
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(color: Colors.grey, fontSize: 16),
                 ),
               ),
             ],
@@ -479,7 +506,9 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
   }
 
   bool _areImagesEqual(
-      List<dynamic> selectedImages, List<dynamic>? existingImages) {
+    List<dynamic> selectedImages,
+    List<dynamic>? existingImages,
+  ) {
     if (selectedImages.length != (existingImages?.length ?? 0)) {
       return false;
     }

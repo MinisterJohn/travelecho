@@ -79,64 +79,28 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
     }
 
     context.read<MemoriesBloc>().add(
-          FetchMemories(
-            search: _currentSearch,
-            title: _currentTitle,
-            location: _currentLocation,
-            tag: _currentTag,
-            sort: _currentSort,
-            skip: append ? _memories.length : 0,
-            append: append,
-          ),
-        );
-  }
-
-  void _handleViewMemory(MemoryModel memory) {
-    DisplayMessage.successMessage(
-        'View memory functionality coming soon', context);
-  }
-
-  void _handleEditMemory(MemoryModel memory) {
-    AppNavigator.push(
-      context,
-      BlocProvider.value(
-        value: context.read<MemoriesBloc>(),
-        child: CreateMemoryDetailsPage(
-          memory: memory,
-          isEditing: true,
-        ),
+      FetchMemories(
+        search: _currentSearch,
+        title: _currentTitle,
+        location: _currentLocation,
+        tag: _currentTag,
+        sort: _currentSort,
+        skip: append ? _memories.length : 0,
+        append: append,
       ),
     );
   }
 
+  void _handleViewMemory(MemoryModel memory) {
+    handleViewMemory(context, memory);
+  }
+
+  void _handleEditMemory(MemoryModel memory) {
+    handleEditMemory(context, memory);
+  }
+
   void _handleDeleteMemory(MemoryModel memory) {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Delete Memory'),
-          content: const Text('Are you sure you want to delete this memory?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(dialogContext),
-              child: const Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.pop(dialogContext);
-                context.read<MemoriesBloc>().add(
-                      DeleteMemory(memoryId: memory.id),
-                    );
-              },
-              child: const Text(
-                'Delete',
-                style: TextStyle(color: Colors.red),
-              ),
-            ),
-          ],
-        );
-      },
-    );
+    handleDeleteMemory(context, memory);
   }
 
   @override
@@ -234,7 +198,9 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
                     child: Center(
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 8),
+                          horizontal: 16,
+                          vertical: 8,
+                        ),
                         decoration: BoxDecoration(
                           color: AppColors.primaryColor,
                           borderRadius: BorderRadius.circular(20),
@@ -254,8 +220,9 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
                               height: 16,
                               child: CircularProgressIndicator(
                                 strokeWidth: 2,
-                                valueColor:
-                                    AlwaysStoppedAnimation<Color>(Colors.white),
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
                               ),
                             ),
                             SizedBox(width: 8),

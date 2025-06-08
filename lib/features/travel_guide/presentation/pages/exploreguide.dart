@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
-
+import "../../travel_guide_exports.dart";
 class ExploreGuide extends StatefulWidget {
   const ExploreGuide({super.key});
 
@@ -45,7 +45,7 @@ class _ExploreGuideState extends State<ExploreGuide> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Divider(thickness: 1),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             const Text(
               "Where are you travelling to?",
               style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
@@ -69,7 +69,7 @@ class _ExploreGuideState extends State<ExploreGuide> {
               ),
               onSubmitted: handleUserInput, // Handle input submission
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Rectangle box with corner radius
             Container(
@@ -100,7 +100,7 @@ class _ExploreGuideState extends State<ExploreGuide> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 20),
+                  WidgetsSpacer.verticalSpacer20,
                   // Field for user to ask a question
                   TextField(
                     decoration: InputDecoration(
@@ -119,7 +119,7 @@ class _ExploreGuideState extends State<ExploreGuide> {
                     ),
                     onSubmitted: handleUserInput, // Handle input submission
                   ),
-                  const SizedBox(height: 20),
+                  WidgetsSpacer.verticalSpacer20,
                   // Display response
                   if (response.isNotEmpty)
                     Text(

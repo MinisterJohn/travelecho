@@ -25,75 +25,49 @@ class FlightInfoCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildSectionCard(
-      'Flight Information',
-      Icons.info_outline,
-      [
-        _buildInfoRow(
-          'Aircraft',
-          firstSegment['aircraft']?['code'] ?? 'N/A',
-          Icons.airplanemode_active,
+    return _buildSectionCard('Flight Information', Icons.info_outline, [
+      _buildInfoRow(
+        'Aircraft',
+        firstSegment['aircraft']?['code'] ?? 'N/A',
+        Icons.airplanemode_active,
+      ),
+      _buildInfoRow(
+        'Seats Available',
+        (flightOffer['numberOfBookableSeats'] ?? 0).toString(),
+        Icons.chair,
+      ),
+      _buildInfoRow(
+        'Booking End Date',
+        flightOffer['lastTicketingDate'] ?? 'N/A',
+        Icons.calendar_today,
+      ),
+      _buildInfoRow(
+        'Flight Duration',
+        _calculateDuration(
+          firstSegment['departure']?['at'],
+          firstSegment['arrival']?['at'],
         ),
-        _buildInfoRow(
-          'Seats Available',
-          (flightOffer['numberOfBookableSeats'] ?? 0).toString(),
-          Icons.chair,
-        ),
-        _buildInfoRow(
-          'Booking End Date',
-          flightOffer['lastTicketingDate'] ?? 'N/A',
-          Icons.calendar_today,
-        ),
-        _buildInfoRow(
-          'Flight Duration',
-          _calculateDuration(
-            firstSegment['departure']?['at'],
-            firstSegment['arrival']?['at'],
-          ),
-          Icons.timer,
-        ),
-        _buildInfoRow(
-          'Cabin Class',
-          cabinClass,
-          Icons.airline_seat_recline_normal,
-        ),
-        _buildInfoRow(
-          'Fare Basis',
-          fareBasis,
-          Icons.receipt_long,
-        ),
-        _buildInfoRow(
-          'Branded Fare',
-          brandedFareLabel,
-          Icons.sell,
-        ),
-        _buildInfoRow(
-          'Checked Baggage',
-          '$checkedBags piece(s)',
-          Icons.luggage,
-        ),
-        _buildInfoRow(
-          'Cabin Baggage',
-          '$cabinBags piece(s)',
-          Icons.backpack,
-        ),
-        if (amenityDescriptions.isNotEmpty)
-          _buildInfoRow(
-            'Amenities',
-            amenityDescriptions,
-            Icons.room_service,
-          ),
-      ],
-    );
+        Icons.timer,
+      ),
+      _buildInfoRow(
+        'Cabin Class',
+        cabinClass,
+        Icons.airline_seat_recline_normal,
+      ),
+      _buildInfoRow('Fare Basis', fareBasis, Icons.receipt_long),
+      _buildInfoRow('Branded Fare', brandedFareLabel, Icons.sell),
+      _buildInfoRow('Checked Baggage', '$checkedBags piece(s)', Icons.luggage),
+      _buildInfoRow('Cabin Baggage', '$cabinBags piece(s)', Icons.backpack),
+      if (amenityDescriptions.isNotEmpty)
+        _buildInfoRow('Amenities', amenityDescriptions, Icons.room_service),
+    ]);
   }
 
   Widget _buildSectionCard(String title, IconData icon, List<Widget> children) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -102,7 +76,7 @@ class FlightInfoCard extends StatelessWidget {
             Row(
               children: [
                 Icon(icon, color: AppColors.primaryColor),
-                const SizedBox(width: 8),
+                WidgetsSpacer.horizontalSpacer8,
                 Text(
                   title,
                   style: const TextStyle(
@@ -112,7 +86,7 @@ class FlightInfoCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             ...children,
           ],
         ),
@@ -126,25 +100,21 @@ class FlightInfoCard extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Row(children: [
-            Icon(icon, size: 18, color: Colors.grey),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: const TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
+          Row(
+            children: [
+              Icon(icon, size: 18, color: Colors.grey),
+              WidgetsSpacer.horizontalSpacer8,
+              Text(
+                label,
+                style: const TextStyle(fontSize: 14, color: Colors.grey),
               ),
-            ),
-          ]),
+            ],
+          ),
           // const Spacer(),
           Flexible(
             child: Text(
               value,
-              style: const TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-              ),
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
               textAlign: TextAlign.end,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,

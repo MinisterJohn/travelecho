@@ -26,12 +26,12 @@ class FlightSummaryCard extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             AppColors.primaryColor,
-            AppColors.primaryColor.withOpacity(0.8)
+            AppColors.primaryColor.withOpacity(0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
         ),
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -57,9 +57,11 @@ class FlightSummaryCard extends StatelessWidget {
                             state.airlines.isNotEmpty) {
                           return Row(
                             children: [
-                              const Icon(Icons.airplanemode_active,
-                                  color: Colors.white),
-                              const SizedBox(width: 8),
+                              const Icon(
+                                Icons.airplanemode_active,
+                                color: Colors.white,
+                              ),
+                              WidgetsSpacer.horizontalSpacer8,
                               Text(
                                 state.airlines.first['commonName'] ??
                                     "Airline Name",
@@ -74,9 +76,11 @@ class FlightSummaryCard extends StatelessWidget {
                         }
                         return Row(
                           children: [
-                            const Icon(Icons.airplanemode_active,
-                                color: Colors.white),
-                            const SizedBox(width: 8),
+                            const Icon(
+                              Icons.airplanemode_active,
+                              color: Colors.white,
+                            ),
+                            WidgetsSpacer.horizontalSpacer8,
                             Text(
                               carrierCode ?? "Unknown Airline",
                               style: const TextStyle(
@@ -100,8 +104,10 @@ class FlightSummaryCard extends StatelessWidget {
                   ],
                 ),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 6,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20),
@@ -127,7 +133,7 @@ class FlightSummaryCard extends StatelessWidget {
                       Row(
                         children: [
                           const Icon(Icons.flight_takeoff, color: Colors.white),
-                          const SizedBox(width: 8),
+                          WidgetsSpacer.horizontalSpacer8,
                           Text(
                             _formatTime(departure['at']),
                             style: const TextStyle(
@@ -181,7 +187,7 @@ class FlightSummaryCard extends StatelessWidget {
                               color: Colors.white,
                             ),
                           ),
-                          const SizedBox(width: 8),
+                          WidgetsSpacer.horizontalSpacer8,
                           const Icon(Icons.flight_land, color: Colors.white),
                         ],
                       ),

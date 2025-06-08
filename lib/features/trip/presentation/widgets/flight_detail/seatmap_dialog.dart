@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../blocs/seatmap/seatmap_cubit.dart';
+import "../../../trip_exports.dart";
 
 class SeatmapDialog extends StatelessWidget {
   final dynamic flightOffer;
 
-  const SeatmapDialog({
-    super.key,
-    required this.flightOffer,
-  });
+  const SeatmapDialog({super.key, required this.flightOffer});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          context.read<SeatmapCubit>()..getSeatmap(flightOffer),
+      create:
+          (context) => context.read<SeatmapCubit>()..getSeatmap(flightOffer),
       child: BlocBuilder<SeatmapCubit, SeatmapState>(
         builder: (context, state) {
           return Dialog(
@@ -48,32 +45,31 @@ class SeatmapDialog extends StatelessWidget {
 
                   // Content
                   Expanded(
-                    child: state is SeatmapLoading
-                        ? const Center(child: CircularProgressIndicator())
-                        : state is SeatmapLoaded
+                    child:
+                        state is SeatmapLoading
+                            ? const Center(child: CircularProgressIndicator())
+                            : state is SeatmapLoaded
                             ? _buildSeatmap(state.seatmapData)
                             : state is SeatmapError
-                                ? Center(
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        const Icon(
-                                          Icons.error_outline,
-                                          size: 48,
-                                          color: Colors.red,
-                                        ),
-                                        const SizedBox(height: 16),
-                                        Text(
-                                          state.message,
-                                          style: const TextStyle(
-                                              color: Colors.red),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                : const SizedBox(),
+                            ? Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const Icon(
+                                    Icons.error_outline,
+                                    size: 48,
+                                    color: Colors.red,
+                                  ),
+                                  WidgetsSpacer.verticalSpacer16,
+                                  Text(
+                                    state.message,
+                                    style: const TextStyle(color: Colors.red),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                            )
+                            : const SizedBox(),
                   ),
 
                   // Legend
@@ -91,9 +87,7 @@ class SeatmapDialog extends StatelessWidget {
     // Extract seatmap data from the API response
     final data = seatmapData['data'] as List?;
     if (data == null || data.isEmpty) {
-      return const Center(
-        child: Text('No seatmap data available'),
-      );
+      return const Center(child: Text('No seatmap data available'));
     }
 
     // Get the first seatmap
@@ -115,9 +109,7 @@ class SeatmapDialog extends StatelessWidget {
     // Extract deck information
     final decks = seatmap['decks'] as List?;
     if (decks == null || decks.isEmpty) {
-      return const Center(
-        child: Text('No deck information available'),
-      );
+      return const Center(child: Text('No deck information available'));
     }
 
     // Get the first deck
@@ -127,9 +119,7 @@ class SeatmapDialog extends StatelessWidget {
     final seats = deck['seats'] as List?;
 
     if (seats == null || seats.isEmpty) {
-      return const Center(
-        child: Text('No seat information available'),
-      );
+      return const Center(child: Text('No seat information available'));
     }
 
     // Group seats by row
@@ -146,8 +136,10 @@ class SeatmapDialog extends StatelessWidget {
     }
 
     // Sort rows numerically
-    final sortedRows = seatsByRow.keys.toList()
-      ..sort((a, b) => int.tryParse(a)?.compareTo(int.tryParse(b) ?? 0) ?? 0);
+    final sortedRows =
+        seatsByRow.keys.toList()..sort(
+          (a, b) => int.tryParse(a)?.compareTo(int.tryParse(b) ?? 0) ?? 0,
+        );
 
     // Build a seatmap visualization
     return Column(
@@ -171,23 +163,17 @@ class SeatmapDialog extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 'Aircraft: Boeing $aircraftCode',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey.shade700,
-                ),
+                style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
               ),
               if (legSpace != 'Unknown')
                 Text(
                   'Leg Space: $legSpace $spaceUnit',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey.shade700,
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.grey.shade700),
                 ),
             ],
           ),
         ),
-        const SizedBox(height: 16),
+        WidgetsSpacer.verticalSpacer16,
 
         // Seat rows
         Expanded(
@@ -232,10 +218,14 @@ class SeatmapDialog extends StatelessWidget {
 
                   // Sort seats by letter (A, B, C, J, K, L)
                   rowSeats.sort((a, b) {
-                    final aLetter = (a['number'] as String)
-                        .replaceAll(RegExp(r'[0-9]'), '');
-                    final bLetter = (b['number'] as String)
-                        .replaceAll(RegExp(r'[0-9]'), '');
+                    final aLetter = (a['number'] as String).replaceAll(
+                      RegExp(r'[0-9]'),
+                      '',
+                    );
+                    final bLetter = (b['number'] as String).replaceAll(
+                      RegExp(r'[0-9]'),
+                      '',
+                    );
                     return aLetter.compareTo(bLetter);
                   });
 
@@ -259,7 +249,8 @@ class SeatmapDialog extends StatelessWidget {
                                   Text(
                                     rowNumber,
                                     style: const TextStyle(
-                                        fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                   if (isExitRow)
                                     Padding(
@@ -280,86 +271,94 @@ class SeatmapDialog extends StatelessWidget {
                                 scrollDirection: Axis.horizontal,
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
-                                  children: rowSeats.map((seat) {
-                                    final seatNumber =
-                                        seat['number'] as String? ?? '';
-                                    final seatLetter = seatNumber.replaceAll(
-                                        RegExp(r'[0-9]'), '');
-                                    final availabilityStatus =
-                                        seat['travelerPricing']?[0]
-                                                    ?['seatAvailabilityStatus']
+                                  children:
+                                      rowSeats.map((seat) {
+                                        final seatNumber =
+                                            seat['number'] as String? ?? '';
+                                        final seatLetter = seatNumber
+                                            .replaceAll(RegExp(r'[0-9]'), '');
+                                        final availabilityStatus =
+                                            seat['travelerPricing']?[0]?['seatAvailabilityStatus']
                                                 as String? ??
                                             'UNKNOWN';
-                                    final characteristics =
-                                        seat['characteristicsCodes'] as List? ??
+                                        final characteristics =
+                                            seat['characteristicsCodes']
+                                                as List? ??
                                             [];
 
-                                    // Determine seat color based on availability and characteristics
-                                    Color seatColor = Colors.grey;
-                                    if (availabilityStatus == 'AVAILABLE') {
-                                      seatColor = Colors.green;
-                                    } else if (availabilityStatus ==
-                                        'OCCUPIED') {
-                                      seatColor = Colors.red;
-                                    } else if (availabilityStatus ==
-                                        'BLOCKED') {
-                                      seatColor = Colors.orange;
-                                    }
+                                        // Determine seat color based on availability and characteristics
+                                        Color seatColor = Colors.grey;
+                                        if (availabilityStatus == 'AVAILABLE') {
+                                          seatColor = Colors.green;
+                                        } else if (availabilityStatus ==
+                                            'OCCUPIED') {
+                                          seatColor = Colors.red;
+                                        } else if (availabilityStatus ==
+                                            'BLOCKED') {
+                                          seatColor = Colors.orange;
+                                        }
 
-                                    // Add special indicators for seat characteristics
-                                    bool isWindow =
-                                        characteristics.contains('W');
-                                    bool isAisle =
-                                        characteristics.contains('A');
-                                    bool isExit = characteristics.contains('E');
-                                    bool isLegSpace =
-                                        characteristics.contains('L');
-                                    bool isChargeable =
-                                        characteristics.contains('CH');
+                                        // Add special indicators for seat characteristics
+                                        bool isWindow = characteristics
+                                            .contains('W');
+                                        bool isAisle = characteristics.contains(
+                                          'A',
+                                        );
+                                        bool isExit = characteristics.contains(
+                                          'E',
+                                        );
+                                        bool isLegSpace = characteristics
+                                            .contains('L');
+                                        bool isChargeable = characteristics
+                                            .contains('CH');
 
-                                    // Add a border for special seats
-                                    BoxBorder? specialBorder;
-                                    if (isWindow ||
-                                        isAisle ||
-                                        isExit ||
-                                        isLegSpace ||
-                                        isChargeable) {
-                                      specialBorder = Border.all(
-                                        color: Colors.black,
-                                        width: 1.5,
-                                      );
-                                    }
+                                        // Add a border for special seats
+                                        BoxBorder? specialBorder;
+                                        if (isWindow ||
+                                            isAisle ||
+                                            isExit ||
+                                            isLegSpace ||
+                                            isChargeable) {
+                                          specialBorder = Border.all(
+                                            color: Colors.black,
+                                            width: 1.5,
+                                          );
+                                        }
 
-                                    return Container(
-                                      width: 30,
-                                      height: 30,
-                                      margin: const EdgeInsets.symmetric(
-                                          horizontal: 2.0),
-                                      decoration: BoxDecoration(
-                                        color: seatColor,
-                                        borderRadius: BorderRadius.circular(4),
-                                        border: specialBorder,
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.1),
-                                            blurRadius: 2,
-                                            offset: const Offset(0, 1),
+                                        return Container(
+                                          width: 30,
+                                          height: 30,
+                                          margin: const EdgeInsets.symmetric(
+                                            horizontal: 2.0,
                                           ),
-                                        ],
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          seatLetter,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.bold,
+                                          decoration: BoxDecoration(
+                                            color: seatColor,
+                                            borderRadius: BorderRadius.circular(
+                                              4,
+                                            ),
+                                            border: specialBorder,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.black.withOpacity(
+                                                  0.1,
+                                                ),
+                                                blurRadius: 2,
+                                                offset: const Offset(0, 1),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                      ),
-                                    );
-                                  }).toList(),
+                                          child: Center(
+                                            child: Text(
+                                              seatLetter,
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      }).toList(),
                                 ),
                               ),
                             ),
@@ -401,12 +400,9 @@ class SeatmapDialog extends StatelessWidget {
         children: [
           const Text(
             'Legend',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
-          const SizedBox(height: 8),
+          WidgetsSpacer.verticalSpacer8,
           Wrap(
             spacing: 16,
             runSpacing: 8,
@@ -416,8 +412,12 @@ class SeatmapDialog extends StatelessWidget {
               _buildLegendItem('Blocked', Colors.orange),
               _buildLegendItem('Window', Colors.grey, isSpecial: true),
               _buildLegendItem('Aisle', Colors.grey, isSpecial: true),
-              _buildLegendItem('Exit Row', Colors.grey,
-                  isSpecial: true, isExit: true),
+              _buildLegendItem(
+                'Exit Row',
+                Colors.grey,
+                isSpecial: true,
+                isExit: true,
+              ),
               _buildLegendItem('Leg Space', Colors.grey, isSpecial: true),
               _buildLegendItem('Chargeable', Colors.grey, isSpecial: true),
             ],
@@ -427,8 +427,12 @@ class SeatmapDialog extends StatelessWidget {
     );
   }
 
-  Widget _buildLegendItem(String label, Color color,
-      {bool isSpecial = false, bool isExit = false}) {
+  Widget _buildLegendItem(
+    String label,
+    Color color, {
+    bool isSpecial = false,
+    bool isExit = false,
+  }) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -448,15 +452,16 @@ class SeatmapDialog extends StatelessWidget {
               ),
             ],
           ),
-          child: isExit
-              ? Center(
-                  child: Icon(
-                    Icons.exit_to_app,
-                    size: 12,
-                    color: Colors.orange.shade700,
-                  ),
-                )
-              : null,
+          child:
+              isExit
+                  ? Center(
+                    child: Icon(
+                      Icons.exit_to_app,
+                      size: 12,
+                      color: Colors.orange.shade700,
+                    ),
+                  )
+                  : null,
         ),
         const SizedBox(width: 4),
         Text(label),

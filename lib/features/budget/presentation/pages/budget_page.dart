@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import "../../budget_exports.dart";
 
 class BudgetPage extends StatelessWidget {
@@ -20,31 +19,33 @@ class BudgetPage extends StatelessWidget {
           children: [
             const Text(
               'Manage Your Budget',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             ElevatedButton(
               onPressed: () {
-                AppNavigator.push(
-                    context,
-                    BlocProvider.value(
-                        value: sl<BudgetBloc>(), child: const NewBudgetPage()));
+                // AppNavigator.push(
+                //   context,
+                //   BlocProvider.value(
+                //     value: sl<BudgetBloc>(),
+                //     child: const NewBudgetPage(),
+                //   ),
+                // );
                 // Navigate to Add Budget Screen
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 15,
+                ),
               ),
               child: const Text(
                 'Add New Budget',
                 style: TextStyle(fontSize: 16, color: Colors.white),
               ),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             // Expanded(
             //   child: ListView.builder(
             //     itemCount: 10, // Replace with actual budget count

@@ -18,6 +18,10 @@ class CurrencyListLoaded extends CurrencyState {
   final List<String> currencies;
   CurrencyListLoaded(this.currencies);
 }
+class MergedCurrencyListLoaded extends CurrencyState {
+  final List<CurrencyInfo> currencies;
+  MergedCurrencyListLoaded(this.currencies);
+}
 
 class CurrencyError extends CurrencyState {
   final String message;

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
-import '../../memories_exports.dart';
+import '../../../memories_exports.dart';
 
 class MemorySkeletonCard extends StatelessWidget {
   const MemorySkeletonCard({super.key});
@@ -10,7 +10,7 @@ class MemorySkeletonCard extends StatelessWidget {
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
             color: Colors.grey.withOpacity(0.1),
@@ -28,8 +28,9 @@ class MemorySkeletonCard extends StatelessWidget {
             height: 200,
             decoration: BoxDecoration(
               color: Colors.grey[200],
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(12),
+              ),
             ),
           ),
           Padding(
@@ -46,7 +47,7 @@ class MemorySkeletonCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                const SizedBox(height: 8),
+                WidgetsSpacer.verticalSpacer8,
                 // Location placeholder
                 Container(
                   height: 16,
@@ -56,7 +57,7 @@ class MemorySkeletonCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
-                const SizedBox(height: 16),
+                WidgetsSpacer.verticalSpacer16,
                 // Tags placeholder
                 Row(
                   children: List.generate(
@@ -67,7 +68,7 @@ class MemorySkeletonCard extends StatelessWidget {
                       width: 80,
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                   ),
@@ -118,11 +119,8 @@ class MemoriesListSection extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text((state as MemoryError).message),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: onRetry,
-              child: const Text('Retry'),
-            ),
+            WidgetsSpacer.verticalSpacer16,
+            ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
           ],
         ),
       );
@@ -133,12 +131,8 @@ class MemoriesListSection extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              Icons.search_off,
-              size: 64,
-              color: Colors.grey[400],
-            ),
-            const SizedBox(height: 16),
+            Icon(Icons.search_off, size: 64, color: Colors.grey[400]),
+            WidgetsSpacer.verticalSpacer16,
             Text(
               state is MemoriesLoaded && (state as MemoriesLoaded).isSearching
                   ? 'No memories found matching your search'
@@ -149,15 +143,12 @@ class MemoriesListSection extends StatelessWidget {
                 color: Colors.grey[700],
               ),
             ),
-            const SizedBox(height: 8),
+            WidgetsSpacer.verticalSpacer8,
             Text(
               state is MemoriesLoaded && (state as MemoriesLoaded).isSearching
                   ? 'Try different search terms'
                   : 'Try adjusting your filters or search terms',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
           ],
         ),
@@ -166,7 +157,8 @@ class MemoriesListSection extends StatelessWidget {
 
     return ListView.builder(
       controller: scrollController,
-      itemCount: memories.length +
+      itemCount:
+          memories.length +
           (state is MemoriesLoaded && (state as MemoriesLoaded).hasMore
               ? 1
               : 0),
@@ -176,20 +168,22 @@ class MemoriesListSection extends StatelessWidget {
         }
 
         final memory = memories[index];
-        final isDeleting = state is MemoriesLoaded &&
+        final isDeleting =
+            state is MemoriesLoaded &&
             (state as MemoriesLoaded).deletingMemoryId == memory.id;
 
         return AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
-          child: isDeleting
-              ? const SizedBox.shrink()
-              : MemoryCard(
-                  key: ValueKey(memory.id),
-                  memory: memory,
-                  onView: () => onView(memory),
-                  onEdit: () => onEdit(memory),
-                  onDelete: () => onDelete(memory),
-                ),
+          child:
+              isDeleting
+                  ? const SizedBox.shrink()
+                  : MemoryCard(
+                    key: ValueKey(memory.id),
+                    memory: memory,
+                    onView: () => onView(memory),
+                    onEdit: () => onEdit(memory),
+                    onDelete: () => onDelete(memory),
+                  ),
         );
       },
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
-import '../../memories_exports.dart';
+import '../../../memories_exports.dart';
 import 'memory_filter_dialog.dart';
 
 class MemorySearchFilterSection extends StatelessWidget {
@@ -24,11 +24,12 @@ class MemorySearchFilterSection extends StatelessWidget {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => MemoryFilterDialog(
-        currentLocation: currentLocation,
-        currentDate: currentDate,
-        onApplyFilters: onApplyFilters,
-      ),
+      builder:
+          (context) => MemoryFilterDialog(
+            currentLocation: currentLocation,
+            currentDate: currentDate,
+            onApplyFilters: onApplyFilters,
+          ),
     );
   }
 
@@ -50,9 +51,10 @@ class MemorySearchFilterSection extends StatelessWidget {
               IconButton(
                 icon: Icon(
                   LineIcons.horizontalSliders,
-                  color: currentLocation != null || currentDate != null
-                      ? AppColors.primaryColor
-                      : AppColors.defaultColor400,
+                  color:
+                      currentLocation != null || currentDate != null
+                          ? AppColors.primaryColor
+                          : AppColors.defaultColor400,
                 ),
                 onPressed: () => _showFilterDialog(context),
               ),
@@ -67,8 +69,10 @@ class MemorySearchFilterSection extends StatelessWidget {
                 if (currentLocation != null)
                   Chip(
                     label: Text('Location: $currentLocation'),
-                    deleteIcon: const Icon(LineIcons.timesCircleAlt,
-                        color: AppColors.defaultColor400),
+                    deleteIcon: const Icon(
+                      LineIcons.timesCircleAlt,
+                      color: AppColors.defaultColor400,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                       side: const BorderSide(color: AppColors.primaryColor300),
@@ -76,13 +80,15 @@ class MemorySearchFilterSection extends StatelessWidget {
                     onDeleted: () => onApplyFilters(null, currentDate),
                   ),
                 if (currentDate != null) ...[
-                  const SizedBox(width: 8),
+                  WidgetsSpacer.horizontalSpacer8,
                   Chip(
                     label: Text(
                       'Date: ${currentDate!.day}/${currentDate!.month}/${currentDate!.year}',
                     ),
-                    deleteIcon: const Icon(LineIcons.timesCircleAlt,
-                        color: AppColors.defaultColor400),
+                    deleteIcon: const Icon(
+                      LineIcons.timesCircleAlt,
+                      color: AppColors.defaultColor400,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                       side: const BorderSide(color: AppColors.primaryColor300),

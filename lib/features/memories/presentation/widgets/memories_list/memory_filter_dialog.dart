@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
-import '../../memories_exports.dart';
+import '../../../memories_exports.dart';
 
 class MemoryFilterDialog extends StatefulWidget {
   final String? currentLocation;
@@ -69,10 +69,7 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
               children: [
                 const Text(
                   'Filter Memories',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -85,10 +82,7 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
             // Location filter
             const Text(
               'Location',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             WidgetsSpacer.verticalSpacer8,
             BlocProvider.value(
@@ -107,10 +101,7 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
             // Date filter
             const Text(
               'Sort by Date',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
             WidgetsSpacer.verticalSpacer8,
             InkWell(
@@ -126,9 +117,11 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
                 ),
                 child: Row(
                   children: [
-                    const Icon(LineIcons.calendar,
-                        color: AppColors.defaultColor400),
-                    const SizedBox(width: 8),
+                    const Icon(
+                      LineIcons.calendar,
+                      color: AppColors.defaultColor400,
+                    ),
+                    WidgetsSpacer.horizontalSpacer8,
                     Text(
                       _selectedDate != null
                           ? '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}'
@@ -163,7 +156,7 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
                     child: const Text('Clear Filters'),
                   ),
                 ),
-                const SizedBox(width: 16),
+                WidgetsSpacer.horizontalSpacer16,
                 Expanded(
                   child: ElevatedButton(
                     onPressed: () {

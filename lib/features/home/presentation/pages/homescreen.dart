@@ -30,12 +30,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: const Color.fromARGB(5, 145, 11, 255),
                       borderRadius: BorderRadius.circular(100),
                     ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
                     child: const Row(
                       children: [
-                        Icon(Icons.search,
-                            color: Color.fromARGB(100, 30, 30, 30)),
+                        Icon(
+                          Icons.search,
+                          color: Color.fromARGB(100, 30, 30, 30),
+                        ),
                         SizedBox(width: 8),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,11 +47,16 @@ class _HomeScreenState extends State<HomeScreen> {
                             Text(
                               "Where to?",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 16),
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                             Text(
                               "Search for Flights and Hotels",
-                              style: TextStyle(color: Colors.grey, fontSize: 14),
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 14,
+                              ),
                             ),
                           ],
                         ),
@@ -57,27 +66,35 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
-        
+                WidgetsSpacer.verticalSpacer20,
+
                 // Currency Converter, Visa & Immigration, Travel Guide
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     _featureCard(
-                        Icons.currency_exchange_outlined,
-                        "Currency Converter",
-                        context,
-                        const CurrencyConverterPage()),
-                    _featureCard(LineIcons.passport, "Visa & Immigration",
-                        context, const VisaImmigrationPage()),
-                    _featureCard(LineIcons.globe, "Travel Guide", context,
-                        const TravelGuidePage()),
+                      Icons.currency_exchange_outlined,
+                      "Currency Converter",
+                      context,
+                      const CurrencyConverterPage(),
+                    ),
+                    _featureCard(
+                      LineIcons.passport,
+                      "Visa & Immigration",
+                      context,
+                      const VisaImmigrationPage(),
+                    ),
+                    _featureCard(
+                      LineIcons.globe,
+                      "Travel Guide",
+                      context,
+                      const TravelGuidePage(),
+                    ),
                   ],
                 ),
                 WidgetsSpacer.verticalSpacer16,
-        
+
                 carousel.CarouselSlider(
-                  
                   options: carousel.CarouselOptions(
                     height: 220,
                     autoPlay: true,
@@ -86,40 +103,49 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   items: [
                     _carouselItem(
-                        "assets/images/home_images/france.jpg", "Explore France"),
-                    _carouselItem("assets/images/home_images/beinjing.jpeg",
-                        "The beauties of Beijing"),
-                    _carouselItem("assets/images/home_images/uk.jpeg",
-                        "Your next travel should be the UK"),
+                      "assets/images/home_images/france.jpg",
+                      "Explore France",
+                    ),
+                    _carouselItem(
+                      "assets/images/home_images/beinjing.jpeg",
+                      "The beauties of Beijing",
+                    ),
+                    _carouselItem(
+                      "assets/images/home_images/uk.jpeg",
+                      "Your next travel should be the UK",
+                    ),
                   ],
                 ),
-        
+
                 WidgetsSpacer.verticalSpacer16,
-        
+
                 carousel.CarouselSlider(
-                  
                   options: carousel.CarouselOptions(
                     height: 220,
                     autoPlay: false,
                     enlargeCenterPage: false,
                     viewportFraction: 1.0,
                   ),
-                  items: [
+                  items:
+                      [
                         _carouselItemWithTextInsideImage(
-                            "assets/images/home_images/nextcarousel.jpg",
-                            "Based on Your Latest Journey"),
+                          "assets/images/home_images/nextcarousel.jpg",
+                          "Based on Your Latest Journey",
+                        ),
                         _carouselItemWithTextInsideImage(
-                            "assets/images/home_images/nextcarousel2.jpg",
-                            "Based on Your Latest Journey"),
+                          "assets/images/home_images/nextcarousel2.jpg",
+                          "Based on Your Latest Journey",
+                        ),
                         _carouselItemWithTextInsideImage(
-                            "assets/images/home_images/nextcarousel3.jpg",
-                            "Based on Your Latest Journey"),
+                          "assets/images/home_images/nextcarousel3.jpg",
+                          "Based on Your Latest Journey",
+                        ),
                       ] ??
                       [],
                 ),
-        
+
                 WidgetsSpacer.verticalSpacer16,
-        
+
                 // Bottom Navigation
               ],
             ),
@@ -130,7 +156,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _featureCard(
-      IconData icon, String label, BuildContext context, widgetDestination) {
+    IconData icon,
+    String label,
+    BuildContext context,
+    widgetDestination,
+  ) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
@@ -176,10 +206,13 @@ class _HomeScreenState extends State<HomeScreen> {
             bottom: 8.0, // Position text slightly above the bottom
             left: 8.0, // Align text to the left
             child: Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-              color: Colors.black
-                  .withOpacity(0.5), // Semi-transparent background for text
+              padding: const EdgeInsets.symmetric(
+                horizontal: 8.0,
+                vertical: 4.0,
+              ),
+              color: Colors.black.withOpacity(
+                0.5,
+              ), // Semi-transparent background for text
               child: Text(
                 cityName,
                 style: const TextStyle(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
+import "../../budget_exports.dart";
 
 class SaveBudgetScreen extends StatelessWidget {
   const SaveBudgetScreen({super.key});
@@ -43,7 +44,7 @@ class SaveBudgetScreen extends StatelessWidget {
                 color: Color(0xFF930BFF),
               ),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             const Text(
               'You just created your first budget!!!',
               style: TextStyle(
@@ -56,10 +57,7 @@ class SaveBudgetScreen extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               'Enjoy every trip when you set a budget for your trip.',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
@@ -69,8 +67,10 @@ class SaveBudgetScreen extends StatelessWidget {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF930BFF),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 textStyle: const TextStyle(fontSize: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),

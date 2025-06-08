@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
-import '../../memories_exports.dart';
+import '../../../memories_exports.dart';
 
 void validatePostDiscard(BuildContext context) {
   showDialog(
@@ -13,12 +13,9 @@ void validatePostDiscard(BuildContext context) {
           children: [
             const Text(
               'Are you sure you would want to discard this post?',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -29,7 +26,9 @@ void validatePostDiscard(BuildContext context) {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.red,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),
@@ -48,7 +47,9 @@ void validatePostDiscard(BuildContext context) {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.errorColor,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                      horizontal: 20,
+                      vertical: 10,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8),
                     ),

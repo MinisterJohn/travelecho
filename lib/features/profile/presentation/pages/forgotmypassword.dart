@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
+import "../../profile_exports.dart";
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({super.key});
@@ -38,13 +39,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                   color: Color(0xff930BFF),
                 ),
               ),
-              const SizedBox(height: 8.0),
+              WidgetsSpacer.verticalSpacer8,
               const Text(
                 'Find a flight that matches your destination and schedule it instantly',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  color: Colors.black54,
-                ),
+                style: TextStyle(fontSize: 16.0, color: Colors.black54),
               ),
               const SizedBox(height: 20.0),
 
@@ -97,8 +95,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               if (email == null || email.isEmpty) {
                 return 'Please enter an email address';
               }
-              final emailRegex =
-                  RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+              final emailRegex = RegExp(
+                r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+              );
               if (!emailRegex.hasMatch(email)) {
                 return 'Email is invalid';
               }
@@ -108,10 +107,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           const SizedBox(height: 5.0),
           const Text(
             'A 6 Digit Code will be sent to your email to enable you change your password',
-            style: TextStyle(
-              fontSize: 12.0,
-              color: Colors.black87,
-            ),
+            style: TextStyle(fontSize: 12.0, color: Colors.black87),
           ),
           const SizedBox(height: 20.0),
           ElevatedButton(
@@ -120,7 +116,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => const CodeValidationPage()),
+                    builder: (context) => const CodeValidationPage(),
+                  ),
                 );
                 print('Password reset link sent to ${_emailController.text}');
               } else {
@@ -136,10 +133,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
             child: const Text(
               'Next',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18.0,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 18.0),
             ),
           ),
         ],
@@ -170,10 +164,7 @@ class _CodeValidationPageState extends State<CodeValidationPage> {
             Navigator.pop(context); // Navigate back to ForgotPasswordPage
           },
         ),
-        title: const Text(
-          'Enter Code',
-          style: TextStyle(color: Colors.black),
-        ),
+        title: const Text('Enter Code', style: TextStyle(color: Colors.black)),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -188,13 +179,10 @@ class _CodeValidationPageState extends State<CodeValidationPage> {
                 color: Color(0xff930BFF),
               ),
             ),
-            const SizedBox(height: 8.0),
+            WidgetsSpacer.verticalSpacer8,
             const Text(
               'Enter the 6-digit code sent to your email to validate your password reset.',
-              style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.black54,
-              ),
+              style: TextStyle(fontSize: 16.0, color: Colors.black54),
             ),
             const SizedBox(height: 20.0),
             TextFormField(
@@ -222,10 +210,7 @@ class _CodeValidationPageState extends State<CodeValidationPage> {
               ),
               child: const Text(
                 'Validate',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18.0,
-                ),
+                style: TextStyle(color: Colors.white, fontSize: 18.0),
               ),
             ),
           ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
+import "../../profile_exports.dart";
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -12,7 +13,7 @@ class AboutPage extends StatelessWidget {
     "Language and Culture Guide: Access basic cultural insights.",
     "Community Building: Connect with fellow travelers.",
     "Milestones Recognition: Earn badges as you explore.",
-    "Flight and Hotel Reservations: Book your travels with ease."
+    "Flight and Hotel Reservations: Book your travels with ease.",
   ];
 
   // List of Premium Tier features.
@@ -26,7 +27,7 @@ class AboutPage extends StatelessWidget {
     "Unlimited Milestones & Achievements: Earn rewards without limits.",
     "Travel Recommendations: Exclusive tips and insights.",
     "Enhanced Language and Culture Guide: In-depth cultural guidance and language support.",
-    "Advanced Photo and Memory Journal: High-resolution uploads and advanced organization."
+    "Advanced Photo and Memory Journal: High-resolution uploads and advanced organization.",
   ];
 
   @override
@@ -69,7 +70,7 @@ class AboutPage extends StatelessWidget {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  WidgetsSpacer.verticalSpacer16,
                   const Center(
                     child: Text(
                       "Your ultimate travel companion that keeps track of your journeys and memories.",
@@ -90,28 +91,34 @@ class AboutPage extends StatelessWidget {
                       color: Colors.deepPurple[800],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  WidgetsSpacer.verticalSpacer8,
                   Column(
-                    children: freeTierFeatures.map((feature) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Icon(Icons.check_circle_outline,
-                                color: Colors.deepPurple, size: 20),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                feature,
-                                style: const TextStyle(
-                                    fontSize: 16, color: Colors.black87),
-                              ),
+                    children:
+                        freeTierFeatures.map((feature) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.check_circle_outline,
+                                  color: Colors.deepPurple,
+                                  size: 20,
+                                ),
+                                WidgetsSpacer.horizontalSpacer8,
+                                Expanded(
+                                  child: Text(
+                                    feature,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        }).toList(),
                   ),
                   const SizedBox(height: 24),
                   Text(
@@ -122,28 +129,34 @@ class AboutPage extends StatelessWidget {
                       color: Colors.deepPurple[800],
                     ),
                   ),
-                  const SizedBox(height: 8),
+                  WidgetsSpacer.verticalSpacer8,
                   Column(
-                    children: premiumTierFeatures.map((feature) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 4.0),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Icon(Icons.star_border,
-                                color: Colors.deepPurple, size: 20),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                feature,
-                                style: const TextStyle(
-                                    fontSize: 16, color: Colors.black87),
-                              ),
+                    children:
+                        premiumTierFeatures.map((feature) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4.0),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Icon(
+                                  Icons.star_border,
+                                  color: Colors.deepPurple,
+                                  size: 20,
+                                ),
+                                WidgetsSpacer.horizontalSpacer8,
+                                Expanded(
+                                  child: Text(
+                                    feature,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.black87,
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      );
-                    }).toList(),
+                          );
+                        }).toList(),
                   ),
                   const SizedBox(height: 24),
                   const Center(

@@ -14,7 +14,7 @@ class TravelPlanSection extends StatelessWidget {
           "Plan your next travel",
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 8),
+        WidgetsSpacer.verticalSpacer8,
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
@@ -34,7 +34,7 @@ class TravelPlanSection extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(width: 8),
+            WidgetsSpacer.horizontalSpacer8,
             _TravelUtils(
               imageUrl: "hotels.png",
               label: "Hotels",
@@ -49,7 +49,7 @@ class TravelPlanSection extends StatelessWidget {
                 );
               },
             ),
-            const SizedBox(width: 8),
+            WidgetsSpacer.horizontalSpacer8,
             _TravelUtils(
               imageUrl: "car_rentals.png",
               label: "Car Rentals",
@@ -99,11 +99,13 @@ class _TravelUtils extends StatelessWidget {
                   width: 40,
                 ),
               ),
-              const SizedBox(height: 16),
+              WidgetsSpacer.verticalSpacer16,
               Text(
                 label,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ],
           ),

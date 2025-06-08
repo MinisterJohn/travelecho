@@ -47,7 +47,10 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
   }
 
   Future<void> _selectDate(
-      BuildContext context, String travelerId, bool isDateOfBirth) async {
+    BuildContext context,
+    String travelerId,
+    bool isDateOfBirth,
+  ) async {
     final DateTime now = DateTime.now();
     final DateTime? currentValue = _selectedDates[travelerId];
 
@@ -78,9 +81,10 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
     if (picked != null && picked != _selectedDates[travelerId]) {
       setState(() {
         _selectedDates[travelerId] = picked;
-        final controllerKey = isDateOfBirth
-            ? '${travelerId}_dateOfBirth'
-            : '${travelerId}_documentExpiry';
+        final controllerKey =
+            isDateOfBirth
+                ? '${travelerId}_dateOfBirth'
+                : '${travelerId}_documentExpiry';
         _controllers[controllerKey]?.text =
             '${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}';
       });
@@ -90,52 +94,52 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
   void _showCountrySelector(BuildContext context, String travelerId) {
     showDialog(
       context: context,
-      builder: (context) => Dialog(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      builder:
+          (context) => Dialog(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Select Country',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Select Country',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.close),
+                        onPressed: () => Navigator.pop(context),
+                      ),
+                    ],
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.close),
-                    onPressed: () => Navigator.pop(context),
+                  WidgetsSpacer.verticalSpacer16,
+                  CountrySelector(
+                    initialCountryCode:
+                        _selectedPhoneCountries[travelerId]?.code,
+                    onCountrySelected: (country) {
+                      setState(() {
+                        _selectedPhoneCountries[travelerId] = country;
+                      });
+                      Navigator.pop(context);
+                    },
                   ),
                 ],
               ),
-              const SizedBox(height: 16),
-              CountrySelector(
-                initialCountryCode: _selectedPhoneCountries[travelerId]?.code,
-                onCountrySelected: (country) {
-                  setState(() {
-                    _selectedPhoneCountries[travelerId] = country;
-                  });
-                  Navigator.pop(context);
-                },
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Traveler Details'),
-      ),
+      appBar: AppBar(title: const Text('Traveler Details')),
       body: BlocBuilder<FlightBookingBloc, FlightBookingState>(
         builder: (context, state) {
           if (state is FlightBookingSuccess) {
@@ -179,7 +183,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
               'Traveler - $travelerTypeDisplay $travelerNumber',
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             Row(
               children: [
                 Expanded(
@@ -197,7 +201,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                     },
                   ),
                 ),
-                const SizedBox(width: 16),
+                WidgetsSpacer.horizontalSpacer16,
                 Expanded(
                   child: TextFormField(
                     controller: _controllers['${traveler.id}_lastName'],
@@ -215,7 +219,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             TextFormField(
               controller: _controllers['${traveler.id}_dateOfBirth'],
               decoration: const InputDecoration(
@@ -232,7 +236,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             // Phone number with country selector
             Row(
               children: [
@@ -261,7 +265,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(width: 8),
+                WidgetsSpacer.horizontalSpacer8,
                 // Phone number field
                 Expanded(
                   child: TextFormField(
@@ -281,7 +285,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             DropdownButtonFormField<String>(
               value: _selectedDocumentTypes[traveler.id],
               decoration: const InputDecoration(
@@ -304,7 +308,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             TextFormField(
               controller: _controllers['${traveler.id}_documentNumber'],
               decoration: const InputDecoration(
@@ -318,7 +322,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             TextFormField(
               controller: _controllers['${traveler.id}_documentExpiry'],
               decoration: const InputDecoration(
@@ -335,7 +339,7 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 return null;
               },
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             CountryDropdown(
               value: _selectedIssuanceCountries[traveler.id]?.code,
               onChanged: (Country country) {
@@ -344,11 +348,12 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 });
               },
               hintText: 'Select Document Issuance Country',
-              errorText: _selectedIssuanceCountries[traveler.id] == null
-                  ? 'Please select issuance country'
-                  : null,
+              errorText:
+                  _selectedIssuanceCountries[traveler.id] == null
+                      ? 'Please select issuance country'
+                      : null,
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             CountryDropdown(
               value: _selectedNationalities[traveler.id]?.code,
               onChanged: (Country country) {
@@ -357,9 +362,10 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 });
               },
               hintText: 'Select Nationality',
-              errorText: _selectedNationalities[traveler.id] == null
-                  ? 'Please select nationality'
-                  : null,
+              errorText:
+                  _selectedNationalities[traveler.id] == null
+                      ? 'Please select nationality'
+                      : null,
             ),
           ],
         ),
@@ -426,17 +432,15 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
           );
 
           context.read<FlightBookingBloc>().updateTravelerDetails(
-                travelerId: traveler.id,
-                details: details,
-              );
+            travelerId: traveler.id,
+            details: details,
+          );
         }
 
         AppNavigator.push(
           context,
           MultiBlocProvider(
-            providers: [
-              BlocProvider.value(value: sl<FlightBookingBloc>()),
-            ],
+            providers: [BlocProvider.value(value: sl<FlightBookingBloc>())],
             child: const FlightBookingPreview(),
           ),
         );

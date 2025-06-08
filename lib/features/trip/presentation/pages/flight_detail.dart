@@ -5,10 +5,7 @@ import '../../trip_exports.dart';
 class FlightDetail extends StatefulWidget {
   final dynamic flightOffer;
 
-  const FlightDetail({
-    super.key,
-    required this.flightOffer,
-  });
+  const FlightDetail({super.key, required this.flightOffer});
 
   @override
   State<FlightDetail> createState() => _FlightDetailState();
@@ -23,9 +20,9 @@ class _FlightDetailState extends State<FlightDetail> {
   }
 
   void _loadPricingInfo() {
-    context
-        .read<FlightPricingCubit>()
-        .getFlightOfferPricing(widget.flightOffer);
+    context.read<FlightPricingCubit>().getFlightOfferPricing(
+      widget.flightOffer,
+    );
   }
 
   void _loadAirlineInfo() {
@@ -68,16 +65,18 @@ class _FlightDetailState extends State<FlightDetail> {
             return const Center(child: CircularProgressIndicator());
           }
 
-          final flightOfferPricing = state is FlightPricingLoaded
-              ? state.pricingData
-              : widget.flightOffer;
+          final flightOfferPricing =
+              state is FlightPricingLoaded
+                  ? state.pricingData
+                  : widget.flightOffer;
 
           try {
             final itineraries = flightOfferPricing['itineraries'] as List;
             final outboundSegments = itineraries[0]['segments'] as List;
-            final returnSegments = itineraries.length > 1
-                ? itineraries[1]['segments'] as List
-                : [];
+            final returnSegments =
+                itineraries.length > 1
+                    ? itineraries[1]['segments'] as List
+                    : [];
             final firstSegment = outboundSegments.first;
 
             // Extract pricing information
@@ -125,13 +124,15 @@ class _FlightDetailState extends State<FlightDetail> {
                       ),
                     ),
                   ),
-                  ...outboundSegments.map((segment) => FlightSummaryCard(
-                        departure: segment['departure'],
-                        arrival: segment['arrival'],
-                        total: flightOfferPricing['price']['total'],
-                        carrierCode: segment['carrierCode'],
-                        flightNumber: segment['number'],
-                      )),
+                  ...outboundSegments.map(
+                    (segment) => FlightSummaryCard(
+                      departure: segment['departure'],
+                      arrival: segment['arrival'],
+                      total: flightOfferPricing['price']['total'],
+                      carrierCode: segment['carrierCode'],
+                      flightNumber: segment['number'],
+                    ),
+                  ),
 
                   // Return Flight (if exists)
                   if (returnSegments.isNotEmpty) ...[
@@ -145,54 +146,56 @@ class _FlightDetailState extends State<FlightDetail> {
                         ),
                       ),
                     ),
-                    ...returnSegments.map((segment) => FlightSummaryCard(
-                          departure: segment['departure'],
-                          arrival: segment['arrival'],
-                          total: flightOfferPricing['price']['total'],
-                          carrierCode: segment['carrierCode'],
-                          flightNumber: segment['number'],
-                        )),
+                    ...returnSegments.map(
+                      (segment) => FlightSummaryCard(
+                        departure: segment['departure'],
+                        arrival: segment['arrival'],
+                        total: flightOfferPricing['price']['total'],
+                        carrierCode: segment['carrierCode'],
+                        flightNumber: segment['number'],
+                      ),
+                    ),
                   ],
 
                   FlightInfoCard(
                     firstSegment: firstSegment,
                     flightOffer: widget.flightOffer,
-                    cabinClass: flightOfferPricing['travelerPricings']?[0]
-                            ?['fareDetailsBySegment']?[0]?['cabin'] ??
+                    cabinClass:
+                        flightOfferPricing['travelerPricings']?[0]?['fareDetailsBySegment']?[0]?['cabin'] ??
                         'N/A',
-                    fareBasis: flightOfferPricing['travelerPricings']?[0]
-                            ?['fareDetailsBySegment']?[0]?['fareBasis'] ??
+                    fareBasis:
+                        flightOfferPricing['travelerPricings']?[0]?['fareDetailsBySegment']?[0]?['fareBasis'] ??
                         'N/A',
-                    brandedFareLabel: flightOfferPricing['travelerPricings']?[0]
-                                ?['fareDetailsBySegment']?[0]
-                            ?['brandedFareLabel'] ??
+                    brandedFareLabel:
+                        flightOfferPricing['travelerPricings']?[0]?['fareDetailsBySegment']?[0]?['brandedFareLabel'] ??
                         'N/A',
-                    checkedBags: flightOfferPricing['travelerPricings']?[0]
-                                    ?['fareDetailsBySegment']?[0]
-                                ?['includedCheckedBags']?['quantity']
+                    checkedBags:
+                        flightOfferPricing['travelerPricings']?[0]?['fareDetailsBySegment']?[0]?['includedCheckedBags']?['quantity']
                             ?.toString() ??
                         '0',
-                    cabinBags: flightOfferPricing['travelerPricings']?[0]
-                                    ?['fareDetailsBySegment']?[0]
-                                ?['includedCabinBags']?['quantity']
+                    cabinBags:
+                        flightOfferPricing['travelerPricings']?[0]?['fareDetailsBySegment']?[0]?['includedCabinBags']?['quantity']
                             ?.toString() ??
                         '0',
-                    amenityDescriptions: flightOfferPricing['travelerPricings']
-                                ?[0]?['fareDetailsBySegment']?[0]?['amenities']
+                    amenityDescriptions:
+                        flightOfferPricing['travelerPricings']?[0]?['fareDetailsBySegment']?[0]?['amenities']
                             ?.map((a) => a['description'] ?? '')
                             .join(',') ??
                         '',
                   ),
                   if (travelerPricings.isNotEmpty)
                     TravelerInfoCard(
-                      travelers: (travelerPricings as List)
-                          .map((tp) => {
-                                'id': tp['travelerId'] as String,
-                                'type': tp['travelerType'] as String,
-                                'fareOption': tp['fareOption'] as String,
-                                'price': tp['price'] as Map<String, dynamic>,
-                              })
-                          .toList(),
+                      travelers:
+                          (travelerPricings as List)
+                              .map(
+                                (tp) => {
+                                  'id': tp['travelerId'] as String,
+                                  'type': tp['travelerType'] as String,
+                                  'fareOption': tp['fareOption'] as String,
+                                  'price': tp['price'] as Map<String, dynamic>,
+                                },
+                              )
+                              .toList(),
                     ),
                   PriceBreakdownCard(
                     baseFare: price['base'] as String? ?? '0',
@@ -207,16 +210,19 @@ class _FlightDetailState extends State<FlightDetail> {
                     onPressed: () {
                       showDialog(
                         context: context,
-                        builder: (context) => BlocProvider.value(
-                          value: sl<SeatmapCubit>(),
-                          child: SeatmapDialog(
-                            flightOffer: widget.flightOffer,
-                          ),
-                        ),
+                        builder:
+                            (context) => BlocProvider.value(
+                              value: sl<SeatmapCubit>(),
+                              child: SeatmapDialog(
+                                flightOffer: widget.flightOffer,
+                              ),
+                            ),
                       );
                     },
-                    icon:
-                        const Icon(Icons.airline_seat_recline_normal, size: 16),
+                    icon: const Icon(
+                      Icons.airline_seat_recline_normal,
+                      size: 16,
+                    ),
                     label: const Text("View Seat Map"),
                   ),
                   Padding(
@@ -240,12 +246,8 @@ class _FlightDetailState extends State<FlightDetail> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    size: 48,
-                    color: Colors.red,
-                  ),
-                  const SizedBox(height: 16),
+                  const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                  WidgetsSpacer.verticalSpacer16,
                   Text(
                     'Error loading flight details: ${error.toString()}',
                     textAlign: TextAlign.center,

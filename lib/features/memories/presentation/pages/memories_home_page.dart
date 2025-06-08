@@ -14,15 +14,11 @@ class _MemoriesHomePageState extends State<MemoriesHomePage> {
   void initState() {
     super.initState();
     // Fetch memories to check if user has any
-    context.read<MemoriesBloc>().add(
-          const FetchMemories(limit: 10),
-        );
+    context.read<MemoriesBloc>().add(const FetchMemories(limit: 10));
   }
 
   void _retryFetch() {
-    context.read<MemoriesBloc>().add(
-          const FetchMemories(limit: 10),
-        );
+    context.read<MemoriesBloc>().add(const FetchMemories(limit: 10));
   }
 
   @override
@@ -53,7 +49,7 @@ class _MemoriesHomePageState extends State<MemoriesHomePage> {
         //             textAlign: TextAlign.center,
         //             style: const TextStyle(fontSize: 16),
         //           ),
-        //           const SizedBox(height: 16),
+        //           WidgetsSpacer.verticalSpacer16,
         //           ElevatedButton(
         //             onPressed: _retryFetch,
         //             child: const Text('Retry'),

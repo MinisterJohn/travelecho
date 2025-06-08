@@ -45,34 +45,34 @@ class ExpenseModel extends Equatable {
 
   factory ExpenseModel.fromJson(Map<String, dynamic> map) {
     return ExpenseModel(
-      id: map['id'],
-      tripId: map['tripId'],
-      budgetId: map['budgetId'],
-      title: map['title'],
-      category: map['category'],
+      id: map['_id'] ?? "",
+      tripId: map['trip'] ?? "",
+      budgetId: map['budget'] ?? "",
+      title: map['title'] ?? "",
+      category: map['category'] ?? "",
       plannedAmount: (map['plannedAmount'] as num?)?.toDouble(),
-      amount: (map['amount'] as num).toDouble(),
-      userId: map['userId'],
-      date: DateTime.parse(map['date']),
-      notes: map['notes'],
-      receiptImageUrl: map['receiptImageUrl'],
+      amount: (map['actualAmount'] as num?)?.toDouble() ?? 0.0,
+      userId: map['user'] ?? "",
+      date: map['date'] != null ? DateTime.parse(map['date']) : DateTime.now(),
+      notes: map['notes'] ?? "",
+      receiptImageUrl: map['receiptImageUrl'] ?? "",
     );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        tripId,
-        budgetId,
-        title,
-        category,
-        plannedAmount,
-        amount,
-        userId,
-        date,
-        notes,
-        receiptImageUrl,
-      ];
+    id,
+    tripId,
+    budgetId,
+    title,
+    category,
+    plannedAmount,
+    amount,
+    userId,
+    date,
+    notes,
+    receiptImageUrl,
+  ];
   @override
   String toString() {
     return 'ExpenseModel(id: $id, tripId: $tripId, budgetId: $budgetId, title: $title, category: $category, plannedAmount: $plannedAmount, amount: $amount, userId: $userId, date: $date, notes: $notes, receiptImageUrl: $receiptImageUrl)';

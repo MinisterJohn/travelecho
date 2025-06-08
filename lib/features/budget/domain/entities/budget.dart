@@ -1,24 +1,21 @@
-import 'package:equatable/equatable.dart';
+class BudgetParams {
+  final String name;
+  final String? notes;
+  final double? plannedAmount;
+  final String? currency;
 
-class Budget extends Equatable {
-  final String id;
-  final String userId;
-  final String title;
-  final double plannedAmount;
-  final double actualAmount;
-  final DateTime startDate;
-  final DateTime endDate;
-
-  const Budget({
-    required this.id,
-    required this.userId,
-    required this.title,
-    required this.plannedAmount,
-    required this.actualAmount,
-    required this.startDate,
-    required this.endDate,
+  const BudgetParams({
+    required this.name,
+    this.notes,
+    this.plannedAmount,
+    this.currency,
   });
-
-  @override
-  List<Object> get props => [id, userId, title, plannedAmount, actualAmount, startDate, endDate];
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'notes': notes,
+      'plannedAmount': plannedAmount ?? 0.0,
+      'currency': currency,
+    };
+  }
 }

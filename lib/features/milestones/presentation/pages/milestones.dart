@@ -16,7 +16,6 @@ class MilestonesPage extends StatelessWidget {
           children: [
             // Spacer to move "You've earned 8 badges" downward
             WidgetsSpacer.verticalSpacer32, // Adjust this value as needed
-
             // "You've earned 8 badges"
             const Text(
               "You've earned 6 badges",
@@ -26,7 +25,7 @@ class MilestonesPage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Badges row
             SingleChildScrollView(
@@ -35,29 +34,40 @@ class MilestonesPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   _badges(
-                      context,
-                      'assets/images/milestones/urban-explorer.png',
-                      "Urban Explorer"),
+                    context,
+                    'assets/images/milestones/urban-explorer.png',
+                    "Urban Explorer",
+                  ),
                   _badges(
-                      context,
-                      'assets/images/milestones/culture-legend.png',
-                      "Culture Legend"),
+                    context,
+                    'assets/images/milestones/culture-legend.png',
+                    "Culture Legend",
+                  ),
                   _badges(
-                      context,
-                      'assets/images/milestones/nation-navigator.png',
-                      "Nation Navigator"),
+                    context,
+                    'assets/images/milestones/nation-navigator.png',
+                    "Nation Navigator",
+                  ),
                   _badges(
-                      context,
-                      'assets/images/milestones/discovery-mogul.png',
-                      "Discovery Mogul"),
+                    context,
+                    'assets/images/milestones/discovery-mogul.png',
+                    "Discovery Mogul",
+                  ),
                   _badges(
-                      context,
-                      'assets/images/milestones/special-solo-traveler.png',
-                      "Special Solo Traveler"),
-                  _badges(context, 'assets/images/milestones/tourist-titan.png',
-                      "Tourist Titan"),
-                  _badges(context, 'assets/images/milestones/frequent-flyer.png',
-                      "Frequent Flyer"),
+                    context,
+                    'assets/images/milestones/special-solo-traveler.png',
+                    "Special Solo Traveler",
+                  ),
+                  _badges(
+                    context,
+                    'assets/images/milestones/tourist-titan.png',
+                    "Tourist Titan",
+                  ),
+                  _badges(
+                    context,
+                    'assets/images/milestones/frequent-flyer.png',
+                    "Frequent Flyer",
+                  ),
                 ],
               ),
             ),
@@ -87,10 +97,7 @@ class MilestonesPage extends StatelessWidget {
                   },
                   child: const Text(
                     "See all",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.blue,
-                    ),
+                    style: TextStyle(fontSize: 14, color: Colors.blue),
                   ),
                 ),
               ],
@@ -109,10 +116,7 @@ class MilestonesPage extends StatelessWidget {
             const SizedBox(height: 5),
             const Text(
               "Next badge: 25k steps",
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 12, color: Colors.grey),
             ),
             const SizedBox(height: 10),
 
@@ -122,7 +126,7 @@ class MilestonesPage extends StatelessWidget {
               backgroundColor: Colors.grey[300],
               color: Colors.blue,
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // "See more achievements"
             Center(
@@ -138,10 +142,7 @@ class MilestonesPage extends StatelessWidget {
                 },
                 child: const Text(
                   "See more achievements",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.blue,
-                  ),
+                  style: TextStyle(fontSize: 14, color: Colors.blue),
                 ),
               ),
             ),
@@ -152,7 +153,10 @@ class MilestonesPage extends StatelessWidget {
   }
 
   Widget _badges(
-      BuildContext context, String badgeImageUrl, String badgeTitle) {
+    BuildContext context,
+    String badgeImageUrl,
+    String badgeTitle,
+  ) {
     return GestureDetector(
       onTap: () {
         AppNavigator.push(context, const UrbanExplorerPage());
@@ -166,10 +170,7 @@ class MilestonesPage extends StatelessWidget {
             height: 150.h,
           ),
           WidgetsSpacer.verticalSpacer8,
-          Text(
-            badgeTitle,
-            style: TextStyle(fontSize: FontSize.size14),
-          )
+          Text(badgeTitle, style: TextStyle(fontSize: FontSize.size14)),
         ],
       ),
     );

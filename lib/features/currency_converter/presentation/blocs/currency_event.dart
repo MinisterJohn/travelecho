@@ -7,8 +7,16 @@ class ConvertRequested extends CurrencyEvent {
   final String target;
   final double amount;
 
-  ConvertRequested(
-      {required this.base, required this.target, required this.amount});
+  ConvertRequested({
+    required this.base,
+    required this.target,
+    required this.amount,
+  });
 }
 
 class CurrencyListRequested extends CurrencyEvent {}
+
+class MergedCurrencyListRequested extends CurrencyEvent {
+  BuildContext context;
+  MergedCurrencyListRequested({required this.context});
+}

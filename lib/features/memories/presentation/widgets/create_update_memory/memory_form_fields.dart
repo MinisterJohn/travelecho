@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
-import "../../memories_exports.dart";
+import "../../../memories_exports.dart";
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MemoryFormFields extends StatelessWidget {
@@ -40,9 +40,7 @@ class MemoryFormFields extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Enter title',
             hintStyle: const TextStyle(color: AppColors.secondaryColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
           style: const TextStyle(fontSize: 16),
           maxLines: 1,
@@ -61,9 +59,7 @@ class MemoryFormFields extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Enter description',
             hintStyle: const TextStyle(color: AppColors.secondaryColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
           style: const TextStyle(fontSize: 16),
           maxLines: 3,
@@ -98,10 +94,7 @@ class MemoryFormFields extends StatelessWidget {
         InkWell(
           onTap: onDateTap,
           child: Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 12,
-            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.secondaryColor),
               borderRadius: BorderRadius.circular(10),
@@ -112,7 +105,7 @@ class MemoryFormFields extends StatelessWidget {
                   Icons.calendar_today,
                   color: AppColors.secondaryColor,
                 ),
-                const SizedBox(width: 8),
+                WidgetsSpacer.horizontalSpacer8,
                 Text(
                   selectedDate != null
                       ? '${selectedDate!.day}/${selectedDate!.month}/${selectedDate!.year}'
@@ -128,10 +121,7 @@ class MemoryFormFields extends StatelessWidget {
           contentPadding: EdgeInsets.zero,
           title: const Text(
             'Make this memory public',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
           trailing: Transform.scale(
             scale: 0.75, // Adjust this to control switch size
@@ -140,14 +130,14 @@ class MemoryFormFields extends StatelessWidget {
               onChanged: onPublicChanged,
               activeColor: AppColors.primaryColor,
               activeTrackColor: AppColors.primaryColor100,
-              trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
-                (states) {
-                  if (states.contains(WidgetState.selected)) {
-                    return AppColors.primaryColor;
-                  }
-                  return AppColors.defaultColor;
-                },
-              ),
+              trackOutlineColor: WidgetStateProperty.resolveWith<Color?>((
+                states,
+              ) {
+                if (states.contains(WidgetState.selected)) {
+                  return AppColors.primaryColor;
+                }
+                return AppColors.defaultColor;
+              }),
             ),
           ),
         ),

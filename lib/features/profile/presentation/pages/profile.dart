@@ -49,7 +49,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                     children: [
                                       const Padding(
                                         padding: EdgeInsets.symmetric(
-                                            horizontal: 16.0, vertical: 8.0),
+                                          horizontal: 16.0,
+                                          vertical: 8.0,
+                                        ),
                                         child: Text(
                                           "Profile",
                                           style: TextStyle(
@@ -59,10 +61,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 16),
+                                      WidgetsSpacer.verticalSpacer16,
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0),
+                                          horizontal: 16.0,
+                                        ),
                                         child: Row(
                                           children: [
                                             Container(
@@ -71,22 +74,28 @@ class _ProfilePageState extends State<ProfilePage> {
                                               decoration: BoxDecoration(
                                                 shape: BoxShape.circle,
                                                 color: Colors.grey[300],
-                                                image: profileState
-                                                            is ProfileLoaded &&
-                                                        profileState.profile
-                                                            .image.isNotEmpty
-                                                    ? DecorationImage(
-                                                        image: NetworkImage(
+                                                image:
+                                                    profileState
+                                                                is ProfileLoaded &&
                                                             profileState
-                                                                .profile.image),
-                                                        fit: BoxFit.cover,
-                                                        alignment:
-                                                            Alignment.topCenter,
-                                                      )
-                                                    : null,
+                                                                .profile
+                                                                .image
+                                                                .isNotEmpty
+                                                        ? DecorationImage(
+                                                          image: NetworkImage(
+                                                            profileState
+                                                                .profile
+                                                                .image,
+                                                          ),
+                                                          fit: BoxFit.cover,
+                                                          alignment:
+                                                              Alignment
+                                                                  .topCenter,
+                                                        )
+                                                        : null,
                                               ),
                                             ),
-                                            const SizedBox(width: 16),
+                                            WidgetsSpacer.horizontalSpacer16,
                                             Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
@@ -97,7 +106,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                                         (profileState
                                                                 is ProfileLoaded
                                                             ? profileState
-                                                                .profile.userId
+                                                                .profile
+                                                                .userId
                                                             : 'User'),
                                                     style: const TextStyle(
                                                       fontSize: 18,
@@ -109,7 +119,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     email,
                                                     style: const TextStyle(
                                                       color: Color.fromARGB(
-                                                          255, 94, 97, 99),
+                                                        255,
+                                                        94,
+                                                        97,
+                                                        99,
+                                                      ),
                                                     ),
                                                   ),
                                                 ],
@@ -117,9 +131,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                             ),
                                             isVerified
                                                 ? const Icon(
-                                                    Icons.verified_outlined,
-                                                    color:
-                                                        AppColors.primaryColor)
+                                                  Icons.verified_outlined,
+                                                  color: AppColors.primaryColor,
+                                                )
                                                 : const SizedBox.shrink(),
                                           ],
                                         ),
@@ -127,7 +141,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                       const SizedBox(height: 32),
                                       Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 16.0),
+                                          horizontal: 16.0,
+                                        ),
                                         child: Text(
                                           "Settings",
                                           style: TextStyle(
@@ -136,7 +151,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ),
                                         ),
                                       ),
-                                      const SizedBox(height: 16),
+                                      WidgetsSpacer.verticalSpacer16,
                                       _buildSettingsItem(
                                         icon: LineIcons.userCircle,
                                         title: "Personal Information",
@@ -146,14 +161,16 @@ class _ProfilePageState extends State<ProfilePage> {
                                             MultiBlocProvider(
                                               providers: [
                                                 BlocProvider(
-                                                  create: (context) =>
-                                                      sl<DataSearchBloc>(),
+                                                  create:
+                                                      (context) =>
+                                                          sl<DataSearchBloc>(),
                                                 ),
                                                 BlocProvider.value(
                                                   value: sl<ProfileBloc>(),
                                                 ),
                                               ],
-                                              child: const EditPersonalInformation(),
+                                              child:
+                                                  const EditPersonalInformation(),
                                             ),
                                           );
                                         },
@@ -163,8 +180,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                         icon: LineIcons.passport,
                                         title: "Passport Information",
                                         onTap: () {
-                                          AppNavigator.push(context,
-                                              const PassportDetailsPage());
+                                          AppNavigator.push(
+                                            context,
+                                            const PassportDetailsPage(),
+                                          );
                                         },
                                       ),
                                       _buildDivider(),
@@ -173,7 +192,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         title: "App and Features",
                                         onTap: () {
                                           AppNavigator.push(
-                                              context, const FeaturesPage());
+                                            context,
+                                            const FeaturesPage(),
+                                          );
                                         },
                                       ),
                                       _buildDivider(),
@@ -182,7 +203,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         title: "Milestones & Achievements",
                                         onTap: () {
                                           AppNavigator.push(
-                                              context, const MilestonesPage());
+                                            context,
+                                            const MilestonesPage(),
+                                          );
                                         },
                                       ),
                                       _buildDivider(),
@@ -190,8 +213,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                         icon: LineIcons.alternateShield,
                                         title: "Login and Security",
                                         onTap: () {
-                                          AppNavigator.push(context,
-                                              const LoginAndSecurityPage());
+                                          AppNavigator.push(
+                                            context,
+                                            const LoginAndSecurityPage(),
+                                          );
                                         },
                                       ),
                                       _buildDivider(),
@@ -200,7 +225,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         title: "Help",
                                         onTap: () {
                                           AppNavigator.push(
-                                              context, const HelpPage());
+                                            context,
+                                            const HelpPage(),
+                                          );
                                         },
                                       ),
                                       _buildDivider(),
@@ -209,7 +236,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                         title: "About",
                                         onTap: () {
                                           AppNavigator.push(
-                                              context, const AboutPage());
+                                            context,
+                                            const AboutPage(),
+                                          );
                                         },
                                       ),
                                       _buildDivider(),
@@ -242,7 +271,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Center(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(20),
@@ -262,17 +293,15 @@ class _ProfilePageState extends State<ProfilePage> {
                             height: 16,
                             child: CircularProgressIndicator(
                               strokeWidth: 2,
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
                             ),
                           ),
                           SizedBox(width: 8),
                           Text(
                             'Loading profile...',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ],
                       ),
@@ -293,7 +322,9 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: Center(
                     child: Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: AppColors.primaryColor,
                         borderRadius: BorderRadius.circular(20),
@@ -317,10 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
                           SizedBox(width: 8),
                           Text(
                             'Refresh to load profile',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                            ),
+                            style: TextStyle(color: Colors.white, fontSize: 14),
                           ),
                         ],
                       ),
@@ -382,7 +410,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         context.read<AuthBloc>().add(LogoutEvent());
                         AppNavigator.pushReplacement(
-                            context, const LoginPage());
+                          context,
+                          const LoginPage(),
+                        );
                       },
                       child: const Text("Yes"),
                     ),

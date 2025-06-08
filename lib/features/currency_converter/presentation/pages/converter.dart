@@ -41,11 +41,13 @@ class _ConverterPageState extends State<ConverterPage> {
       return;
     }
 
-    context.read<CurrencyBloc>().add(ConvertRequested(
-          base: _fromCurrency.split(" - ")[0].toLowerCase(),
-          target: _toCurrency.split(" - ")[0].toLowerCase(),
-          amount: amount,
-        ));
+    context.read<CurrencyBloc>().add(
+      ConvertRequested(
+        base: _fromCurrency.split(" - ")[0].toLowerCase(),
+        target: _toCurrency.split(" - ")[0].toLowerCase(),
+        amount: amount,
+      ),
+    );
   }
 
   @override
@@ -85,10 +87,12 @@ class _ConverterPageState extends State<ConverterPage> {
                   children: [
                     const Text(
                       "Amount",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(height: 8),
+                    WidgetsSpacer.verticalSpacer8,
                     TextField(
                       controller: _amountController,
                       keyboardType: TextInputType.number,
@@ -97,13 +101,15 @@ class _ConverterPageState extends State<ConverterPage> {
                         hintText: "Enter Amount",
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    WidgetsSpacer.verticalSpacer16,
                     const Text(
                       "From",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(height: 8),
+                    WidgetsSpacer.verticalSpacer8,
                     DropdownButtonFormField<String>(
                       value: _fromCurrency,
                       onChanged: (String? newValue) {
@@ -111,23 +117,26 @@ class _ConverterPageState extends State<ConverterPage> {
                           _fromCurrency = newValue!;
                         });
                       },
-                      items: _currencies.map((String currency) {
-                        return DropdownMenuItem<String>(
-                          value: currency,
-                          child: Text(currency),
-                        );
-                      }).toList(),
+                      items:
+                          _currencies.map((String currency) {
+                            return DropdownMenuItem<String>(
+                              value: currency,
+                              child: Text(currency),
+                            );
+                          }).toList(),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    WidgetsSpacer.verticalSpacer16,
                     const Text(
                       "To",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    const SizedBox(height: 8),
+                    WidgetsSpacer.verticalSpacer8,
                     DropdownButtonFormField<String>(
                       value: _toCurrency,
                       onChanged: (String? newValue) {
@@ -135,32 +144,37 @@ class _ConverterPageState extends State<ConverterPage> {
                           _toCurrency = newValue!;
                         });
                       },
-                      items: _currencies.map((String currency) {
-                        return DropdownMenuItem<String>(
-                          value: currency,
-                          child: Text(currency),
-                        );
-                      }).toList(),
+                      items:
+                          _currencies.map((String currency) {
+                            return DropdownMenuItem<String>(
+                              value: currency,
+                              child: Text(currency),
+                            );
+                          }).toList(),
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                       ),
                     ),
-                    const SizedBox(height: 16),
+                    WidgetsSpacer.verticalSpacer16,
                     ElevatedButton(
                       onPressed: _isLoading ? null : _convertCurrency,
                       style: ElevatedButton.styleFrom(
                         minimumSize: const Size(double.infinity, 50),
                       ),
-                      child: _isLoading
-                          ? const CircularProgressIndicator(
-                              valueColor:
-                                  AlwaysStoppedAnimation<Color>(Colors.white),
-                            )
-                          : const Text(
-                              "Convert",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
+                      child:
+                          _isLoading
+                              ? const CircularProgressIndicator(
+                                valueColor: AlwaysStoppedAnimation<Color>(
+                                  Colors.white,
+                                ),
+                              )
+                              : const Text(
+                                "Convert",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                ),
+                              ),
                     ),
                     if (_convertedAmount.isNotEmpty)
                       Container(
@@ -171,7 +185,9 @@ class _ConverterPageState extends State<ConverterPage> {
                           color: AppColors.primaryColor100,
                           borderRadius: BorderRadius.circular(8),
                           border: Border.all(
-                              width: 1, color: AppColors.defaultColor100),
+                            width: 1,
+                            color: AppColors.defaultColor100,
+                          ),
                         ),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -179,28 +195,30 @@ class _ConverterPageState extends State<ConverterPage> {
                             const Text(
                               "Converted Amount:",
                               style: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColors.defaultColor400),
+                                fontSize: 16,
+                                color: AppColors.defaultColor400,
+                              ),
                             ),
-                            const SizedBox(height: 8),
+                            WidgetsSpacer.verticalSpacer8,
                             Text.rich(
-                              TextSpan(children: [
-                                TextSpan(
-                                  text:
-                                      "${double.parse(_convertedAmount[1].toStringAsFixed(2)).toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => "${match[1]},")} ",
-                                  style: const TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                TextSpan(
-                                    text: _toCurrency.split(" - ")[0],
+                              TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text:
+                                        "${double.parse(_convertedAmount[1].toStringAsFixed(2)).toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => "${match[1]},")} ",
                                     style: const TextStyle(
-                                      fontSize: 16,
-                                    ))
-                              ]),
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: _toCurrency.split(" - ")[0],
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: 8),
+                            WidgetsSpacer.verticalSpacer8,
                             Text(
                               "1 $_fromCurrency = ${double.parse(_convertedAmount[0].toStringAsFixed(2)).toStringAsFixed(2).replaceAllMapped(RegExp(r'(\d)(?=(\d{3})+(?!\d))'), (match) => "${match[1]},")} ${_toCurrency.split(" - ")[0]}",
                               style: const TextStyle(

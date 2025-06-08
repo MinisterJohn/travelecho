@@ -6,30 +6,12 @@ class TravelGuidePage extends StatelessWidget {
   const TravelGuidePage({super.key});
 
   final List<Map<String, dynamic>> guideFeatures = const [
-    {
-      "icon": Icons.chat_outlined,
-      "title": "Local greetings\nand phrases",
-    },
-    {
-      "icon": Icons.lan_outlined,
-      "title": "Cultural dos\nand don'ts",
-    },
-    {
-      "icon": Icons.star_outline,
-      "title": "Traditional Customs",
-    },
-    {
-      "icon": Icons.menu_book_sharp,
-      "title": "Local Behavioral \nTips",
-    },
-    {
-      "icon": LineIcons.utensils,
-      "title": "Local Cuisine \n& Drinks",
-    },
-    {
-      "icon": Icons.attractions,
-      "title": "Tourist Attraction",
-    },
+    {"icon": Icons.chat_outlined, "title": "Local greetings\nand phrases"},
+    {"icon": Icons.lan_outlined, "title": "Cultural dos\nand don'ts"},
+    {"icon": Icons.star_outline, "title": "Traditional Customs"},
+    {"icon": Icons.menu_book_sharp, "title": "Local Behavioral \nTips"},
+    {"icon": LineIcons.utensils, "title": "Local Cuisine \n& Drinks"},
+    {"icon": Icons.attractions, "title": "Tourist Attraction"},
   ];
 
   @override
@@ -65,7 +47,7 @@ class TravelGuidePage extends StatelessWidget {
                   ],
                 ),
               ),
-              const SizedBox(height: 20),
+              WidgetsSpacer.verticalSpacer20,
               const Text(
                 "Your Culture Guide",
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
@@ -123,8 +105,10 @@ class TravelGuidePage extends StatelessWidget {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primaryColor,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 100, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 100,
+                    vertical: 15,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -134,7 +118,7 @@ class TravelGuidePage extends StatelessWidget {
                   style: TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
-              const SizedBox(height: 20),
+              WidgetsSpacer.verticalSpacer20,
             ],
           ),
         ),

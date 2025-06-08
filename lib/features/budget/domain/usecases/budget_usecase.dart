@@ -8,7 +8,7 @@ class GetBudgetWithExpensesUseCase {
 
   GetBudgetWithExpensesUseCase();
 
-  Future<Either<String, Map<String, dynamic>>> call(String id) {
+  Future<Either<String, BudgetModel>> call(String id) {
     return repository.getBudgetWithExpenses(id);
   }
 }

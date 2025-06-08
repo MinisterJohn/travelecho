@@ -9,6 +9,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
   final CreateBudgetUseCase createBudgetUseCase = sl<CreateBudgetUseCase>();
   final UpdateBudgetUseCase updateBudgetUseCase = sl<UpdateBudgetUseCase>();
   final DeleteBudgetUseCase deleteBudgetUseCase = sl<DeleteBudgetUseCase>();
+  final GetBudgetWithExpensesUseCase getBudgetWithExpensesUseCase = sl<GetBudgetWithExpensesUseCase>();
   final GetExpensesUseCase getExpensesUseCase = sl<GetExpensesUseCase>();
   final CreateExpenseUseCase createExpenseUseCase = sl<CreateExpenseUseCase>();
   final UpdateExpenseUseCase updateExpenseUseCase = sl<UpdateExpenseUseCase>();
@@ -19,13 +20,10 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       emit(BudgetLoading());
       final result = await createBudgetUseCase(event.budget);
       print("Budget created: $result");
-      result.fold(
-        (error) => emit(BudgetError(error)),
-        (budget) {
-          // final Map<String, dynamic> budgetData = budget['budget'];
-          add(GetAllBudgetsEvent());
-        },
-      );
+      result.fold((error) => emit(BudgetError(error)), (budget) {
+        // final Map<String, dynamic> budgetData = budget['budget'];
+        add(GetAllBudgetsEvent());
+      });
     });
 
     on<UpdateBudgetEvent>((event, emit) async {
@@ -43,7 +41,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       print("Budgets fetched: $result");
       result.fold(
         (error) => emit(BudgetError(error)),
-        (budgets) => emit(BudgetLoaded(budgets)),
+        (budgets) => emit(BudgetsLoaded(budgets)),
       );
     });
 
@@ -56,7 +54,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       );
     });
 
-    on<GetExpensesEvent>((event, emit) async {
+    on<GetAllExpensesEvent>((event, emit) async {
       emit(BudgetLoading());
       final result = await getExpensesUseCase();
       result.fold(
@@ -70,7 +68,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       final result = await createExpenseUseCase(event.expense);
       result.fold(
         (error) => emit(BudgetError(error)),
-        (_) => add(GetExpensesEvent()),
+        (_) => add(GetAllExpensesEvent()),
       );
     });
 
@@ -79,7 +77,7 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       final result = await updateExpenseUseCase(event.id, event.expense);
       result.fold(
         (error) => emit(BudgetError(error)),
-        (_) => add(GetExpensesEvent()),
+        (_) => add(GetAllExpensesEvent()),
       );
     });
 
@@ -88,8 +86,17 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
       final result = await deleteExpenseUseCase(event.expenseId);
       result.fold(
         (error) => emit(BudgetError(error)),
-        (_) => add(GetExpensesEvent()),
+        (_) => add(GetAllExpensesEvent()),
+      );
+    });
+   on<GetBudgetWithExpensesEvent>((event, emit) async {
+      emit(BudgetLoading());
+      final result = await getBudgetWithExpensesUseCase(event.id);
+      result.fold(
+        (error) => emit(BudgetError(error)),
+        (budget) => emit(SingleBudgetLoaded(budget)),
       );
     });
   }
+
 }

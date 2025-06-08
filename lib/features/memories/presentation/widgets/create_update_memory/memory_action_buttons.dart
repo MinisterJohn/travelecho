@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:line_icons/line_icons.dart';
-import '../../memories_exports.dart';
+import '../../../memories_exports.dart';
 
 class MemoryActionButtons extends StatelessWidget {
   final bool isLoading;

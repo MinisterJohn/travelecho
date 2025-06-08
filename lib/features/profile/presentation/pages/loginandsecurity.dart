@@ -22,12 +22,9 @@ class LoginAndSecurityPage extends StatelessWidget {
           // Password Section
           const Text(
             'Password',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          WidgetsSpacer.verticalSpacer8,
           ListTile(
             title: const Text('Change Password'),
             trailing: const Icon(Icons.chevron_right),
@@ -59,12 +56,9 @@ class LoginAndSecurityPage extends StatelessWidget {
           // Biometrics Section
           const Text(
             'Biometrics',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 8),
+          WidgetsSpacer.verticalSpacer8,
           ListTile(
             title: const Text('Login with Fingerprint'),
             trailing: Switch(

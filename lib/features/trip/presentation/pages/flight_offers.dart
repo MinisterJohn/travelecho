@@ -36,14 +36,16 @@ class _FlightOffersState extends State<FlightOffers> {
       final infants =
           booking.travelers.where((t) => t.travelerType == "INFANT").length;
 
-      flightOffersBloc.add(SearchFlightOffers(
-        origin: originDestination.originLocationCode,
-        destination: originDestination.destinationLocationCode,
-        departureDate: originDestination.departureDateTimeRange.date,
-        adults: adults,
-        children: children,
-        infants: infants,
-      ));
+      flightOffersBloc.add(
+        SearchFlightOffers(
+          origin: originDestination.originLocationCode,
+          destination: originDestination.destinationLocationCode,
+          departureDate: originDestination.departureDateTimeRange.date,
+          adults: adults,
+          children: children,
+          infants: infants,
+        ),
+      );
     }
   }
 
@@ -101,36 +103,41 @@ class _FlightOffersState extends State<FlightOffers> {
                                 context.read<FlightBookingBloc>();
                             if (flightBookingBloc.state
                                 is FlightBookingSuccess) {
-                              final booking = (flightBookingBloc.state
-                                      as FlightBookingSuccess)
-                                  .flightBooking;
+                              final booking =
+                                  (flightBookingBloc.state
+                                          as FlightBookingSuccess)
+                                      .flightBooking;
                               final originDestination =
                                   booking.originDestinations.first;
 
                               // Count travelers by type
-                              final adults = booking.travelers
-                                  .where((t) => t.travelerType == "ADULT")
-                                  .length;
-                              final children = booking.travelers
-                                  .where((t) => t.travelerType == "CHILD")
-                                  .length;
-                              final infants = booking.travelers
-                                  .where((t) => t.travelerType == "INFANT")
-                                  .length;
+                              final adults =
+                                  booking.travelers
+                                      .where((t) => t.travelerType == "ADULT")
+                                      .length;
+                              final children =
+                                  booking.travelers
+                                      .where((t) => t.travelerType == "CHILD")
+                                      .length;
+                              final infants =
+                                  booking.travelers
+                                      .where((t) => t.travelerType == "INFANT")
+                                      .length;
 
-                              context
-                                  .read<FlightOffersBloc>()
-                                  .add(SearchFlightOffers(
-                                    origin:
-                                        originDestination.originLocationCode,
-                                    destination: originDestination
-                                        .destinationLocationCode,
-                                    departureDate: originDestination
-                                        .departureDateTimeRange.date,
-                                    adults: adults,
-                                    children: children,
-                                    infants: infants,
-                                  ));
+                              context.read<FlightOffersBloc>().add(
+                                SearchFlightOffers(
+                                  origin: originDestination.originLocationCode,
+                                  destination:
+                                      originDestination.destinationLocationCode,
+                                  departureDate:
+                                      originDestination
+                                          .departureDateTimeRange
+                                          .date,
+                                  adults: adults,
+                                  children: children,
+                                  infants: infants,
+                                ),
+                              );
                             }
                           },
                           child: ListView.builder(
@@ -198,11 +205,11 @@ class _FlightOffersState extends State<FlightOffers> {
                     Row(
                       children: [
                         const Icon(Icons.flight_takeoff, size: 16),
-                        const SizedBox(width: 8),
+                        WidgetsSpacer.horizontalSpacer8,
                         Text(departure['at'].split('T')[1].substring(0, 5)),
-                        const SizedBox(width: 16),
+                        WidgetsSpacer.horizontalSpacer16,
                         const Icon(Icons.flight_land, size: 16),
-                        const SizedBox(width: 8),
+                        WidgetsSpacer.horizontalSpacer8,
                         Text(arrival['at'].split('T')[1].substring(0, 5)),
                       ],
                     ),
@@ -223,34 +230,37 @@ class _FlightOffersState extends State<FlightOffers> {
                     ),
                     const Text(
                       "per person",
-                      style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
+                      style: TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     WidgetsSpacer.verticalSpacer8,
                     TextButton(
-                        onPressed: () {
-                          AppNavigator.push(
-                            context,
-                            MultiBlocProvider(providers: [
+                      onPressed: () {
+                        AppNavigator.push(
+                          context,
+                          MultiBlocProvider(
+                            providers: [
                               BlocProvider.value(value: sl<AirlineCubit>()),
                               BlocProvider.value(
-                                  value: sl<FlightPricingCubit>()),
+                                value: sl<FlightPricingCubit>(),
+                              ),
                               BlocProvider.value(value: sl<FlightOffersBloc>()),
                               BlocProvider.value(
-                                  value: sl<FlightBookingBloc>()),
+                                value: sl<FlightBookingBloc>(),
+                              ),
                               BlocProvider.value(value: sl<SeatmapCubit>()),
-                            ], child: FlightDetail(flightOffer: offer)),
-                          );
-                        },
-                        child: const Text("View Details")),
+                            ],
+                            child: FlightDetail(flightOffer: offer),
+                          ),
+                        );
+                      },
+                      child: const Text("View Details"),
+                    ),
                   ],
                 ),
               ],
             ),
             WidgetsSpacer.verticalSpacer8,
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             ElevatedButton(
               onPressed: () {
                 // Navigate to booking confirmation
@@ -278,25 +288,26 @@ class _FlightOffersState extends State<FlightOffers> {
     // Trigger the airline search using the new cubit
     context.read<AirlineCubit>().searchAirline(firstSegment['carrierCode']);
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Divider(
-        color: AppColors.defaultColor100,
-        thickness: 2,
-      ),
-      const Text("Flight Details"),
-      WidgetsSpacer.verticalSpacer8,
-      Text("Ticket Booking end date: ${offer['lastTicketingDate']}"),
-      WidgetsSpacer.verticalSpacer8,
-      BlocBuilder<AirlineCubit, AirlineState>(
-        builder: (context, state) {
-          if (state is AirlineLoaded && state.airlines.isNotEmpty) {
-            return Text(
-                "Airline: ${state.airlines.first['commonName'] ?? "Airline Name"} (${firstSegment['carrierCode'] + "${firstSegment['aircraft']['code']}" ?? "Airline Name"})");
-          }
-          return Text("Airline: ${firstSegment['carrierCode']}");
-        },
-      ),
-    ]);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Divider(color: AppColors.defaultColor100, thickness: 2),
+        const Text("Flight Details"),
+        WidgetsSpacer.verticalSpacer8,
+        Text("Ticket Booking end date: ${offer['lastTicketingDate']}"),
+        WidgetsSpacer.verticalSpacer8,
+        BlocBuilder<AirlineCubit, AirlineState>(
+          builder: (context, state) {
+            if (state is AirlineLoaded && state.airlines.isNotEmpty) {
+              return Text(
+                "Airline: ${state.airlines.first['commonName'] ?? "Airline Name"} (${firstSegment['carrierCode'] + "${firstSegment['aircraft']['code']}" ?? "Airline Name"})",
+              );
+            }
+            return Text("Airline: ${firstSegment['carrierCode']}");
+          },
+        ),
+      ],
+    );
   }
 
   Widget _progressDisplay() {
@@ -306,60 +317,77 @@ class _FlightOffersState extends State<FlightOffers> {
           final originDestination =
               state.flightBooking.originDestinations.first;
           return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: [
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
                 TripProgressDisplay(
-                    progressIcon: Icons.flight_takeoff_outlined,
-                    progressKey: "Origin Airport",
-                    progressValue: originDestination.originLocationCode,
-                    onPressed: () {
-                      AppNavigator.push(
-                          context,
-                          MultiBlocProvider(providers: [
-                            BlocProvider.value(value: sl<AirportBloc>()),
-                            BlocProvider.value(value: sl<FlightOffersBloc>())
-                          ], child: const TripScreen()));
-                    }),
+                  progressIcon: Icons.flight_takeoff_outlined,
+                  progressKey: "Origin Airport",
+                  progressValue: originDestination.originLocationCode,
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: sl<AirportBloc>()),
+                          BlocProvider.value(value: sl<FlightOffersBloc>()),
+                        ],
+                        child: const TripScreen(),
+                      ),
+                    );
+                  },
+                ),
                 WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
-                    progressIcon: Icons.flight_land_outlined,
-                    progressKey: "Destination Airport",
-                    progressValue: originDestination.destinationLocationCode,
-                    onPressed: () {
-                      AppNavigator.push(
-                          context,
-                          MultiBlocProvider(providers: [
-                            BlocProvider.value(value: sl<AirportBloc>()),
-                            BlocProvider.value(value: sl<FlightBookingBloc>())
-                          ], child: const SetDestination()));
-                    }),
+                  progressIcon: Icons.flight_land_outlined,
+                  progressKey: "Destination Airport",
+                  progressValue: originDestination.destinationLocationCode,
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      MultiBlocProvider(
+                        providers: [
+                          BlocProvider.value(value: sl<AirportBloc>()),
+                          BlocProvider.value(value: sl<FlightBookingBloc>()),
+                        ],
+                        child: const SetDestination(),
+                      ),
+                    );
+                  },
+                ),
                 WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
-                    progressIcon: Icons.calendar_month_outlined,
-                    progressKey: "Date",
-                    progressValue:
-                        originDestination.departureDateTimeRange.date,
-                    onPressed: () {
-                      AppNavigator.push(
-                          context,
-                          BlocProvider.value(
-                              value: sl<FlightBookingBloc>(),
-                              child: const FlightDate()));
-                    }),
+                  progressIcon: Icons.calendar_month_outlined,
+                  progressKey: "Date",
+                  progressValue: originDestination.departureDateTimeRange.date,
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      BlocProvider.value(
+                        value: sl<FlightBookingBloc>(),
+                        child: const FlightDate(),
+                      ),
+                    );
+                  },
+                ),
                 WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
-                    progressIcon: Icons.access_time_outlined,
-                    progressKey: "Departure Time",
-                    progressValue:
-                        originDestination.departureDateTimeRange.time,
-                    onPressed: () {
-                      AppNavigator.push(
-                          context,
-                          BlocProvider.value(
-                              value: sl<FlightBookingBloc>(),
-                              child: const FlightDate()));
-                    }),
-              ]));
+                  progressIcon: Icons.access_time_outlined,
+                  progressKey: "Departure Time",
+                  progressValue: originDestination.departureDateTimeRange.time,
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      BlocProvider.value(
+                        value: sl<FlightBookingBloc>(),
+                        child: const FlightDate(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
         }
         return const SizedBox.shrink();
       },

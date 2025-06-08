@@ -6,9 +6,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: AddCardDetailsPage(),
-    );
+    return const MaterialApp(home: AddCardDetailsPage());
   }
 }
 
@@ -48,8 +46,9 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                   border: Border.all(color: Colors.purple, width: 2),
                 ),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment
-                      .spaceBetween, // Align text to the left, icon to the right
+                  mainAxisAlignment:
+                      MainAxisAlignment
+                          .spaceBetween, // Align text to the left, icon to the right
                   children: [
                     const Expanded(
                       child: Text(
@@ -63,14 +62,17 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                         color: Colors.purple,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.check,
-                          color: Colors.white, size: 18),
+                      child: const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 18,
+                      ),
                     ),
                   ],
                 ),
               ),
 
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Visa and MasterCard logos side by side
             Row(
@@ -82,8 +84,10 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                       _selectedLogo = 'assets/images/profile/visa.png';
                     });
                   },
-                  child:
-                      Image.asset('assets/images/profile/visa.png', height: 20),
+                  child: Image.asset(
+                    'assets/images/profile/visa.png',
+                    height: 20,
+                  ),
                 ),
                 const SizedBox(width: 10),
                 GestureDetector(
@@ -92,13 +96,15 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                       _selectedLogo = 'assets/images/profile/master.png';
                     });
                   },
-                  child: Image.asset('assets/images/profile/master.png',
-                      height: 20),
+                  child: Image.asset(
+                    'assets/images/profile/master.png',
+                    height: 20,
+                  ),
                 ),
               ],
             ),
 
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Card Number field with logo display
             const Text("Card Number", style: TextStyle(fontSize: 16)),
@@ -107,19 +113,17 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
               decoration: InputDecoration(
                 hintText: "Card Number",
                 border: const OutlineInputBorder(),
-                suffixIcon: _selectedLogo != null
-                    ? Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(
-                          _selectedLogo!,
-                          height: 20,
-                        ),
-                      )
-                    : null,
+                suffixIcon:
+                    _selectedLogo != null
+                        ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Image.asset(_selectedLogo!, height: 20),
+                        )
+                        : null,
               ),
               keyboardType: TextInputType.number,
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Month & Year, and CCV fields
             Row(
@@ -134,7 +138,7 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                     keyboardType: TextInputType.datetime,
                   ),
                 ),
-                const SizedBox(width: 20),
+                WidgetsSpacer.horizontalSpacer20,
                 Expanded(
                   child: TextField(
                     controller: _ccvController,
@@ -148,7 +152,7 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
               ],
             ),
 
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Zip Code field
             const Text("Zip Code", style: TextStyle(fontSize: 16)),
@@ -175,8 +179,10 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.purple,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 150, vertical: 15),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 150,
+                    vertical: 15,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
                   ),

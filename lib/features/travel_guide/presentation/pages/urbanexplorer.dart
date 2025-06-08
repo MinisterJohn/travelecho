@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
+import "../../travel_guide_exports.dart";
 
 class UrbanExplorerPage extends StatelessWidget {
   const UrbanExplorerPage({super.key});
@@ -33,13 +34,14 @@ class UrbanExplorerPage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Depth3 image with sharearrow beside it
             Center(
               child: Row(
-                mainAxisSize: MainAxisSize
-                    .min, // Ensures the row takes only as much space as needed
+                mainAxisSize:
+                    MainAxisSize
+                        .min, // Ensures the row takes only as much space as needed
                 children: [
                   Image.asset(
                     'assets/Depth3.png', // Replace with your image path
@@ -49,7 +51,7 @@ class UrbanExplorerPage extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Congratulations section
             const Text(
@@ -74,12 +76,9 @@ class UrbanExplorerPage extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               "Complete 5 trips to urban cities and unlock exclusive rewards!",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Badge Details
             const Text(
@@ -93,28 +92,19 @@ class UrbanExplorerPage extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               "Name: Urban Explorer",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             const SizedBox(height: 5),
             const Text(
               "Type: Travel Milestone",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             const SizedBox(height: 5),
             const Text(
               "Description: Awarded to travelers who explore multiple urban cities.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Requirements
             const Text(
@@ -128,28 +118,19 @@ class UrbanExplorerPage extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               "1. Complete 5 trips to urban cities.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             const SizedBox(height: 5),
             const Text(
               "2. Visit 2 unique cities.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             const SizedBox(height: 5),
             const Text(
               "3. Share 2 travel stories.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // Badge Levels
             const Text(
@@ -163,34 +144,22 @@ class UrbanExplorerPage extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               "1. Bronze: 5 urban cities.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             const SizedBox(height: 5),
             const Text(
               "2. Silver: 10 urban cities.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             const SizedBox(height: 5),
             const Text(
               "3. Gold: 20 urban cities.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
             const SizedBox(height: 5),
             const Text(
               "4. Platinum: 50 urban cities.",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-              ),
+              style: TextStyle(fontSize: 14, color: Colors.black),
             ),
           ],
         ),

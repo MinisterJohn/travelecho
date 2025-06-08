@@ -27,7 +27,8 @@ class _UserDashboardState extends State<UserDashboard> {
                     child: CircleAvatar(
                       radius: 25,
                       backgroundImage: AssetImage(
-                          'assets/images/community/profile_pic2.jpeg'),
+                        'assets/images/community/profile_pic2.jpeg',
+                      ),
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -44,10 +45,10 @@ class _UserDashboardState extends State<UserDashboard> {
                   const Icon(Icons.settings, color: Colors.grey),
                 ],
               ),
-              const SizedBox(height: 20),
+              WidgetsSpacer.verticalSpacer20,
               const Post(),
               WidgetsSpacer.verticalSpacer48,
-              const Post()
+              const Post(),
             ],
           ),
         ),

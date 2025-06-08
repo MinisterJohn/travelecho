@@ -5,11 +5,21 @@ import '../../../budget_exports.dart';
 
 class BuildBudget extends StatelessWidget {
   final BudgetModel budget;
+  final List<CurrencyInfo> mergedCurrencies;
 
-  const BuildBudget({Key? key, required this.budget}) : super(key: key);
+  const BuildBudget({
+    super.key,
+    required this.budget,
+    required this.mergedCurrencies,
+  });
 
   @override
   Widget build(BuildContext context) {
+    print("Build: $mergedCurrencies");
+    final currencyInfo = mergedCurrencies.firstWhere(
+      (currency) => currency.name == budget.currency,
+      orElse: () => CurrencyInfo(name: budget.currency, symbol: '', key: ""),
+    );
     return Row(
       children: [
         Container(
@@ -27,7 +37,7 @@ class BuildBudget extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(width: 20),
+        WidgetsSpacer.horizontalSpacer20,
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -41,7 +51,9 @@ class BuildBudget extends StatelessWidget {
               ),
               const SizedBox(height: 5),
               Text(
-                "${budget.currency} ${budget.plannedAmount}",
+                currencyInfo.symbol.isNotEmpty
+                    ? "${currencyInfo.symbol} ${budget.plannedAmount}"
+                    : "${budget.currency} ${budget.plannedAmount}",
                 style: const TextStyle(color: Colors.grey),
               ),
             ],
@@ -74,23 +86,42 @@ class BuildBudget extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              'Manage ${budget.name}',
+                              style: const TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: AppColors.defaultColor400,
+                              ),
+                            ),
+                          ),
                           OptionButton(
                             context: context,
-                            text: 'View ${budget.name}',
+                            text: 'View ',
                             icon: LineIcons.eye,
                             onTap: () {},
                           ),
                           const Divider(color: AppColors.defaultColor100),
                           OptionButton(
                             context: context,
-                            text: 'Edit ${budget.name}',
+                            text: 'Edit',
                             icon: LineIcons.editAlt,
                             onTap: () {
                               AppNavigator.push(
                                 context,
-                                BlocProvider.value(
-                                  value: sl<BudgetBloc>(),
-                                  child: NewBudgetPage(budget: budget),
+                                MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider.value(value: sl<BudgetBloc>()),
+                                    BlocProvider.value(
+                                      value: sl<CurrencyBloc>(),
+                                    ),
+                                  ],
+                                  child: NewBudgetPage(
+                                    budget: budget,
+                                    mergedCurrencyList: mergedCurrencies,
+                                  ),
                                 ),
                               );
                             },
@@ -98,17 +129,55 @@ class BuildBudget extends StatelessWidget {
                           const Divider(color: AppColors.defaultColor100),
                           OptionButton(
                             context: context,
-                            text: 'Add Expenses to ${budget.name}',
+                            text: 'Manage Expenses',
                             icon: LineIcons.editAlt,
-                            onTap: () {},
+                            onTap: () {
+                              AppNavigator.push(
+                                context,
+                                BlocProvider.value(
+                                  value: sl<BudgetBloc>(),
+                                  child: ExpenseScreen(
+                                    budget: budget,
+                                    currency: currencyInfo,
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                           const Divider(color: AppColors.defaultColor100),
                           OptionButton(
                             context: context,
-                            text: 'Delete ${budget.name}',
+                            text: 'Delete',
                             icon: LineIcons.alternateTrash,
                             onTap: () {
-                              
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    title: const Text('Delete Budget'),
+                                    content: const Text(
+                                        'Are you sure you want to delete this budget?'),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                         AppNavigator.pop(context);
+                                        },
+                                        child: const Text('Cancel'),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          // Call the delete budget function
+                                          context.read<BudgetBloc>().add(
+                                            DeleteBudgetEvent(budget.id),
+                                          );
+                                          AppNavigator.pop(context);
+                                        },
+                                        child: const Text('Delete'),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
                             },
                             isDelete: true,
                           ),

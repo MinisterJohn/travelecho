@@ -35,18 +35,26 @@ export 'presentation/pages/tagbutton.dart';
 export 'presentation/pages/takephoto.dart';
 export 'presentation/pages/memories_list_page.dart';
 export 'presentation/pages/memories_home_page.dart';
+export 'presentation/pages/view_memory_page.dart';
+
+//widgets
 export 'presentation/widgets/upgrade_to_pro.dart';
-export 'presentation/widgets/user_header.dart';
-export 'presentation/widgets/validate_discard.dart';
+export 'presentation/widgets/user_header/user_header.dart';
+export 'presentation/widgets/user_header/validate_discard.dart';
 export 'presentation/widgets/location_search_field.dart';
-export 'presentation/widgets/memory_search_bar.dart';
-export 'presentation/widgets/memory_search_filter_section.dart';
-export 'presentation/widgets/memories_list_section.dart';
-export 'presentation/widgets/memory_card.dart';
-export 'presentation/widgets/memory_action_buttons.dart';
-export 'presentation/widgets/memory_tags_section.dart';
+export 'presentation/widgets/memories_list/memory_search_bar.dart';
+export 'presentation/widgets/memories_list/memory_search_filter_section.dart';
+export 'presentation/widgets/memories_list/memories_list_section.dart';
+export 'presentation/widgets/memories_list/memory_card.dart';
+export 'presentation/widgets/create_update_memory/memory_action_buttons.dart';
+export 'presentation/widgets/create_update_memory/memory_tags_section.dart';
 // export 'presentation/widgets/memory_details.dart';
-export 'presentation/widgets/memory_form_fields.dart';
+export 'presentation/widgets/create_update_memory/memory_form_fields.dart';
+export 'presentation/widgets/view_memory/details_tab.dart';
+
+//utils
+export 'presentation/utils/memory_actions.dart';
+
 
 export '../features_exports.dart';
 

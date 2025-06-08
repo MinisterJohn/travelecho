@@ -12,9 +12,7 @@ class HotelBooking extends StatelessWidget {
       body: BlocBuilder<HotelBookingBloc, HotelBookingState>(
         builder: (context, state) {
           if (state is HotelBookingLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (state is HotelBookingError) {
@@ -22,25 +20,19 @@ class HotelBooking extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(
-                    Icons.error_outline,
-                    color: Colors.red,
-                    size: 60,
-                  ),
-                  const SizedBox(height: 16),
+                  const Icon(Icons.error_outline, color: Colors.red, size: 60),
+                  WidgetsSpacer.verticalSpacer16,
                   Text(
                     'Error: ${state.message}',
                     style: const TextStyle(color: Colors.red),
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 16),
+                  WidgetsSpacer.verticalSpacer16,
                   ElevatedButton(
                     onPressed: () {
                       context.read<HotelBookingBloc>().add(
-                            const SearchHotels(
-                              query: 'Paris',
-                            ),
-                          );
+                        const SearchHotels(query: 'Paris'),
+                      );
                     },
                     child: const Text('Retry'),
                   ),
@@ -66,19 +58,20 @@ class HotelBooking extends StatelessWidget {
               ),
               SliverPadding(
                 padding: const EdgeInsets.all(16),
-                sliver: state is HotelBookingSuccess && state.hotels.isNotEmpty
-                    ? HotelList(hotels: state.hotels)
-                    : const SliverToBoxAdapter(
-                        child: Center(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(vertical: 32),
-                            child: Text(
-                              'Search for hotels to see available options',
-                              style: TextStyle(fontSize: 16),
+                sliver:
+                    state is HotelBookingSuccess && state.hotels.isNotEmpty
+                        ? HotelList(hotels: state.hotels)
+                        : const SliverToBoxAdapter(
+                          child: Center(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(vertical: 32),
+                              child: Text(
+                                'Search for hotels to see available options',
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
                           ),
                         ),
-                      ),
               ),
             ],
           );

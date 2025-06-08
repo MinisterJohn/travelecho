@@ -62,7 +62,7 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
           //     //         textAlign: TextAlign.center,
           //     //         style: const TextStyle(color: Colors.red),
           //     //       ),
-          //     //       const SizedBox(height: 16),
+          //     //       WidgetsSpacer.verticalSpacer16,
           //     //       ElevatedButton.icon(
           //     //         onPressed: () {
           //     //           context.read<ProfileBloc>().add(ProfileLoadRequested());
@@ -101,7 +101,7 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 16),
+                      WidgetsSpacer.verticalSpacer16,
                       ProfileImageSection(
                         state: state,
                         onImageSelected: _handleImageSelected,

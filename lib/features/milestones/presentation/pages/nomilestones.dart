@@ -21,7 +21,7 @@ class NoMileStonePage extends StatelessWidget {
                 height: 200,
               ),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
 
             // "Nothing to see here!" text in bold
             const Text(
@@ -40,10 +40,7 @@ class NoMileStonePage extends StatelessWidget {
                 "You do not have any milestones or\n achievements yet",
                 textAlign:
                     TextAlign.center, // Ensures the text itself is centered
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
+                style: TextStyle(fontSize: 12, color: Colors.black),
               ),
             ),
           ],

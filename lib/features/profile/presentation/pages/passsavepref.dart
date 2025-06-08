@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
+import "../../profile_exports.dart";
 
 class PasswordSavingPreferencePage extends StatefulWidget {
   const PasswordSavingPreferencePage({super.key});
@@ -50,7 +51,7 @@ class _PasswordSavingPreferencePageState
               },
             ),
 
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
 
             // 60-Minute Password Free Login Section
             _buildOptionCard(
@@ -66,7 +67,7 @@ class _PasswordSavingPreferencePageState
               },
             ),
 
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
 
             // Password Always Needed Section
             _buildOptionCard(
@@ -102,10 +103,7 @@ class _PasswordSavingPreferencePageState
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border.all(
-            color: Colors.purple,
-            width: 2,
-          ),
+          border: Border.all(color: Colors.purple, width: 2),
           borderRadius: BorderRadius.circular(30),
         ),
         child: Row(
@@ -122,13 +120,10 @@ class _PasswordSavingPreferencePageState
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 8),
+                WidgetsSpacer.verticalSpacer8,
                 Text(
                   description,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.grey, fontSize: 14),
                 ),
               ],
             ),

@@ -5,7 +5,7 @@ import '../../../budget_exports.dart';
 class ShowBudgets extends StatelessWidget {
   final List<BudgetModel> budgetsData;
 
-  const ShowBudgets({Key? key, required this.budgetsData}) : super(key: key);
+  const ShowBudgets({super.key, required this.budgetsData});
 
   @override
   Widget build(BuildContext context) {
@@ -17,22 +17,45 @@ class ShowBudgets extends StatelessWidget {
           "Budget Overview",
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        const SizedBox(height: 20),
+        WidgetsSpacer.verticalSpacer20,
         Column(
           spacing: 10,
           children:
               budgetsData.map((budget) {
-                return BuildBudget(budget: budget);
+                return BlocBuilder<CurrencyBloc, CurrencyState>(
+                  builder: (context, state) {
+                    return BuildBudget(
+                      budget: budget,
+                      mergedCurrencies:
+                          state is MergedCurrencyListLoaded
+                              ? state.currencies
+                              : [],
+                    );
+                  },
+                );
               }).toList(),
         ),
-        const SizedBox(height: 20),
+        WidgetsSpacer.verticalSpacer20,
         ElevatedButton(
           onPressed: () {
             AppNavigator.push(
               context,
-              BlocProvider.value(
-                value: sl<BudgetBloc>(),
-                child: const NewBudgetPage(),
+
+              MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: sl<BudgetBloc>()),
+                  BlocProvider.value(value: sl<CurrencyBloc>()),
+                ],
+                child: BlocBuilder<CurrencyBloc, CurrencyState>(
+                  builder: (context, state) {
+                    return NewBudgetPage(
+                      mergedCurrencyList:
+                          state is MergedCurrencyListLoaded
+                              ? state.currencies
+                              : [],
+                    );
+                  },
+                ),
               ),
             );
             // Add your logic here

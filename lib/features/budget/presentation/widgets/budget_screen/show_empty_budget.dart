@@ -5,8 +5,7 @@ import "../../../budget_exports.dart";
 class ShowEmptyBudget extends StatelessWidget {
   final VoidCallback onAddBudget;
 
-  const ShowEmptyBudget({Key? key, required this.onAddBudget})
-    : super(key: key);
+  const ShowEmptyBudget({super.key, required this.onAddBudget});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,7 @@ class ShowEmptyBudget extends StatelessWidget {
         ),
         const SizedBox(height: 40),
         Center(child: Image.asset('assets/NoResultFound.png', height: 100)),
-        const SizedBox(height: 20),
+        WidgetsSpacer.verticalSpacer20,
         const Center(
           child: Text(
             'Nothing to see here!',
@@ -30,7 +29,7 @@ class ShowEmptyBudget extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 20),
+        WidgetsSpacer.verticalSpacer20,
         const Center(
           child: Text(
             'You can set your budget for your next trip\nand manage your finances.',
@@ -38,15 +37,28 @@ class ShowEmptyBudget extends StatelessWidget {
             style: TextStyle(fontSize: 14, color: Colors.grey),
           ),
         ),
-        const SizedBox(height: 20),
+        WidgetsSpacer.verticalSpacer20,
         Center(
           child: ElevatedButton(
-            onPressed: (){
+            onPressed: () {
               AppNavigator.push(
                 context,
-                BlocProvider.value(
-                  value: sl<BudgetBloc>(),
-                  child: const NewBudgetPage(),
+
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: sl<CurrencyBloc>()),
+                    BlocProvider.value(value: sl<BudgetBloc>()),
+                  ],
+                  child: BlocBuilder<CurrencyBloc, CurrencyState>(
+                    builder: (context, state) {
+                      return NewBudgetPage(
+                        mergedCurrencyList:
+                            state is MergedCurrencyListLoaded
+                                ? state.currencies
+                                : [],
+                      );
+                    },
+                  ),
                 ),
               );
             },

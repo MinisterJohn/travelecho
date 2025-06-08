@@ -5,10 +5,7 @@ import '../../../trip_exports.dart';
 class TravelerInfoCard extends StatelessWidget {
   final List<Map> travelers;
 
-  const TravelerInfoCard({
-    super.key,
-    required this.travelers,
-  });
+  const TravelerInfoCard({super.key, required this.travelers});
 
   @override
   Widget build(BuildContext context) {
@@ -18,37 +15,29 @@ class TravelerInfoCard extends StatelessWidget {
           final travelerDetailsMap =
               context.read<FlightBookingBloc>().travelerDetailsMap;
 
-          return _buildSectionCard(
-            'Traveler Information',
-            Icons.people,
-            [
-              for (var traveler in travelers)
-                _buildTravelerRow(
-                  traveler['id'] as String,
-                  traveler['travelerType'] ?? 'Unknown',
-                  traveler['fareOption'] ?? 'Unknown',
-                  traveler['price'] ?? {},
-                  travelerDetailsMap[traveler['id'] as String],
-                ),
-            ],
-          );
-        }
-
-        // Fallback if state is not FlightBookingSuccess
-        return _buildSectionCard(
-          'Traveler Information',
-          Icons.people,
-          [
+          return _buildSectionCard('Traveler Information', Icons.people, [
             for (var traveler in travelers)
               _buildTravelerRow(
                 traveler['id'] as String,
                 traveler['travelerType'] ?? 'Unknown',
                 traveler['fareOption'] ?? 'Unknown',
                 traveler['price'] ?? {},
-                null,
+                travelerDetailsMap[traveler['id'] as String],
               ),
-          ],
-        );
+          ]);
+        }
+
+        // Fallback if state is not FlightBookingSuccess
+        return _buildSectionCard('Traveler Information', Icons.people, [
+          for (var traveler in travelers)
+            _buildTravelerRow(
+              traveler['id'] as String,
+              traveler['travelerType'] ?? 'Unknown',
+              traveler['fareOption'] ?? 'Unknown',
+              traveler['price'] ?? {},
+              null,
+            ),
+        ]);
       },
     );
   }
@@ -57,9 +46,7 @@ class TravelerInfoCard extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -68,7 +55,7 @@ class TravelerInfoCard extends StatelessWidget {
             Row(
               children: [
                 Icon(icon, color: AppColors.primaryColor),
-                const SizedBox(width: 8),
+                WidgetsSpacer.horizontalSpacer8,
                 Text(
                   title,
                   style: const TextStyle(
@@ -78,7 +65,7 @@ class TravelerInfoCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             ...children,
           ],
         ),
@@ -93,16 +80,17 @@ class TravelerInfoCard extends StatelessWidget {
     Map price,
     TravelerDetails? travelerDetails,
   ) {
-    final String displayName = travelerDetails != null
-        ? '${travelerDetails.name.firstName} ${travelerDetails.name.lastName}'
-        : 'Not specified';
+    final String displayName =
+        travelerDetails != null
+            ? '${travelerDetails.name.firstName} ${travelerDetails.name.lastName}'
+            : 'Not specified';
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
           const Icon(Icons.person, size: 18, color: Colors.grey),
-          const SizedBox(width: 8),
+          WidgetsSpacer.horizontalSpacer8,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -125,18 +113,12 @@ class TravelerInfoCard extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   'Fare option: $fareOption',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   'Price: \$${price['total']}',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
                 ),
               ],
             ),

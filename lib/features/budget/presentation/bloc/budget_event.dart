@@ -29,7 +29,7 @@ class DeleteBudgetEvent extends BudgetEvent {
   DeleteBudgetEvent(this.id);
 }
 
-class GetExpensesEvent extends BudgetEvent {}
+class GetAllExpensesEvent extends BudgetEvent {}
 
 class GetExpenseByIdEvent extends BudgetEvent {
   final String id;
@@ -37,14 +37,20 @@ class GetExpenseByIdEvent extends BudgetEvent {
   GetExpenseByIdEvent(this.id);
 }
 
+class GetBudgetWithExpensesEvent extends BudgetEvent {
+  final String id;
+
+  GetBudgetWithExpensesEvent(this.id);
+}
+
 class CreateExpenseEvent extends BudgetEvent {
-  final ExpenseModel expense;
+  final ExpenseParams expense;
 
   CreateExpenseEvent(this.expense);
 }
 
 class UpdateExpenseEvent extends BudgetEvent {
-  final ExpenseModel expense;
+  final ExpenseParams expense;
   final String id;
 
   UpdateExpenseEvent(this.id, this.expense);

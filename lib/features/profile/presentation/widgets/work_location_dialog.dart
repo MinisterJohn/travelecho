@@ -87,7 +87,7 @@ void showWhereIWorkDialog(BuildContext context) {
                     occupationController,
                     selectedOccupation,
                   ),
-                if (selectedOccupation!.isNotEmpty &&
+                if (selectedOccupation.isNotEmpty &&
                     occupationController.text.isEmpty)
                   _buildSelectedOccupation(context, selectedOccupation),
                 WidgetsSpacer.spacer,

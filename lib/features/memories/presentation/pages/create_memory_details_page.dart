@@ -2,6 +2,7 @@ import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../memories_exports.dart';
+import 'dart:async';
 
 class CreateMemoryDetailsPage extends StatefulWidget {
   final MemoryModel? memory;
@@ -66,48 +67,73 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
     }
   }
 
-  Future<void> _handlePost() async {
+  Future _handlePost() async {
     if (_titleController.text.isEmpty) {
       DisplayMessage.errorMessage('Please enter a title', context);
-      return;
+      return null;
     }
 
     setState(() {
       _isLoading = true;
     });
 
+    Completer<String?> completer = Completer<String?>();
+
     if (widget.isEditing && widget.memory != null) {
       context.read<MemoriesBloc>().add(
-            EditMemory(
-              memoryId: widget.memory!.id,
-              title: _titleController.text,
-              description: _descriptionController.text.isNotEmpty
-                  ? _descriptionController.text
-                  : null,
-              location: _locationController.text.isNotEmpty
-                  ? _locationController.text
-                  : null,
-              date: _selectedDate,
-              tags: _tags.isNotEmpty ? _tags : null,
-              isPublic: _isPublic,
-            ),
-          );
+        EditMemory(
+          memoryId: widget.memory!.id,
+          title: _titleController.text,
+          description: _descriptionController.text.isNotEmpty
+              ? _descriptionController.text
+              : null,
+          location: _locationController.text.isNotEmpty
+              ? _locationController.text
+              : null,
+          date: _selectedDate,
+          tags: _tags.isNotEmpty ? _tags : null,
+          isPublic: _isPublic,
+        ),
+      );
     } else {
       context.read<MemoriesBloc>().add(
-            CreateMemory(
-              title: _titleController.text,
-              description: _descriptionController.text.isNotEmpty
-                  ? _descriptionController.text
-                  : null,
-              location: _locationController.text.isNotEmpty
-                  ? _locationController.text
-                  : null,
-              date: _selectedDate,
-              tags: _tags.isNotEmpty ? _tags : null,
-              isPublic: _isPublic,
-            ),
-          );
+        CreateMemory(
+          title: _titleController.text,
+          description: _descriptionController.text.isNotEmpty
+              ? _descriptionController.text
+              : null,
+          location: _locationController.text.isNotEmpty
+              ? _locationController.text
+              : null,
+          date: _selectedDate,
+          tags: _tags.isNotEmpty ? _tags : null,
+          isPublic: _isPublic,
+        ),
+      );
     }
+
+    context.read<MemoriesBloc>().stream.listen((state) {
+      if (state is MemoryCreated) {
+        setState(() {
+          _isLoading = false;
+          _memoryId = state.memory['_id'] ?? state.memory['id'];
+        });
+        completer.complete(_memoryId);
+      } else if (state is MemoryUpdated) {
+        setState(() {
+          _isLoading = false;
+          _memoryId = state.memory['_id'] ?? state.memory['id'];
+        });
+        completer.complete(_memoryId);
+      } else if (state is MemoryError) {
+        setState(() {
+          _isLoading = false;
+        });
+        completer.completeError(state.message);
+      }
+    });
+
+    return completer.future;
   }
 
   void _addTag() {
@@ -196,7 +222,9 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
                   onCreateUpdate: () async {
                     if (_titleController.text.isEmpty) {
                       DisplayMessage.errorMessage(
-                          'Please enter a title', context);
+                        'Please enter a title',
+                        context,
+                      );
                       return;
                     }
                     await _handlePost();
@@ -204,26 +232,27 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
                     AppNavigator.pop(context);
                   },
                   onAddUpdatePictures: () async {
-                    print("pictures");
-                    await _handlePost();
+                    final response = await _handlePost();
+                    print(response);
                     final currentState = context.read<MemoriesBloc>().state;
-                    print(currentState);
-                   
-                      AppNavigator.push(
-                        context,
-                        BlocProvider.value(
-                          value: context.read<MemoriesBloc>(),
-                          child: AddDetailsToMemoryPage(
-                            memoryId: widget.memory!.id,
-                            isEditing: widget.isEditing,
-                            existingImages:
-                                widget.isEditing && widget.memory != null
-                                    ? widget.memory!.images
-                                    : null,
-                          ),
+                    AppNavigator.push(
+                      context,
+                      BlocProvider.value(
+                        value: sl<MemoriesBloc>(),
+                        child: AddDetailsToMemoryPage(
+                          memoryId: widget.memory != null
+                              ? widget.memory!.id
+                              : currentState is MemoryCreated
+                                  ? currentState.memory['_id'] ??
+                                      currentState.memory['id']
+                                  : '',
+                          isEditing: widget.isEditing,
+                          existingImages: widget.isEditing && widget.memory != null
+                              ? widget.memory!.images
+                              : null,
                         ),
-                      );
-                    
+                      ),
+                    );
                   },
                 ),
                 WidgetsSpacer.verticalSpacer32,

@@ -7,6 +7,9 @@ class WidgetsSpacer {
   static const verticalSpacer16 = SizedBox(
     height: 16,
   );
+  static const verticalSpacer20 = SizedBox(
+    height: 20,
+  );
   static const verticalSpacer32 = SizedBox(
     height: 32,
   );
@@ -18,6 +21,9 @@ class WidgetsSpacer {
   );
   static const horizontalSpacer8 = SizedBox(
     width: 8,
+  );
+  static const horizontalSpacer16 = SizedBox(
+    width: 16,
   );
   static const horizontalSpacer20 = SizedBox(
     width: 20,

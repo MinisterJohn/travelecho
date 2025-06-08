@@ -1,11 +1,14 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import '../../currency_converter_exports.dart';
 
-
 class ConvertCurrency {
   Future<Either<String, List<double>>> execute(
-      String base, String target, double amount) async {
+    String base,
+    String target,
+    double amount,
+  ) async {
     final result = await sl<CurrencyRepository>().getExchangeRates(base);
 
     return result.fold(
@@ -26,6 +29,21 @@ class ConvertCurrency {
 class GetCurrencyList {
   Future<Either<String, List<String>>> getList() async {
     final result = await sl<CurrencyRepository>().getCurrencyList();
+
+    return result.fold(
+      (failure) => Left(failure), // ❌ If API fails
+      (currencies) {
+        return Right(currencies.toList()); // ✅ Success
+      },
+    );
+  }
+
+  Future<Either<String, List<CurrencyInfo>>> getMergedList(
+    BuildContext context,
+  ) async {
+    final result = await sl<CurrencyRepository>().getMergedCurrencyList(
+      context,
+    );
 
     return result.fold(
       (failure) => Left(failure), // ❌ If API fails

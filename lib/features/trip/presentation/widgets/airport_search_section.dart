@@ -70,10 +70,13 @@ class _AirportSearchSectionState extends State<AirportSearchSection> {
             prefixIcon: Center(
               child: Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: widget.isDestination
-                    ? const Icon(Icons.search, size: 18)
-                    : const FaIcon(FontAwesomeIcons.locationCrosshairs,
-                        size: 18),
+                child:
+                    widget.isDestination
+                        ? const Icon(Icons.search, size: 18)
+                        : const FaIcon(
+                          FontAwesomeIcons.locationCrosshairs,
+                          size: 18,
+                        ),
               ),
             ),
             prefixIconConstraints: const BoxConstraints(maxWidth: 40),
@@ -108,7 +111,7 @@ class _AirportSearchSectionState extends State<AirportSearchSection> {
                     size: 16,
                     color: Colors.grey.shade700,
                   ),
-                  const SizedBox(width: 8),
+                  WidgetsSpacer.horizontalSpacer8,
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -122,9 +125,7 @@ class _AirportSearchSectionState extends State<AirportSearchSection> {
                         ),
                         Text(
                           "${widget.selectedAirportName} (${widget.selectedAirportCode})",
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ],
                     ),

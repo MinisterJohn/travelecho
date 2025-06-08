@@ -35,7 +35,7 @@ class BudgetRepositoryImpl implements BudgetRepository {
   }
 
   @override
-  Future<Either<String, Map<String, dynamic>>> getBudgetWithExpenses(
+  Future<Either<String, BudgetModel>> getBudgetWithExpenses(
       String id) async {
     try {
       return await remoteDataSource.getBudgetWithExpenses(id);
@@ -82,9 +82,9 @@ class BudgetRepositoryImpl implements BudgetRepository {
   }
 
   @override
-  Future<Either<String, void>> createExpense(ExpenseModel expense) async {
+  Future<Either<String, void>> createExpense(ExpenseParams expense) async {
     try {
-      return await remoteDataSource.createExpense(expense.toJson());
+      return await remoteDataSource.createExpense(expense);
     } catch (e) {
       return Left("Failed to create expense: ${e.toString()}");
     }
@@ -92,9 +92,9 @@ class BudgetRepositoryImpl implements BudgetRepository {
 
   @override
   Future<Either<String, void>> updateExpense(
-      String id, ExpenseModel expense) async {
+      String id, ExpenseParams expense) async {
     try {
-      return await remoteDataSource.updateExpense(id, expense.toJson());
+      return await remoteDataSource.updateExpense(id, expense);
     } catch (e) {
       return Left("Failed to update expense: ${e.toString()}");
     }

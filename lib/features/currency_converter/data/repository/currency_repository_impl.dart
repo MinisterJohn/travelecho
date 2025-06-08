@@ -1,5 +1,6 @@
 // ignore: file_names
 import 'package:dartz/dartz.dart';
+import 'package:flutter/widgets.dart';
 import 'package:logger/logger.dart';
 import '../../currency_converter_exports.dart';
 
@@ -10,7 +11,9 @@ class CurrencyRepositoryImpl implements CurrencyRepository {
   Future<Either> getExchangeRates(String baseCurrency) async {
     try {
       final rates = await remoteSource.fetchExchangeRates(baseCurrency);
-      logger.i("Exchange rates fetched successfully: ${rates.rates}"); // Log the rates
+      logger.i(
+        "Exchange rates fetched successfully: ${rates.rates}",
+      ); // Log the rates
       return Right(rates); // ✅ Success
     } catch (e) {
       logger.e("Error fetching exchange rates: $e");
@@ -27,6 +30,18 @@ class CurrencyRepositoryImpl implements CurrencyRepository {
     } catch (e) {
       logger.e("Error fetching currency list: $e");
       return const Left("Failed to get currency list"); // Handle failure
+    }
+  }
+
+  @override
+  Future<Either> getMergedCurrencyList(BuildContext context) async {
+    try {
+      final mergedCurrencies = await remoteSource.fetchMergedCurrencyList(
+        context,
+      );
+      return Right(mergedCurrencies);
+    } catch (e) {
+      return Left("Failed to get Merged currency list");
     }
   }
 }

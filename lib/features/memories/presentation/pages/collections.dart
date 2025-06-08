@@ -32,17 +32,23 @@ class CollectionPage extends StatelessWidget {
                 color: Colors.white,
                 size: FontSize.size14,
               ),
-              label: Text("Get Pro",
-                  style: TextStyle(
-                      color: Colors.white, fontSize: FontSize.size14)),
+              label: Text(
+                "Get Pro",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: FontSize.size14,
+                ),
+              ),
               style: ElevatedButton.styleFrom(
                 backgroundColor: AppColors.primaryColor,
                 minimumSize: Size(50.w, 50.h),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 8,
+                ),
               ),
             ),
           ),
@@ -58,7 +64,8 @@ class CollectionPage extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   backgroundImage: AssetImage(
-                      'assets/images/memories/rectangle1.png'), // Replace with user's image
+                    'assets/images/memories/rectangle1.png',
+                  ), // Replace with user's image
                 ),
                 SizedBox(width: 10),
                 Column(
@@ -66,8 +73,10 @@ class CollectionPage extends StatelessWidget {
                   children: [
                     Text(
                       "Daniel Shawn",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     Text(
                       "See the moments you have created",
@@ -77,7 +86,7 @@ class CollectionPage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -115,7 +124,7 @@ class CollectionPage extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             const Text(
               "Collections",
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -171,12 +180,13 @@ class CollectionPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(10),
                             image: const DecorationImage(
                               image: AssetImage(
-                                  'assets/images/memories/rectangle2.png'),
+                                'assets/images/memories/rectangle2.png',
+                              ),
                               fit: BoxFit.cover,
                             ),
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        WidgetsSpacer.verticalSpacer20,
                         const Text(
                           "Capture Every Moment, Limitlessly!",
                           style: TextStyle(
@@ -191,7 +201,7 @@ class CollectionPage extends StatelessWidget {
                           style: TextStyle(fontSize: 14, color: Colors.grey),
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 20),
+                        WidgetsSpacer.verticalSpacer20,
                         ElevatedButton(
                           onPressed: () {
                             // Handle "Upgrade to Pro" action

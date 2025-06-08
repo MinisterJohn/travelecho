@@ -3,6 +3,7 @@
 // Domain Models
 export 'data/models/currency_model.dart';
 export 'data/models/currencies_list_model.dart';
+export 'data/models/currency_info.dart';
 export 'domain/entities/currency.dart';
 
 // Domain Failures

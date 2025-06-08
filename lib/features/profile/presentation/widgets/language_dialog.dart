@@ -20,7 +20,7 @@ void showLanguageDialog(BuildContext context) {
 class LanguageDialog extends StatefulWidget {
   final BuildContext context;
 
-  const LanguageDialog({Key? key, required this.context}) : super(key: key);
+  const LanguageDialog({super.key, required this.context});
 
   @override
   _LanguageDialogState createState() => _LanguageDialogState();

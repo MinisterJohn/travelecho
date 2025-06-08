@@ -1,3 +1,4 @@
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../currency_converter_exports.dart';
 
@@ -9,8 +10,11 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
     on<ConvertRequested>((event, emit) async {
       emit(CurrencyLoading());
 
-      final result = await sl<ConvertCurrency>()
-          .execute(event.base, event.target, event.amount);
+      final result = await sl<ConvertCurrency>().execute(
+        event.base,
+        event.target,
+        event.amount,
+      );
       print("Yeah");
       result.fold(
         (failure) => emit(CurrencyError(failure)),
@@ -27,6 +31,17 @@ class CurrencyBloc extends Bloc<CurrencyEvent, CurrencyState> {
       result.fold(
         (failure) => emit(CurrencyError(failure)),
         (currencies) => emit(CurrencyListLoaded(currencies)),
+      );
+    });
+    on<MergedCurrencyListRequested>((event, emit) async {
+      // Corrected event name
+      emit(CurrencyLoading());
+
+      final result = await sl<GetCurrencyList>().getMergedList(event.context);
+
+      result.fold(
+        (failure) => emit(CurrencyError(failure)),
+        (currencies) => emit(MergedCurrencyListLoaded(currencies)),
       );
     });
   }

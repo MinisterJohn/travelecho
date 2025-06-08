@@ -2,9 +2,7 @@ import 'package:flutter/material.dart' hide CarouselController;
 import '../../profile_exports.dart';
 
 void main() {
-  runApp(const MaterialApp(
-    home: ChangePasswordPage(),
-  ));
+  runApp(const MaterialApp(home: ChangePasswordPage()));
 }
 
 class ChangePasswordPage extends StatelessWidget {
@@ -19,9 +17,7 @@ class ChangePasswordPage extends StatelessWidget {
         onConfirm: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => const NewPasswordPage(),
-            ),
+            MaterialPageRoute(builder: (context) => const NewPasswordPage()),
           );
         },
       ),
@@ -95,53 +91,46 @@ class PasswordChangedPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Password Changed'),
-      ),
+      appBar: AppBar(title: const Text('Password Changed')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.check_circle,
-              size: 100,
-              color: Colors.purple,
-            ),
-            const SizedBox(height: 16),
+            const Icon(Icons.check_circle, size: 100, color: Colors.purple),
+            WidgetsSpacer.verticalSpacer16,
             const Text(
               'Password Changed',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 32),
             ElevatedButton(
               onPressed: () {
                 showDialog(
                   context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Are you sure you want to exit?'),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('No'),
+                  builder:
+                      (context) => AlertDialog(
+                        title: const Text('Are you sure you want to exit?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('No'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.popUntil(
+                                context,
+                                (route) => route.isFirst,
+                              );
+                            },
+                            child: const Text('Yes'),
+                          ),
+                        ],
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.popUntil(context, (route) => route.isFirst);
-                        },
-                        child: const Text('Yes'),
-                      ),
-                    ],
-                  ),
                 );
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-              ),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
               child: const Text(
                 'Go Back',
                 style: TextStyle(color: Colors.white),
@@ -158,8 +147,11 @@ class PasswordInputPage extends StatefulWidget {
   final String title;
   final VoidCallback onConfirm;
 
-  const PasswordInputPage(
-      {super.key, required this.title, required this.onConfirm});
+  const PasswordInputPage({
+    super.key,
+    required this.title,
+    required this.onConfirm,
+  });
 
   @override
   _PasswordInputPageState createState() => _PasswordInputPageState();
@@ -177,12 +169,9 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
         children: [
           Text(
             widget.title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
           ),
-          const SizedBox(height: 16),
+          WidgetsSpacer.verticalSpacer16,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: List.generate(
@@ -206,8 +195,10 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.purple,
-                minimumSize:
-                    const Size(300, 50), // Increase width and height here
+                minimumSize: const Size(
+                  300,
+                  50,
+                ), // Increase width and height here
               ),
               child: const Text(
                 'Confirm',

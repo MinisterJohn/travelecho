@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart' hide CarouselController;
-import 'colors.dart';
 import '../../core/core_exports.dart';
 import "package:flutter/services.dart";
 

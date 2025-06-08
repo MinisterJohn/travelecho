@@ -22,10 +22,11 @@ class UserProfilePage extends StatelessWidget {
             children: [
               const CircleAvatar(
                 radius: 50,
-                backgroundImage:
-                    AssetImage('assets/images/memories/rectangle1.png'),
+                backgroundImage: AssetImage(
+                  'assets/images/memories/rectangle1.png',
+                ),
               ),
-              const SizedBox(height: 20),
+              WidgetsSpacer.verticalSpacer20,
               const Text(
                 'Megan Kelly',
                 style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),

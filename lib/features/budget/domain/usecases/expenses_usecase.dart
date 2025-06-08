@@ -6,7 +6,7 @@ class CreateExpenseUseCase {
 
   CreateExpenseUseCase();
 
-  Future<Either<String, void>> call(ExpenseModel expense) {
+  Future<Either<String, void>> call(ExpenseParams expense) {
     return repository.createExpense(expense);
   }
 }
@@ -16,7 +16,7 @@ class UpdateExpenseUseCase {
 
   UpdateExpenseUseCase();
 
-  Future<Either<String, void>> call(String id, ExpenseModel expense) {
+  Future<Either<String, void>> call(String id, ExpenseParams expense) {
     return repository.updateExpense(id, expense);
   }
 }

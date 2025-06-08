@@ -12,45 +12,53 @@ class AddCategoriesScreen extends StatefulWidget {
 class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
   final List<ExpenseCategory> _expenseCategories = [
     ExpenseCategory(
-        title: "Cruise",
-        description: "Travels on ship and boats cruise",
-        imagePath: "cruise.png",
-        expenseIsAdded: false),
+      title: "Cruise",
+      description: "Travels on ship and boats cruise",
+      imagePath: "cruise.png",
+      expenseIsAdded: false,
+    ),
     ExpenseCategory(
-        title: "Road Trips",
-        description: "Multiple destinations by car or RV",
-        imagePath: "carbon_road.png",
-        expenseIsAdded: false),
+      title: "Road Trips",
+      description: "Multiple destinations by car or RV",
+      imagePath: "carbon_road.png",
+      expenseIsAdded: false,
+    ),
     ExpenseCategory(
-        title: "Wildlife Watching",
-        description: "Visiting zoos, aquariums, etc.",
-        imagePath: "tripsouthafrica.png",
-        expenseIsAdded: false),
+      title: "Wildlife Watching",
+      description: "Visiting zoos, aquariums, etc.",
+      imagePath: "tripsouthafrica.png",
+      expenseIsAdded: false,
+    ),
     ExpenseCategory(
-        title: "Accommodation",
-        description: "Hotel Bookings",
-        imagePath: "accomodation.png",
-        expenseIsAdded: false),
+      title: "Accommodation",
+      description: "Hotel Bookings",
+      imagePath: "accomodation.png",
+      expenseIsAdded: false,
+    ),
     ExpenseCategory(
-        title: "Food & Drinks",
-        description: "Restaurant and cafes",
-        imagePath: "foodanddrinks.png",
-        expenseIsAdded: false),
+      title: "Food & Drinks",
+      description: "Restaurant and cafes",
+      imagePath: "foodanddrinks.png",
+      expenseIsAdded: false,
+    ),
     ExpenseCategory(
-        title: "Transportation",
-        description: "Flights, taxis, etc.",
-        imagePath: "transportation.png",
-        expenseIsAdded: false),
+      title: "Transportation",
+      description: "Flights, taxis, etc.",
+      imagePath: "transportation.png",
+      expenseIsAdded: false,
+    ),
     ExpenseCategory(
-        title: "Outdoor Adventures",
-        description: "Hiking, biking, kayaking, etc.",
-        imagePath: "outdooradventures.png",
-        expenseIsAdded: false),
+      title: "Outdoor Adventures",
+      description: "Hiking, biking, kayaking, etc.",
+      imagePath: "outdooradventures.png",
+      expenseIsAdded: false,
+    ),
     ExpenseCategory(
-        title: "Sightseeing",
-        description: "Visiting landmarks, historical sites, etc.",
-        imagePath: "sightseeing.png",
-        expenseIsAdded: false),
+      title: "Sightseeing",
+      description: "Visiting landmarks, historical sites, etc.",
+      imagePath: "sightseeing.png",
+      expenseIsAdded: false,
+    ),
   ];
 
   final TextEditingController _customExpenseCategoryName =
@@ -70,11 +78,14 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final List<ExpenseCategory> filteredExpenseCategories = _expenseCategories
-        .where((expense) => expense.title
-            .toLowerCase()
-            .contains(_searchExpenseQuery.toLowerCase()))
-        .toList();
+    final List<ExpenseCategory> filteredExpenseCategories =
+        _expenseCategories
+            .where(
+              (expense) => expense.title.toLowerCase().contains(
+                _searchExpenseQuery.toLowerCase(),
+              ),
+            )
+            .toList();
 
     return SingleChildScrollView(
       child: Padding(
@@ -86,7 +97,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
               'Highlight what best fits your travel experience',
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             TextField(
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.search),
@@ -94,8 +105,10 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
-                contentPadding:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 15,
+                  horizontal: 10,
+                ),
               ),
               onChanged: (query) {
                 setState(() {
@@ -103,62 +116,65 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                 });
               },
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             Column(
-              children: filteredExpenseCategories.map((expenseCategory) {
-                // bool isSelected = widget.budget.expenseList.any((expense) =>
-                //     expense.title.toLowerCase() ==
-                //     expenseCategory.title.toLowerCase());
+              children:
+                  filteredExpenseCategories.map((expenseCategory) {
+                    // bool isSelected = widget.budget.expenseList.any((expense) =>
+                    //     expense.title.toLowerCase() ==
+                    //     expenseCategory.title.toLowerCase());
 
-                return _buildCategoryItem(
-                  imagePath: 'assets/${expenseCategory.imagePath}',
-                  title: expenseCategory.title,
-                  subtitle: expenseCategory.description,
-                  isSelected: false,
-                  onChanged: (value) {
-                    // setState(() {
-                    //   if (value ?? false) {
-                    //     // Add to expenseList
-                    //     if (!widget.budget.expenseList.any((expense) =>
-                    //         expense.title.toLowerCase() ==
-                    //         expenseCategory.title.toLowerCase())) {
-                    //       widget.budget.addNewExpense(
-                    //         ExpenseCategorySelected(
-                    //           amount: 0.0,
-                    //           title: expenseCategory.title,
-                    //           description: expenseCategory.description,
-                    //           imagePath: 'assets/${expenseCategory.imagePath}',
-                    //           expenseIsAdded: true,
-                    //           showExpenseDropdown: false,
-                    //         ),
-                    //       );
-                    //     }
-                    //   } else {
-                    //     // Remove from expenseList
-                    //     // widget.budget.removeExpense(expenseCategory.title);
-                    //   }
-                    // });
-                 
-                  },
-                );
-              }).toList(),
+                    return _buildCategoryItem(
+                      imagePath: 'assets/${expenseCategory.imagePath}',
+                      title: expenseCategory.title,
+                      subtitle: expenseCategory.description,
+                      isSelected: false,
+                      onChanged: (value) {
+                        // setState(() {
+                        //   if (value ?? false) {
+                        //     // Add to expenseList
+                        //     if (!widget.budget.expenseList.any((expense) =>
+                        //         expense.title.toLowerCase() ==
+                        //         expenseCategory.title.toLowerCase())) {
+                        //       widget.budget.addNewExpense(
+                        //         ExpenseCategorySelected(
+                        //           amount: 0.0,
+                        //           title: expenseCategory.title,
+                        //           description: expenseCategory.description,
+                        //           imagePath: 'assets/${expenseCategory.imagePath}',
+                        //           expenseIsAdded: true,
+                        //           showExpenseDropdown: false,
+                        //         ),
+                        //       );
+                        //     }
+                        //   } else {
+                        //     // Remove from expenseList
+                        //     // widget.budget.removeExpense(expenseCategory.title);
+                        //   }
+                        // });
+                      },
+                    );
+                  }).toList(),
             ),
             const SizedBox(height: 10),
             // TextField(controller: _custom,),
             TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _showCustomExpenseDialog(context);
-                },
-                child: const Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('Add Custom Expense Category',
-                        style: TextStyle(color: AppColors.primaryColor)),
-                    SizedBox(width: 8),
-                    Icon(Icons.add, color: AppColors.primaryColor),
-                  ],
-                )),
+              onPressed: () {
+                Navigator.pop(context);
+                _showCustomExpenseDialog(context);
+              },
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Add Custom Expense Category',
+                    style: TextStyle(color: AppColors.primaryColor),
+                  ),
+                  SizedBox(width: 8),
+                  Icon(Icons.add, color: AppColors.primaryColor),
+                ],
+              ),
+            ),
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -183,7 +199,9 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF930BFF),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 13, vertical: 12),
+                      horizontal: 13,
+                      vertical: 12,
+                    ),
                     textStyle: const TextStyle(fontSize: 16),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(5),
@@ -217,10 +235,10 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
             imagePath,
             width: 40,
             height: 40,
-            errorBuilder: (context, error, stackTrace) =>
-                const Icon(Icons.broken_image),
+            errorBuilder:
+                (context, error, stackTrace) => const Icon(Icons.broken_image),
           ),
-          const SizedBox(width: 20),
+          WidgetsSpacer.horizontalSpacer20,
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -230,17 +248,11 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 5),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: Colors.grey),
-                ),
+                Text(subtitle, style: const TextStyle(color: Colors.grey)),
               ],
             ),
           ),
-          Checkbox(
-            value: isSelected,
-            onChanged: onChanged,
-          ),
+          Checkbox(value: isSelected, onChanged: onChanged),
         ],
       ),
     );
@@ -259,7 +271,8 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
               backgroundColor: Colors.white,
               clipBehavior: Clip.antiAlias,
               shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(Radius.circular(8))),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
+              ),
               title: const Center(
                 child: Text(
                   'Custom Expense Category',
@@ -320,10 +333,13 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.primaryColor,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8)),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                   ),
-                  child:
-                      const Text("Add", style: TextStyle(color: Colors.white)),
+                  child: const Text(
+                    "Add",
+                    style: TextStyle(color: Colors.white),
+                  ),
                 ),
               ],
             );

@@ -73,11 +73,16 @@ class _CountrySelectorState extends State<CountrySelector> {
       if (query.isEmpty) {
         _filteredCountries = _countries;
       } else {
-        _filteredCountries = _countries
-            .where((country) =>
-                country.name.toLowerCase().contains(query.toLowerCase()) ||
-                country.code.toLowerCase().contains(query.toLowerCase()))
-            .toList();
+        _filteredCountries =
+            _countries
+                .where(
+                  (country) =>
+                      country.name.toLowerCase().contains(
+                        query.toLowerCase(),
+                      ) ||
+                      country.code.toLowerCase().contains(query.toLowerCase()),
+                )
+                .toList();
       }
     });
   }
@@ -95,19 +100,20 @@ class _CountrySelectorState extends State<CountrySelector> {
             hintText: 'Type to search...',
             prefixIcon: const Icon(Icons.search),
             border: const OutlineInputBorder(),
-            suffixIcon: _searchController.text.isNotEmpty
-                ? IconButton(
-                    icon: const Icon(Icons.clear),
-                    onPressed: () {
-                      _searchController.clear();
-                      _filterCountries('');
-                    },
-                  )
-                : null,
+            suffixIcon:
+                _searchController.text.isNotEmpty
+                    ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        _searchController.clear();
+                        _filterCountries('');
+                      },
+                    )
+                    : null,
           ),
           onChanged: _filterCountries,
         ),
-        const SizedBox(height: 16),
+        WidgetsSpacer.verticalSpacer16,
 
         // Countries list
         if (_isLoading)

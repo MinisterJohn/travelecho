@@ -2,24 +2,24 @@ import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 
-import '../../memories_exports.dart';
+import '../../../memories_exports.dart';
 
 class UserHeader extends StatelessWidget {
   final String username;
   final String? location;
   final DateTime createdAt;
-  final VoidCallback onView;
-  final VoidCallback onEdit;
-  final VoidCallback onDelete;
+  final VoidCallback? onView;
+  final VoidCallback? onEdit;
+  final VoidCallback? onDelete;
 
   const UserHeader({
     super.key,
     required this.username,
     required this.createdAt,
     this.location,
-    required this.onView,
-    required this.onEdit,
-    required this.onDelete,
+    this.onView,
+    this.onEdit,
+    this.onDelete,
   });
 
   @override
@@ -77,7 +77,7 @@ class UserHeader extends StatelessWidget {
           icon: Container(
             decoration: BoxDecoration(
               border: Border.all(color: AppColors.defaultColor400),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(50),
             ),
             child: const Icon(
               Icons.more_horiz_outlined,
@@ -109,25 +109,29 @@ class UserHeader extends StatelessWidget {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          OptionButton(
-                            context: context,
-                            text: 'View Memory',
-                            icon: LineIcons.eye,
-                            onTap: onView,
-                          ),
-                          const Divider(color: AppColors.defaultColor100),
-                          OptionButton(
-                            context: context,
-                            text: 'Edit Memory',
-                            icon: LineIcons.editAlt,
-                            onTap: onEdit,
-                          ),
+                          if (onView != null) ...[
+                            OptionButton(
+                              context: context,
+                              text: 'View Memory',
+                              icon: LineIcons.eye,
+                              onTap: onView!,
+                            ),
+                            const Divider(color: AppColors.defaultColor100),
+                          ],
+                          if (onEdit != null) ...[
+                            OptionButton(
+                              context: context,
+                              text: 'Edit Memory',
+                              icon: LineIcons.editAlt,
+                              onTap: onEdit!,
+                            ),
+                          ],
                           const Divider(color: AppColors.defaultColor100),
                           OptionButton(
                             context: context,
                             text: 'Delete Memory',
                             icon: LineIcons.alternateTrash,
-                            onTap: onDelete,
+                            onTap: onDelete!,
                             isDelete: true,
                           ),
                         ],

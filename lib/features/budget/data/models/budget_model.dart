@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import "../../budget_exports.dart";
 
 class BudgetModel extends Equatable {
   final String id; // Unique ID for this budget record
@@ -11,6 +12,7 @@ class BudgetModel extends Equatable {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final String? notes;
+  final List<ExpenseModel>? expenses;
 
   const BudgetModel({
     required this.id,
@@ -23,6 +25,7 @@ class BudgetModel extends Equatable {
     required this.createdAt,
     this.updatedAt,
     this.notes,
+    this.expenses,
   });
 
   double get remaining => plannedAmount - spentAmount;
@@ -39,6 +42,7 @@ class BudgetModel extends Equatable {
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt?.toIso8601String(),
       'notes': notes,
+      'expenses': expenses,
     };
   }
 
@@ -46,7 +50,7 @@ class BudgetModel extends Equatable {
     return BudgetModel(
       id: map['_id'] ?? "",
       userId: map['user'] ?? "",
-      tripId: map['trip_id'] ?? "",
+      tripId: map['trip'] ?? "",
       name: map['name'] ?? "",
       plannedAmount:
           map["plannedAmount"] != null
@@ -66,6 +70,14 @@ class BudgetModel extends Equatable {
               ? DateTime.parse(map['updatedAt'])
               : DateTime.now(),
       notes: map['notes'] ?? "",
+      expenses:
+          map.containsKey('expenses') && map['expenses'] is List
+              ? List<ExpenseModel>.from(
+                (map['expenses'] as List).map(
+                  (expense) => ExpenseModel.fromJson(expense),
+                ),
+              )
+              : [],
     );
   }
   @override
@@ -79,10 +91,11 @@ class BudgetModel extends Equatable {
     createdAt,
     updatedAt,
     notes,
+    expenses,
   ];
   @override
   String toString() {
-    return 'BudgetModel(id: $id, userId: $userId, tripId: $tripId, plannedAmount: $plannedAmount, spentAmount: $spentAmount, currency: $currency, createdAt: $createdAt, updatedAt: $updatedAt, notes: $notes)';
+    return 'BudgetModel(id: $id, userId: $userId, tripId: $tripId, plannedAmount: $plannedAmount, spentAmount: $spentAmount, currency: $currency, createdAt: $createdAt, updatedAt: $updatedAt, notes: $notes, expenses: $expenses)';
   }
 
   BudgetModel copyWith({
@@ -96,6 +109,7 @@ class BudgetModel extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? notes,
+    List<ExpenseModel>? expenses,
   }) {
     return BudgetModel(
       id: id ?? this.id,
@@ -108,6 +122,7 @@ class BudgetModel extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       notes: notes ?? this.notes,
+      expenses: expenses!.isNotEmpty ? expenses : this.expenses,
     );
   }
 }

@@ -17,32 +17,26 @@ class PriceBreakdownCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _buildSectionCard(
-      'Price Breakdown',
-      Icons.attach_money,
-      [
-        _buildPriceRow('Base Fare', baseFare, Icons.monetization_on),
-        _buildPriceRow('Taxes', totalTaxes, Icons.account_balance),
-        // if (fees.isNotEmpty)
-        //   for (var fee in fees)
-        //     _buildPriceRow(
-        //       fee['type'] ?? 'Unknown Fee',
-        //       fee['amount'] ?? '0',
-        //       Icons.receipt,
-        //     ),
-        const Divider(height: 24),
-        _buildPriceRow('Total', total, Icons.payments, isTotal: true),
-      ],
-    );
+    return _buildSectionCard('Price Breakdown', Icons.attach_money, [
+      _buildPriceRow('Base Fare', baseFare, Icons.monetization_on),
+      _buildPriceRow('Taxes', totalTaxes, Icons.account_balance),
+      // if (fees.isNotEmpty)
+      //   for (var fee in fees)
+      //     _buildPriceRow(
+      //       fee['type'] ?? 'Unknown Fee',
+      //       fee['amount'] ?? '0',
+      //       Icons.receipt,
+      //     ),
+      const Divider(height: 24),
+      _buildPriceRow('Total', total, Icons.payments, isTotal: true),
+    ]);
   }
 
   Widget _buildSectionCard(String title, IconData icon, List<Widget> children) {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -51,7 +45,7 @@ class PriceBreakdownCard extends StatelessWidget {
             Row(
               children: [
                 Icon(icon, color: AppColors.primaryColor),
-                const SizedBox(width: 8),
+                WidgetsSpacer.horizontalSpacer8,
                 Text(
                   title,
                   style: const TextStyle(
@@ -61,7 +55,7 @@ class PriceBreakdownCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            WidgetsSpacer.verticalSpacer16,
             ...children,
           ],
         ),
@@ -69,15 +63,22 @@ class PriceBreakdownCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceRow(String label, String value, IconData icon,
-      {bool isTotal = false}) {
+  Widget _buildPriceRow(
+    String label,
+    String value,
+    IconData icon, {
+    bool isTotal = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          Icon(icon,
-              size: 18, color: isTotal ? AppColors.primaryColor : Colors.grey),
-          const SizedBox(width: 8),
+          Icon(
+            icon,
+            size: 18,
+            color: isTotal ? AppColors.primaryColor : Colors.grey,
+          ),
+          WidgetsSpacer.horizontalSpacer8,
           Text(
             label,
             style: TextStyle(

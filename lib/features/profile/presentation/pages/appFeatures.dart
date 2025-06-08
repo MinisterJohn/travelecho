@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
+import "../../profile_exports.dart";
 
 class FeaturesPage extends StatelessWidget {
   const FeaturesPage({super.key});
@@ -12,7 +13,7 @@ class FeaturesPage extends StatelessWidget {
     "Language and Culture Guide: Basic phrases and cultural info for popular destinations.",
     "Community Building: Meeting travel buddies with code verifications.",
     "Milestones recognition: With limited badges, rewards.",
-    "Flight and hotel reservations: With integrated booking system, limited recommendations."
+    "Flight and hotel reservations: With integrated booking system, limited recommendations.",
   ];
 
   // List of Premium tier features
@@ -26,15 +27,17 @@ class FeaturesPage extends StatelessWidget {
     "Milestones and achievements: With unlimited rewards, badges, and exclusive member recognition.",
     "Travel Recommendations: Suggested places to visit, real-time insights, and VIP-only tips.",
     "Language and Culture Guide: Expanded language support, cultural insights, local expert access, and language practice tools.",
-    "Photo and Memory Journal: Unlimited storage, high-resolution media upload, and memory creation."
+    "Photo and Memory Journal: Unlimited storage, high-resolution media upload, and memory creation.",
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("App Features",
-            style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
+        title: const Text(
+          "App Features",
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: Colors.deepPurple,
       ),
@@ -70,11 +73,12 @@ class FeaturesPage extends StatelessWidget {
               const Text(
                 "Free Features",
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-              const SizedBox(height: 8),
+              WidgetsSpacer.verticalSpacer8,
               ...freeFeatures.map(
                 (feature) => Card(
                   margin: const EdgeInsets.symmetric(vertical: 6),
@@ -87,8 +91,10 @@ class FeaturesPage extends StatelessWidget {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.check_circle_outline,
-                            color: Colors.green),
+                        const Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green,
+                        ),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Text(
@@ -106,11 +112,12 @@ class FeaturesPage extends StatelessWidget {
               const Text(
                 "Premium Features",
                 style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87),
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
+                ),
               ),
-              const SizedBox(height: 8),
+              WidgetsSpacer.verticalSpacer8,
               ...premiumFeatures.map(
                 (feature) => Card(
                   margin: const EdgeInsets.symmetric(vertical: 6),

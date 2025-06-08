@@ -33,8 +33,9 @@ class _PostState extends State<Post> {
             children: [
               const CircleAvatar(
                 radius: 30, // Reduced size of the image
-                backgroundImage:
-                    AssetImage('assets/images/community/profile_pic2.jpeg'),
+                backgroundImage: AssetImage(
+                  'assets/images/community/profile_pic2.jpeg',
+                ),
               ),
               const SizedBox(width: 10),
               const Column(
@@ -44,19 +45,10 @@ class _PostState extends State<Post> {
                     'Megan Kelly',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
-                  SizedBox(
-                    height: 3,
-                  ),
+                  SizedBox(height: 3),
                   // WidgetsSpacer.verticalSpacer8,
-                  Text(
-                    'Travelled 5 countries',
-                    style: TextStyle(
-                      fontSize: 10,
-                    ),
-                  ),
-                  SizedBox(
-                    height: 3,
-                  ),
+                  Text('Travelled 5 countries', style: TextStyle(fontSize: 10)),
+                  SizedBox(height: 3),
 
                   // WidgetsSpacer.verticalSpacer8,
                   Text(
@@ -75,18 +67,20 @@ class _PostState extends State<Post> {
                 child: Text(
                   _userIsFollowing ? 'Following' : 'Follow',
                   style: TextStyle(
-                      fontSize: FontSize.size16,
-                      color: _userIsFollowing
-                          ? AppColors.primaryColor300
-                          : AppColors.primaryColor,
-                      fontWeight: FontWeight.bold),
+                    fontSize: FontSize.size16,
+                    color:
+                        _userIsFollowing
+                            ? AppColors.primaryColor300
+                            : AppColors.primaryColor,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               // WidgetsSpacer.verticalSpacer16,
               // Icon(Icons.add, color: Colors.purple, size: 20),
             ],
           ),
-          const SizedBox(height: 20),
+          WidgetsSpacer.verticalSpacer20,
           const Text(
             'Two of my favorites, this is going to....',
             style: TextStyle(fontSize: 16),
@@ -95,17 +89,23 @@ class _PostState extends State<Post> {
           Row(
             children: [
               Expanded(
-                child: Image.asset('assets/images/community/posted_img1.jpeg',
-                    height: 150, fit: BoxFit.cover),
+                child: Image.asset(
+                  'assets/images/community/posted_img1.jpeg',
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Image.asset('assets/images/community/posted_img2.jpeg',
-                    height: 150, fit: BoxFit.cover),
+                child: Image.asset(
+                  'assets/images/community/posted_img2.jpeg',
+                  height: 150,
+                  fit: BoxFit.cover,
+                ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          WidgetsSpacer.verticalSpacer20,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -117,10 +117,13 @@ class _PostState extends State<Post> {
                 },
                 child: Column(
                   children: [
-                    Icon(_isLiked ? Icons.favorite : LineIcons.heart,
-                        color: _isLiked
-                            ? AppColors.primaryColor
-                            : AppColors.defaultColor400),
+                    Icon(
+                      _isLiked ? Icons.favorite : LineIcons.heart,
+                      color:
+                          _isLiked
+                              ? AppColors.primaryColor
+                              : AppColors.defaultColor400,
+                    ),
                     const Text('Like'),
                   ],
                 ),
@@ -134,8 +137,10 @@ class _PostState extends State<Post> {
                         _wantsToShare = false;
                       });
                     },
-                    child: const Icon(LineIcons.comment,
-                        color: AppColors.defaultColor400),
+                    child: const Icon(
+                      LineIcons.comment,
+                      color: AppColors.defaultColor400,
+                    ),
                   ),
                   const Text('Comment'),
                 ],
@@ -149,8 +154,10 @@ class _PostState extends State<Post> {
                 },
                 child: const Column(
                   children: [
-                    Icon(LineIcons.shareSquare,
-                        color: AppColors.defaultColor400),
+                    Icon(
+                      LineIcons.shareSquare,
+                      color: AppColors.defaultColor400,
+                    ),
                     Text('Share'),
                   ],
                 ),
@@ -173,13 +180,7 @@ class _PostState extends State<Post> {
                       for (var comment in _comments)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Row(
-                            children: [
-                              PostComment(
-                                comment: comment,
-                              )
-                            ],
-                          ),
+                          child: Row(children: [PostComment(comment: comment)]),
                         ),
                     ],
                   ),

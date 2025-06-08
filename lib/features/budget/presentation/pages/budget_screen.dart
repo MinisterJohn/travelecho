@@ -43,6 +43,13 @@ class _BudgetScreenState extends State<BudgetScreen> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("Fetching budgets again");
+    context.read<BudgetBloc>().add(GetAllBudgetsEvent());
+  }
+
+  @override
   void dispose() {
     _budgetNameController.dispose();
     super.dispose();
@@ -55,150 +62,99 @@ class _BudgetScreenState extends State<BudgetScreen> {
       child: BlocBuilder<BudgetBloc, BudgetState>(
         builder: (context, state) {
           if (state is BudgetLoading) {
-            return Center(child: CircularProgressIndicator());
-          } else if (state is BudgetLoaded) {
-            return Container(
-              child:
-                  state.budgets.isNotEmpty
-                      ? BlocProvider.value(
-                        value: sl<BudgetBloc>(),
-                        child: ShowBudgets(budgetsData: state.budgets),
-                      )
-                      : ShowEmptyBudget(
-                        onAddBudget: () => _showNewBudgetDialog(context),
+            return SizedBox(
+              height: 300,
+              child: ListView.builder(
+                itemCount: 3, // Number of placeholders to show
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2.0),
+                    child: SizedBox(
+                      height: 80,
+
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 60,
+                            height: 60,
+                            margin: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                          ),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 10,
+                                  width: 150,
+                                  color: Colors.grey[400],
+                                ),
+                                const SizedBox(height: 8),
+                                Container(
+                                  height: 10,
+                                  width: 100,
+                                  color: Colors.grey[400],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                  );
+                },
+              ),
+            );
+          } else if (state is BudgetsLoaded) {
+            return MultiBlocProvider(
+              providers: [
+                BlocProvider.value(value: sl<BudgetBloc>()),
+                BlocProvider.value(value: sl<CurrencyBloc>()),
+              ],
+              child: Container(
+                child:
+                    state.budgets.isNotEmpty
+                        ? ShowBudgets(budgetsData: state.budgets)
+                        : ShowEmptyBudget(
+                          onAddBudget:
+                              () => AppNavigator.push(
+                                context,
+                                MultiBlocProvider(
+                                  providers: [
+                                    BlocProvider.value(
+                                      value: sl<CurrencyBloc>(),
+                                    ),
+                                    BlocProvider.value(value: sl<BudgetBloc>()),
+                                  ],
+                                  child: BlocBuilder<
+                                    CurrencyBloc,
+                                    CurrencyState
+                                  >(
+                                    builder: (context, state) {
+                                      return NewBudgetPage(
+                                        mergedCurrencyList:
+                                            state is MergedCurrencyListLoaded
+                                                ? state.currencies
+                                                : [],
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ),
+                        ),
+              ),
             );
           } else if (state is BudgetError) {
+            // DisplayMessage.errorMessage('Error: ${state.message}', context);
             return Center(child: Text('Error: ${state.message}'));
           }
-          return ShowEmptyBudget(
-            onAddBudget: () => _showNewBudgetDialog(context),
-          );
+          return const SizedBox.shrink();
         },
       ),
-    );
-  }
-
-  void _createBudget() {
-    // Budget newBudget = Budget(
-    //   name: _budget.name,
-    //   amount: 0.0,
-    //   isForMultipleDestinations: _budget.tripIsToMultipleDestinations,
-    // );
-    // _selectedBudget = newBudget;
-    // Provider.of<BudgetsData>(context, listen: false).addNewBudget(newBudget);
-  }
-
-  void _showNewBudgetDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        bool dialogIsChecked = _budget.tripIsToMultipleDestinations;
-
-        return StatefulBuilder(
-          builder: (BuildContext context, StateSetter setDialogState) {
-            return AlertDialog(
-              surfaceTintColor: Colors.transparent,
-              backgroundColor: Colors.white,
-              clipBehavior: Clip.antiAlias,
-              shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(8)),
-              ),
-              title: const Center(
-                child: Text(
-                  'New Budget',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  TextField(
-                    controller: _budgetNameController,
-                    decoration: const InputDecoration(
-                      labelText: 'Budget Name',
-                      border: OutlineInputBorder(),
-                      helperText: "e.g. Trip to the United States for tourism",
-                      helperStyle: TextStyle(
-                        fontSize: 12,
-                        fontStyle: FontStyle.italic,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    keyboardType: TextInputType.text,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Checkbox(
-                        value: dialogIsChecked,
-                        onChanged: (bool? value) {
-                          setDialogState(() {
-                            dialogIsChecked = value ?? false;
-                          });
-                        },
-                        activeColor: AppColors.primaryColor,
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          setDialogState(() {
-                            dialogIsChecked = !dialogIsChecked;
-                          });
-                        },
-                        child: const Text(
-                          'Budget for multiple destinations \nin a trip',
-                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                ],
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text('Close'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    _createBudget();
-                    Navigator.pop(context);
-                    context.read<BudgetBloc>().add(
-                      CreateBudgetEvent(
-                        BudgetParams(
-                          name: _budget.name,
-                          plannedAmount: 0.0,
-                          // createdAt: DateTime.now(),
-                        ),
-                      ),
-                    );
-                    _budgetNameController.clear();
-
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const SetBudgetScreen(),
-                        // settings: RouteSettings(arguments: _selectedBudget),
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    "Create Budget",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-              ],
-            );
-          },
-        );
-      },
     );
   }
 }

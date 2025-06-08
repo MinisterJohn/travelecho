@@ -64,53 +64,69 @@ class _TripDurationState extends State<TripDuration> {
           ),
         ),
       ),
-      bottomNavigationBar: DestinationBottomBar(onClear: () {
-        // context.read<AirportBloc>().add(ClearAirportSearch());
-      }, onNext: () {
-        AppNavigator.push(
+      bottomNavigationBar: DestinationBottomBar(
+        onClear: () {
+          // context.read<AirportBloc>().add(ClearAirportSearch());
+        },
+        onNext: () {
+          AppNavigator.push(
             context,
             BlocProvider.value(
-                value: sl<FlightBookingBloc>(), child: const FlightBooking()));
-      }),
+              value: sl<FlightBookingBloc>(),
+              child: const FlightBooking(),
+            ),
+          );
+        },
+      ),
     );
   }
 }
 
 Widget _progressDisplay() {
   return BlocBuilder<FlightBookingBloc, FlightBookingState>(
-      builder: (context, state) {
-    if (state is FlightBookingSuccess) {
-      final originDestination = state.flightBooking.originDestinations.first;
-      return SingleChildScrollView(
+    builder: (context, state) {
+      if (state is FlightBookingSuccess) {
+        final originDestination = state.flightBooking.originDestinations.first;
+        return SingleChildScrollView(
           scrollDirection: Axis.horizontal,
-          child: Row(children: [
-            TripProgressDisplay(
+          child: Row(
+            children: [
+              TripProgressDisplay(
                 progressIcon: Icons.flight_takeoff_outlined,
                 progressKey: "Origin Airport",
                 progressValue: originDestination.originLocationCode,
                 onPressed: () {
                   AppNavigator.push(
-                      context,
-                      BlocProvider.value(
-                          value: sl<FlightBookingBloc>(),
-                          child: const TripScreen()));
-                }),
-            WidgetsSpacer.horizontalSpacer8,
-            TripProgressDisplay(
+                    context,
+                    BlocProvider.value(
+                      value: sl<FlightBookingBloc>(),
+                      child: const TripScreen(),
+                    ),
+                  );
+                },
+              ),
+              WidgetsSpacer.horizontalSpacer8,
+              TripProgressDisplay(
                 progressIcon: Icons.flight_land_outlined,
                 progressKey: "Destination Airport",
                 progressValue: originDestination.destinationLocationCode,
                 onPressed: () {
                   AppNavigator.push(
-                      context,
-                      BlocProvider.value(
-                          value: sl<FlightBookingBloc>(),
-                          child: const SetDestination()));
-                }),
-          ]));
-    }
-    return const SizedBox.shrink();
-  });
+                    context,
+                    BlocProvider.value(
+                      value: sl<FlightBookingBloc>(),
+                      child: const SetDestination(),
+                    ),
+                  );
+                },
+              ),
+            ],
+          ),
+        );
+      }
+      return const SizedBox.shrink();
+    },
+  );
 }
 
 class TripDaysSelection extends StatefulWidget {
@@ -173,114 +189,133 @@ class _TripDaysSelectionState extends State<TripDaysSelection> {
           ),
         );
 
-        flightBookingBloc.add(UpdateFlightBooking(
-          updateKey: FlightBookingUpdateKey.originDestination,
-          updateValue: updatedOriginDestination,
-        ));
+        flightBookingBloc.add(
+          UpdateFlightBooking(
+            updateKey: FlightBookingUpdateKey.originDestination,
+            updateValue: updatedOriginDestination,
+          ),
+        );
       }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text(
-        "When is your trip?",
-        style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-      ),
-      const SizedBox(height: 14),
-      Row(
-        children: [
-          Expanded(
-            child: TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                backgroundColor: const Color(0xff930BFF),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-              child: const Text("Date", style: TextStyle(color: Colors.white)),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextButton(
-              onPressed: () {},
-              style: TextButton.styleFrom(
-                backgroundColor: Colors.white,
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(
-                      width: 1, color: Color.fromRGBO(200, 200, 200, 1)),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-              ),
-              child: const Text("Month", style: TextStyle(color: Colors.black)),
-            ),
-          ),
-        ],
-      ),
-      SizedBox(
-        width: double.infinity,
-        height: 400,
-        child: RangeDatePicker(
-          centerLeadingDate: true,
-          initialDate: DateTime.now(),
-          minDate: DateTime.now(),
-          maxDate: DateTime(2050, 10, 30),
-          enabledCellsTextStyle: const TextStyle(fontSize: 14),
-          currentDateTextStyle:
-              const TextStyle(fontSize: 14, color: AppColors.primaryColor),
-          singleSelectedCellTextStyle:
-              const TextStyle(fontSize: 14, color: Colors.white),
-          selectedCellsTextStyle: const TextStyle(fontSize: 14),
-          disabledCellsTextStyle: const TextStyle(
-              fontSize: 14, color: Color.fromRGBO(200, 200, 200, 1)),
-          currentDateDecoration: BoxDecoration(
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(6),
-            border: Border.all(width: 1, color: AppColors.primaryColor),
-          ),
-          singleSelectedCellDecoration: BoxDecoration(
-            color: AppColors.primaryColor,
-            shape: BoxShape.rectangle,
-            borderRadius: BorderRadius.circular(6),
-          ),
-          onRangeSelected: (value) {
-            setState(() {
-              selectedRange = value;
-            });
-            _onDateRangeSelected(value);
-          },
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "When is your trip?",
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-      ),
-      Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          const Text("How many days will you like to stay?"),
-          Row(
-            children: [
-              IconButton(
-                onPressed: decrementRange,
-                icon: const Icon(LineIcons.minusSquare),
+        const SizedBox(height: 14),
+        Row(
+          children: [
+            Expanded(
+              child: TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color(0xff930BFF),
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                child: const Text(
+                  "Date",
+                  style: TextStyle(color: Colors.white),
+                ),
               ),
-              const SizedBox(width: 4),
-              Text(
-                "${getNumberOfDays()}",
-                style: const TextStyle(fontSize: 16),
+            ),
+            WidgetsSpacer.horizontalSpacer8,
+            Expanded(
+              child: TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  minimumSize: const Size(double.infinity, 50),
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(
+                      width: 1,
+                      color: Color.fromRGBO(200, 200, 200, 1),
+                    ),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                ),
+                child: const Text(
+                  "Month",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
-              const SizedBox(width: 4),
-              IconButton(
-                onPressed: incrementRange,
-                icon: const Icon(LineIcons.plusSquare),
-              ),
-            ],
-          )
-        ],
-      ),
-    ]);
+            ),
+          ],
+        ),
+        SizedBox(
+          width: double.infinity,
+          height: 400,
+          child: RangeDatePicker(
+            centerLeadingDate: true,
+            initialDate: DateTime.now(),
+            minDate: DateTime.now(),
+            maxDate: DateTime(2050, 10, 30),
+            enabledCellsTextStyle: const TextStyle(fontSize: 14),
+            currentDateTextStyle: const TextStyle(
+              fontSize: 14,
+              color: AppColors.primaryColor,
+            ),
+            singleSelectedCellTextStyle: const TextStyle(
+              fontSize: 14,
+              color: Colors.white,
+            ),
+            selectedCellsTextStyle: const TextStyle(fontSize: 14),
+            disabledCellsTextStyle: const TextStyle(
+              fontSize: 14,
+              color: Color.fromRGBO(200, 200, 200, 1),
+            ),
+            currentDateDecoration: BoxDecoration(
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(width: 1, color: AppColors.primaryColor),
+            ),
+            singleSelectedCellDecoration: BoxDecoration(
+              color: AppColors.primaryColor,
+              shape: BoxShape.rectangle,
+              borderRadius: BorderRadius.circular(6),
+            ),
+            onRangeSelected: (value) {
+              setState(() {
+                selectedRange = value;
+              });
+              _onDateRangeSelected(value);
+            },
+          ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Text("How many days will you like to stay?"),
+            Row(
+              children: [
+                IconButton(
+                  onPressed: decrementRange,
+                  icon: const Icon(LineIcons.minusSquare),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  "${getNumberOfDays()}",
+                  style: const TextStyle(fontSize: 16),
+                ),
+                const SizedBox(width: 4),
+                IconButton(
+                  onPressed: incrementRange,
+                  icon: const Icon(LineIcons.plusSquare),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ],
+    );
   }
 }
 
@@ -415,15 +450,17 @@ class CircularProgressPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = color
-      ..strokeWidth = 12
-      ..style = PaintingStyle.stroke;
+    final Paint paint =
+        Paint()
+          ..color = color
+          ..strokeWidth = 12
+          ..style = PaintingStyle.stroke;
 
-    final Paint backgroundPaint = Paint()
-      ..color = Colors.grey.shade300
-      ..strokeWidth = 12
-      ..style = PaintingStyle.stroke;
+    final Paint backgroundPaint =
+        Paint()
+          ..color = Colors.grey.shade300
+          ..strokeWidth = 12
+          ..style = PaintingStyle.stroke;
 
     final double radius = size.width / 2;
     final Offset center = Offset(size.width / 2, size.height / 2);

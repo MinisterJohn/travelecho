@@ -30,175 +30,177 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Container(
-              padding: const EdgeInsets.all(8), // Padding inside the circle
-              decoration: const BoxDecoration(
-                color: Color.fromRGBO(248, 239, 255, 1),
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                LineIcons.arrowCircleLeft,
-                color: Colors.black,
-                size: 20, // Adjusted icon size for better fit
-              ),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Container(
+            padding: const EdgeInsets.all(8), // Padding inside the circle
+            decoration: const BoxDecoration(
+              color: Color.fromRGBO(248, 239, 255, 1),
+              shape: BoxShape.circle,
             ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
-          title: Text(
-            _budget.createdAt.toString(),
-            style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Segoe UI',
-                overflow: TextOverflow.ellipsis),
-          ),
-          centerTitle: true,
-          backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  'Set a budget for your trip!',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 10),
-                TextField(
-                  controller: _budgetAmountController,
-                  decoration: const InputDecoration(
-                    hintText: 'Enter your budget amount',
-                    border: OutlineInputBorder(),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                  ),
-                  keyboardType: TextInputType.number,
-                  // onChanged: (value) {
-                  //   _budget.plannedAmount = double.parse(value);
-                  // },
-                ),
-                const SizedBox(height: 5),
-                const Text(
-                  'Plan your expenses for the trip.',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-                const SizedBox(height: 40),
-                const Text(
-                  'Expense Categories',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 20),
-
-                // TextButton(
-                //   onPressed: () {
-                //     _showModal(context);
-
-                //   },
-                //   child: const Row(
-                //     mainAxisSize: MainAxisSize.min,
-                //     children: [
-                //       Column(
-                //         mainAxisAlignment: MainAxisAlignment.end,
-                //         children: [
-                //           Text(
-                //             'Add expense category',
-                //             style: TextStyle(
-                //               color: Colors.black,
-                //               fontSize: 16,
-                //             ),
-                //           ),
-                //         ],
-                //       ),
-                //       SizedBox(width: 8),
-                //       Icon(Icons.add, color: Colors.black),
-                //     ],
-                //   ),
-                // ),
-                // _budget.expenseList.isNotEmpty
-                //     ? Column(
-                //         children: _budget.getExpenses().map((expense) {
-                //           return _buildCategoryDropdown(
-                //             expense: expense,
-                //             onTap: () {
-                //               setState(() {
-                //                 expense.showExpenseDropdown =
-                //                     !expense.showExpenseDropdown;
-                //               });
-                //             },
-                //           );
-                //         }).toList(),
-                //       )
-                //     : _showEmptyExpense(),
-
-                // SizedBox(height: 25),
-
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        // Implement reset functionality
-                      },
-                      child: const Text(
-                        'Reset',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          fontSize: 16,
-                        ),
-                      ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        // Navigate to the SaveBudgetScreen when the Save button is clicked
-                        print(_budget.toString());
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SaveBudgetScreen()),
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF930BFF),
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 13, vertical: 12),
-                        textStyle: const TextStyle(fontSize: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                      ),
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            child: const Icon(
+              LineIcons.arrowCircleLeft,
+              color: Colors.black,
+              size: 20, // Adjusted icon size for better fit
             ),
           ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        // floatingActionButton: _budget.expenseList.isNotEmpty
-        //     ? FloatingActionButton(
-        //         backgroundColor: AppColors.primaryColor,
-        //         shape: const RoundedRectangleBorder(
-        //             borderRadius: BorderRadius.all(Radius.circular(50))),
-        //         onPressed: () {
-        //           _showModal(context);
-        //         },
-        //         child: const Icon(Icons.add, color: Colors.white),
-        //       )
-        //     : null
-        );
+        title: Text(
+          _budget.createdAt.toString(),
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Segoe UI',
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+        centerTitle: true,
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+      ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Set a budget for your trip!',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 10),
+              TextField(
+                controller: _budgetAmountController,
+                decoration: const InputDecoration(
+                  hintText: 'Enter your budget amount',
+                  border: OutlineInputBorder(),
+                  contentPadding: EdgeInsets.symmetric(
+                    vertical: 10,
+                    horizontal: 10,
+                  ),
+                ),
+                keyboardType: TextInputType.number,
+                // onChanged: (value) {
+                //   _budget.plannedAmount = double.parse(value);
+                // },
+              ),
+              const SizedBox(height: 5),
+              const Text(
+                'Plan your expenses for the trip.',
+                style: TextStyle(fontSize: 12, color: Colors.grey),
+              ),
+              const SizedBox(height: 40),
+              const Text(
+                'Expense Categories',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              ),
+              WidgetsSpacer.verticalSpacer20,
+
+              // TextButton(
+              //   onPressed: () {
+              //     _showModal(context);
+
+              //   },
+              //   child: const Row(
+              //     mainAxisSize: MainAxisSize.min,
+              //     children: [
+              //       Column(
+              //         mainAxisAlignment: MainAxisAlignment.end,
+              //         children: [
+              //           Text(
+              //             'Add expense category',
+              //             style: TextStyle(
+              //               color: Colors.black,
+              //               fontSize: 16,
+              //             ),
+              //           ),
+              //         ],
+              //       ),
+              //       SizedBox(width: 8),
+              //       Icon(Icons.add, color: Colors.black),
+              //     ],
+              //   ),
+              // ),
+              // _budget.expenseList.isNotEmpty
+              //     ? Column(
+              //         children: _budget.getExpenses().map((expense) {
+              //           return _buildCategoryDropdown(
+              //             expense: expense,
+              //             onTap: () {
+              //               setState(() {
+              //                 expense.showExpenseDropdown =
+              //                     !expense.showExpenseDropdown;
+              //               });
+              //             },
+              //           );
+              //         }).toList(),
+              //       )
+              //     : _showEmptyExpense(),
+
+              // SizedBox(height: 25),
+              const SizedBox(height: 30),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // Implement reset functionality
+                    },
+                    child: const Text(
+                      'Reset',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      // Navigate to the SaveBudgetScreen when the Save button is clicked
+                      print(_budget.toString());
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SaveBudgetScreen(),
+                        ),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF930BFF),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 13,
+                        vertical: 12,
+                      ),
+                      textStyle: const TextStyle(fontSize: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                    ),
+                    child: const Text(
+                      'Save',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+      // floatingActionButton: _budget.expenseList.isNotEmpty
+      //     ? FloatingActionButton(
+      //         backgroundColor: AppColors.primaryColor,
+      //         shape: const RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.all(Radius.circular(50))),
+      //         onPressed: () {
+      //           _showModal(context);
+      //         },
+      //         child: const Icon(Icons.add, color: Colors.white),
+      //       )
+      //     : null
+    );
   }
 
   void _showModal(BuildContext context) {
@@ -215,9 +217,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
           builder: (context, scrollController) {
             return SingleChildScrollView(
               controller: scrollController,
-              child: AddCategoriesScreen(
-                budget: _budget,
-              ),
+              child: AddCategoriesScreen(budget: _budget),
             );
           },
         );
@@ -244,11 +244,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Image.asset(
-                    expense.imagePath,
-                    width: 24,
-                    height: 24,
-                  ),
+                  Image.asset(expense.imagePath, width: 24, height: 24),
                   const SizedBox(width: 10),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -268,19 +264,17 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
               ),
             ),
             IconButton(
-                onPressed: () {
-                  // setState(() {
-                  //   _budget.removeExpense(expense.title);
-                  // });
-                },
-                icon: const Icon(
-                  Icons.delete_outlined,
-                  color: Colors.red,
-                ))
+              onPressed: () {
+                // setState(() {
+                //   _budget.removeExpense(expense.title);
+                // });
+              },
+              icon: const Icon(Icons.delete_outlined, color: Colors.red),
+            ),
           ],
         ),
-        // SizedBox(height: 5),
 
+        // SizedBox(height: 5),
         if (expense.showExpenseDropdown) ...[
           const SizedBox(height: 5),
           const Text(
@@ -302,16 +296,15 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
           Text(
             'Plan your expenses for ${expense.title}',
             style: const TextStyle(
-                fontSize: 10, color: Color.fromRGBO(0, 0, 0, .4)),
+              fontSize: 10,
+              color: Color.fromRGBO(0, 0, 0, .4),
+            ),
           ),
           const SizedBox(height: 5),
         ],
         const SizedBox(height: 5),
 
-        const Divider(
-          height: 3,
-          color: Color.fromRGBO(0, 0, 0, .2),
-        ),
+        const Divider(height: 3, color: Color.fromRGBO(0, 0, 0, .2)),
         const SizedBox(height: 5),
       ],
     );
@@ -321,21 +314,19 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Center(
-          child: Image.asset(
-            'assets/NoResultFound.png',
-            height: 100,
-          ),
-        ),
-        const SizedBox(height: 20),
+        Center(child: Image.asset('assets/NoResultFound.png', height: 100)),
+        WidgetsSpacer.verticalSpacer20,
         const Center(
           child: Text(
             'Nothing to see here!',
             style: TextStyle(
-                fontSize: 16, color: Colors.black, fontWeight: FontWeight.bold),
+              fontSize: 16,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-        const SizedBox(height: 20),
+        WidgetsSpacer.verticalSpacer20,
         const Center(
           child: Text(
             'You can add your expense categories for your next trip\nand manage your finances.',
@@ -343,7 +334,7 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
             style: TextStyle(fontSize: 12, color: Colors.grey),
           ),
         ),
-        const SizedBox(height: 20),
+        WidgetsSpacer.verticalSpacer20,
         Center(
           child: ElevatedButton(
             onPressed: () {
@@ -355,13 +346,16 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
               padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
               textStyle: const TextStyle(fontSize: 16),
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
+                borderRadius: BorderRadius.circular(10),
+              ),
             ),
             child: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Add Expense Category',
-                    style: TextStyle(color: Colors.white)),
+                Text(
+                  'Add Expense Category',
+                  style: TextStyle(color: Colors.white),
+                ),
                 SizedBox(width: 8),
                 Icon(Icons.add, color: Colors.white),
               ],

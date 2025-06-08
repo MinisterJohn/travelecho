@@ -21,31 +21,37 @@ class CommunityPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const SizedBox(height: 20),
+          WidgetsSpacer.verticalSpacer20,
           Stack(
             alignment: Alignment.center,
             children: [
               Transform.rotate(
                 angle: -0.2,
-                child: Image.asset('assets/images/memories/rectangle1.png',
-                    width: 100),
+                child: Image.asset(
+                  'assets/images/memories/rectangle1.png',
+                  width: 100,
+                ),
               ),
               Positioned(
                 left: 30,
-                child: Image.asset('assets/images/memories/rectangle2.png',
-                    width: 100),
+                child: Image.asset(
+                  'assets/images/memories/rectangle2.png',
+                  width: 100,
+                ),
               ),
               Positioned(
                 right: 0,
                 child: Transform.rotate(
                   angle: 0.1,
-                  child: Image.asset('assets/images/memories/rectangle3.png',
-                      width: 100),
+                  child: Image.asset(
+                    'assets/images/memories/rectangle3.png',
+                    width: 100,
+                  ),
                 ),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          WidgetsSpacer.verticalSpacer20,
           const Text(
             'Meet Travel Buddies',
             textAlign: TextAlign.center,

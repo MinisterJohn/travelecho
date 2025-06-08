@@ -45,10 +45,8 @@ class _HotelSearchFormState extends State<HotelSearchForm> {
   void _searchHotels() {
     if (_formKey.currentState!.validate()) {
       context.read<HotelBookingBloc>().add(
-            SearchHotels(
-              query: _cityController.text.toUpperCase(),
-            ),
-          );
+        SearchHotels(query: _cityController.text.toUpperCase()),
+      );
     }
   }
 
@@ -72,7 +70,7 @@ class _HotelSearchFormState extends State<HotelSearchForm> {
               return null;
             },
           ),
-          const SizedBox(height: 16),
+          WidgetsSpacer.verticalSpacer16,
           Row(
             children: [
               Expanded(
@@ -99,7 +97,7 @@ class _HotelSearchFormState extends State<HotelSearchForm> {
               ),
             ],
           ),
-          const SizedBox(height: 16),
+          WidgetsSpacer.verticalSpacer16,
           Row(
             children: [
               Expanded(
@@ -109,12 +107,15 @@ class _HotelSearchFormState extends State<HotelSearchForm> {
                     labelText: 'Adults',
                     border: OutlineInputBorder(),
                   ),
-                  items: List.generate(10, (index) => index + 1)
-                      .map((value) => DropdownMenuItem(
-                            value: value,
-                            child: Text('$value'),
-                          ))
-                      .toList(),
+                  items:
+                      List.generate(10, (index) => index + 1)
+                          .map(
+                            (value) => DropdownMenuItem(
+                              value: value,
+                              child: Text('$value'),
+                            ),
+                          )
+                          .toList(),
                   onChanged: (value) {
                     if (value != null) {
                       setState(() => _adults = value);
@@ -122,7 +123,7 @@ class _HotelSearchFormState extends State<HotelSearchForm> {
                   },
                 ),
               ),
-              const SizedBox(width: 16),
+              WidgetsSpacer.horizontalSpacer16,
               Expanded(
                 child: DropdownButtonFormField<int>(
                   value: _rooms,
@@ -130,12 +131,15 @@ class _HotelSearchFormState extends State<HotelSearchForm> {
                     labelText: 'Rooms',
                     border: OutlineInputBorder(),
                   ),
-                  items: List.generate(5, (index) => index + 1)
-                      .map((value) => DropdownMenuItem(
-                            value: value,
-                            child: Text('$value'),
-                          ))
-                      .toList(),
+                  items:
+                      List.generate(5, (index) => index + 1)
+                          .map(
+                            (value) => DropdownMenuItem(
+                              value: value,
+                              child: Text('$value'),
+                            ),
+                          )
+                          .toList(),
                   onChanged: (value) {
                     if (value != null) {
                       setState(() => _rooms = value);

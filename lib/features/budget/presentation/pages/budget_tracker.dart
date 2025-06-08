@@ -12,47 +12,167 @@ class BudgetTracker extends StatefulWidget {
 
 class _BudgetTrackerState extends State<BudgetTracker> {
   String currentBudgetTool = "Budget Overview";
+  List<CurrencyInfo> _mergedCurrencies = [];
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<CurrencyBloc>().add(
+      MergedCurrencyListRequested(context: context),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Travel Budget',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Segoe UI',
-          ),
-        ),
-        centerTitle: true,
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Row with Budget Overview and Expense Tracker images
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  _budgetTools(LineIcons.piggyBank, "Budget Overview"),
-                  const SizedBox(width: 8.0),
-                  _budgetTools(LineIcons.clipboardList, "Expense Tracker"),
-                ],
+      appBar: setAppBar('Travel Budget', context),
+      body: Stack(
+        children: [
+          RefreshIndicator(
+            onRefresh: () async {
+              context.read<BudgetBloc>().add(GetAllBudgetsEvent());
+            },
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Row with Budget Overview and Expense Tracker images
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        _budgetTools(LineIcons.piggyBank, "Budget Overview"),
+                        const SizedBox(width: 8.0),
+                        _budgetTools(
+                          LineIcons.clipboardList,
+                          "Expense Tracker",
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 30),
+                    // currentBudgetTool == "Budget Overview"
+                    MultiBlocProvider(
+                      providers: [
+                        BlocProvider.value(value: sl<BudgetBloc>()),
+                        BlocProvider.value(value: sl<CurrencyBloc>()),
+                      ],
+                      child: BudgetScreen(),
+                    ),
+                    // : Container()
+                  ],
+                ),
               ),
-              const SizedBox(height: 30),
-              // currentBudgetTool == "Budget Overview"
-              BlocProvider.value(
-                value: sl<BudgetBloc>(),
-                child: BudgetScreen(),
-              ),
-              // : Container()
-            ],
+            ),
           ),
-        ),
+          BlocBuilder<BudgetBloc, BudgetState>(
+            builder: (context, budgetState) {
+              if (budgetState is BudgetLoading) {
+                return Positioned(
+                  top: 4,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(
+                              strokeWidth: 2,
+                              valueColor: AlwaysStoppedAnimation<Color>(
+                                Colors.white,
+                              ),
+                            ),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Loading budgets...',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          BlocBuilder<BudgetBloc, BudgetState>(
+            builder: (context, budgetState) {
+              if (budgetState is BudgetError) {
+                return Positioned(
+                  top: 4,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      decoration: BoxDecoration(
+                        color: AppColors.primaryColor,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ],
+                      ),
+                      child: const Row(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: Icon(Icons.refresh, color: Colors.white),
+                          ),
+                          SizedBox(width: 8),
+                          Text(
+                            'Refresh to load budgets',
+                            style: TextStyle(color: Colors.white, fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+          BlocBuilder<CurrencyBloc, CurrencyState>(
+            builder: (context, state) {
+              if (state is MergedCurrencyListLoaded) {
+                _mergedCurrencies = state.currencies;
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
 
       // floatingActionButton: Positioned(

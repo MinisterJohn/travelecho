@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../memories_exports.dart';
+import 'package:readmore/readmore.dart';
+import '../../../memories_exports.dart';
 
 class MemoryCard extends StatelessWidget {
   final MemoryModel memory;
@@ -55,22 +56,26 @@ class MemoryCard extends StatelessWidget {
             width: 280,
             child: Text(
               "Location: ${memory.location}",
-              style: const TextStyle(color: AppColors.defaultColor400),
+              style: const TextStyle(color: AppColors.defaultColor),
               overflow: TextOverflow.ellipsis,
               maxLines: 1,
             ),
           ),
         if (memory.tags.isNotEmpty) ...[
-          // const SizedBox(height: 8),
+          // WidgetsSpacer.verticalSpacer8,
           Wrap(
             spacing: 8,
-            children: memory.tags
-                .map((tag) => Text(
-                      "#$tag",
-                      style: const TextStyle(
-                          color: Color.fromARGB(255, 163, 140, 182)),
-                    ))
-                .toList(),
+            children:
+                memory.tags
+                    .map(
+                      (tag) => Text(
+                        "#$tag",
+                        style: const TextStyle(
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
+                    )
+                    .toList(),
           ),
         ],
         WidgetsSpacer.verticalSpacer32,
@@ -86,25 +91,26 @@ class MemoryCard extends StatelessWidget {
         viewportFraction: 0.8,
         enlargeCenterPage: true,
       ),
-      items: memory.images.map((image) {
-        final imagePath = image['url'];
-        return Builder(
-          builder: (BuildContext context) {
-            return Container(
-              width: MediaQuery.of(context).size.width,
-              margin: const EdgeInsets.symmetric(horizontal: 5.0),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(10),
-                image: DecorationImage(
-                  image: NetworkImage(imagePath),
-                  fit: BoxFit.cover,
-                ),
-              ),
+      items:
+          memory.images.map((image) {
+            final imagePath = image['url'];
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width - 15,
+                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(8),
+                    image: DecorationImage(
+                      image: NetworkImage(imagePath),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                );
+              },
             );
-          },
-        );
-      }).toList(),
+          }).toList(),
     );
   }
 
@@ -132,14 +138,16 @@ class MemoryCard extends StatelessWidget {
       children: [
         Text(
           memory.title,
-          style: TextStyle(
-            fontSize: FontSize.size16,
-            fontWeight: FontWeight.w400,
-          ),
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
         ),
         if (memory.description != '') ...[
-          Text(
+          ReadMoreText(
             memory.description,
+            trimLines: 3,
+            colorClickableText: AppColors.primaryColor,
+            trimMode: TrimMode.Line,
+            trimCollapsedText: 'Read more',
+            trimExpandedText: 'Show less',
             style: TextStyle(fontSize: FontSize.size16),
           ),
         ],

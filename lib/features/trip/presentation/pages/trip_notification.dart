@@ -44,7 +44,7 @@ class TripNotification extends StatelessWidget {
                 color: Color(0xFF930BFF),
               ),
             ),
-            const SizedBox(height: 20),
+            WidgetsSpacer.verticalSpacer20,
             const Text(
               'You have booked your first trip!!',
               style: TextStyle(
@@ -57,25 +57,23 @@ class TripNotification extends StatelessWidget {
             const SizedBox(height: 10),
             const Text(
               'Starting from September 14th',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey,
-              ),
+              style: TextStyle(fontSize: 16, color: Colors.grey),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 30),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            const RootPage())); // Go back to the budget screen
+                  context,
+                  MaterialPageRoute(builder: (context) => const RootPage()),
+                ); // Go back to the budget screen
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF930BFF),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
                 textStyle: const TextStyle(fontSize: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(5),
