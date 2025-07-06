@@ -2,7 +2,10 @@ import 'package:flutter/material.dart' hide CarouselController;
 import 'package:line_icons/line_icons.dart';
 import "../../features/features_exports.dart";
 
-IconButton appBarIconButton(BuildContext context) {
+IconButton appBarIconButton(
+  BuildContext context,
+  VoidCallback? backAction,
+) {
   return IconButton(
     icon: Container(
       padding: const EdgeInsets.all(4), // Padding inside the circle
@@ -18,7 +21,11 @@ IconButton appBarIconButton(BuildContext context) {
     ),
     onPressed: () {
       if (Navigator.canPop(context)) {
-        Navigator.pop(context);
+        if (backAction != null) {
+          backAction;
+        } else {
+          AppNavigator.pop(context);
+        }
       } else {
         // If we can't pop, go to the root page
         AppNavigator.pushAndRemove(context, const RootPage());
@@ -27,18 +34,23 @@ IconButton appBarIconButton(BuildContext context) {
   );
 }
 
-AppBar setAppBar(String titleText, BuildContext context,
-    {List<Widget> actions = const []}) {
+AppBar setAppBar(
+  String titleText,
+  BuildContext context, {
+  List<Widget> actions = const [],
+  VoidCallback? backAction,
+}) {
   return AppBar(
-      leading: appBarIconButton(context),
-      centerTitle: true,
-      title: Text(
-        titleText,
-        style: const TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-          fontFamily: 'Segoe UI',
-        ),
+    leading: appBarIconButton(context, backAction),
+    centerTitle: true,
+    title: Text(
+      titleText,
+      style: const TextStyle(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+        fontFamily: 'Segoe UI',
       ),
-      actions: actions);
+    ),
+    actions: actions,
+  );
 }

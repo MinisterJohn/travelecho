@@ -273,9 +273,13 @@ class _FlightOffersState extends State<FlightOffers> {
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 "Select Flight",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  fontSize: FontSize.size16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
+                ),
               ),
             ),
           ],

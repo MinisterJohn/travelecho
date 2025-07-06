@@ -38,7 +38,11 @@ class MemoryActionButtons extends StatelessWidget {
                         )
                       : Text(
                           isEditing ? 'Update Memory' : 'Create Memory',
-                        ),
+                        style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                )),
                 ),
               ),
             ),
@@ -60,7 +64,11 @@ class MemoryActionButtons extends StatelessWidget {
                         ),
                         SizedBox(width: 4.w),
                         Text(
-                          isEditing ? 'Update Pictures' : 'Add Pictures',
+                          isEditing ? 'Update Pictures' : 'Add Pictures', style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.primaryColor,
+                                )
                         ),
                       ],
                     ),

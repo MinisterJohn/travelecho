@@ -65,20 +65,22 @@ class SaveBudgetScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context); // Go back to the budget screen
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF930BFF),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                textStyle: const TextStyle(fontSize: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
+              style: mergeWithThemeButtonStyle(
+                context,
+                ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 12,
+                  ),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Go back',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  fontSize: FontSize.size16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
+                ),
               ),
             ),
           ],

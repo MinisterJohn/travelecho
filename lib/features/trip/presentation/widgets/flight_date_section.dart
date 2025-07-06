@@ -25,29 +25,28 @@ class FlightDateSection extends StatelessWidget {
                 ),
               );
             },
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 70),
-              backgroundColor: Colors.white,
-              foregroundColor: Colors.black,
-              elevation: 1.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(6),
+            style: mergeWithThemeButtonStyle(
+              context,
+              ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 70),
+                backgroundColor: Colors.white,
+                foregroundColor: Colors.black,
               ),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   "Flight Date",
-                  style: TextStyle(color: Colors.black),
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: FontSize.size16,
+                  ),
                 ),
                 WidgetsSpacer.horizontalSpacer8,
                 Row(
                   children: [
-                    const Icon(
-                      Icons.calendar_today_outlined,
-                      size: 14,
-                    ),
+                    const Icon(Icons.calendar_today_outlined, size: 14),
                     Text(
                       "${originDestination.departureDateTimeRange.date} ${originDestination.departureDateTimeRange.time}",
                       style: const TextStyle(color: Colors.black),

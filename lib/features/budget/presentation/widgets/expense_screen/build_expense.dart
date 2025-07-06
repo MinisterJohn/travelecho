@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:line_icons/line_icons.dart';
 import '../../../budget_exports.dart';
-import '../create_update_expense/expense_categories.dart';
 
 class BuildExpense extends StatefulWidget {
   final ExpenseModel expense;
@@ -74,9 +73,36 @@ class _BuildExpenseState extends State<BuildExpense> {
                 ),
               ),
               const SizedBox(height: 5),
-              Text(
-                "${widget.currency.symbol.isNotEmpty ? widget.currency.symbol : widget.currency.key} ${widget.expense.plannedAmount}",
-                style: const TextStyle(color: Colors.grey),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                spacing: 8.0,
+                children: [
+                  Text(
+                    BudgetUtils.formatAmount(
+                      widget.expense.plannedAmount!,
+                      widget.currency.symbol.isNotEmpty
+                          ? widget.currency.symbol
+                          : widget.currency.key,
+                    ),
+                    style: TextStyle(
+                      color: AppColors.defaultColor400,
+                      decoration:
+                          widget.expense.amount != 0
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none,
+                    ),
+                  ),
+                  if (widget.expense.amount != 0)
+                    Text(
+                      BudgetUtils.formatAmount(
+                        widget.expense.amount,
+                        widget.currency.symbol.isNotEmpty
+                            ? widget.currency.symbol
+                            : widget.currency.key,
+                      ),
+                      style: TextStyle(color: AppColors.defaultColor400),
+                    ),
+                ],
               ),
             ],
           ),
@@ -123,29 +149,73 @@ class _BuildExpenseState extends State<BuildExpense> {
                             context: context,
                             text: 'View ',
                             icon: LineIcons.eye,
-                            onTap: () {},
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (BuildContext context) {
+                                  return ExpenseInfoBottomSheet(
+                                    expense: widget.expense,
+                                    currency: widget.currency,
+                                  );
+                                },
+                              );
+                            },
                           ),
                           const Divider(color: AppColors.defaultColor100),
                           OptionButton(
                             context: context,
-                            text: 'Edit',
+                            text: 'Track Expense',
                             icon: LineIcons.editAlt,
                             onTap: () {
-                              // AppNavigator.push(
-                              //   context,
-                              //   MultiBlocProvider(
-                              //     providers: [
-                              //       BlocProvider.value(value: sl<BudgetBloc>()),
-                              //       BlocProvider.value(
-                              //         value: sl<CurrencyBloc>(),
-                              //       ),
-                              //     ],
-                              //     child: AddExpensePage(
-                              //       budget: widget.expense.budgetId,
-                              //       mergedCurrencyList: mergedCurrencies,
-                              //     ),
-                              //   ),
-                              // );
+                              final budgetBloc = sl<BudgetBloc>();
+                              final currencyBloc = sl<CurrencyBloc>();
+                              final BudgetModel budget;
+                              print(budgetBloc.state);
+                              print(
+                                "Currency Bloc state: ${currencyBloc.state}",
+                              );
+
+                              if (budgetBloc.state is SingleBudgetLoaded) {
+                                budget =
+                                    (budgetBloc.state as SingleBudgetLoaded)
+                                        .budget;
+                                // budgetBloc.saveCurrentState();
+                                if (currencyBloc.state
+                                    is MergedCurrencyListLoaded) {
+                                  AppNavigator.push(
+                                    context,
+                                    MultiBlocProvider(
+                                      providers: [
+                                        BlocProvider.value(value: budgetBloc),
+                                        BlocProvider.value(value: currencyBloc),
+                                      ],
+                                      child: AddExpensePage(
+                                        budget: budget,
+                                        mergedCurrencies:
+                                            (currencyBloc.state
+                                                    as MergedCurrencyListLoaded)
+                                                .currencies,
+                                        expense: budget.expenses!.firstWhere(
+                                          (expense) =>
+                                              expense.id == widget.expense.id,
+                                          orElse: () => widget.expense,
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                } else {
+                                  DisplayMessage.errorMessage(
+                                    'Failed to load currencies',
+                                    context,
+                                  );
+                                }
+                              } else {
+                                DisplayMessage.errorMessage(
+                                  'Budgets not loaded',
+                                  context,
+                                );
+                              }
                             },
                           ),
                           const Divider(color: AppColors.defaultColor100),
@@ -169,65 +239,61 @@ class _BuildExpenseState extends State<BuildExpense> {
                           // const Divider(color: AppColors.defaultColor100),
                           BlocProvider.value(
                             value: sl<BudgetBloc>(),
-                            child: Builder(
-                              builder: (builderContext) {
-                                return OptionButton(
-                                  context:
-                                      ancestorContext, // Use the saved ancestor context
-                                  text: 'Delete',
-                                  icon: LineIcons.alternateTrash,
-                                  onTap: () {
-                                    showDialog(
-                                      context:
-                                          ancestorContext, // Use the saved ancestor context
-                                      builder: (BuildContext dialogContext) {
-                                        return AlertDialog(
-                                          title: Text(
-                                            'Delete ${widget.expense.title}',
-                                          ),
-                                          content: const Text(
-                                            'Are you sure you want to delete this expense?',
-                                          ),
-                                          actions: [
-                                            TextButton(
-                                              onPressed:
-                                                  () => AppNavigator.pop(
-                                                    dialogContext,
-                                                  ),
-                                              child: const Text(
-                                                'Cancel',
-                                                style: TextStyle(
-                                                  color:
-                                                      AppColors.defaultColor400,
-                                                ),
+                            child: OptionButton(
+                              context: ancestorContext,
+                              text: 'Delete',
+                              icon: LineIcons.alternateTrash,
+                              onTap: () {
+                                showDialog(
+                                  context: ancestorContext,
+                                  builder: (BuildContext dialogContext) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        'Delete ${widget.expense.title}',
+                                      ),
+                                      content: const Text(
+                                        'Are you sure you want to delete this expense?',
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed:
+                                              () => AppNavigator.pop(
+                                                dialogContext,
                                               ),
+                                          child: const Text(
+                                            'Cancel',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.defaultColor400,
                                             ),
-                                            TextButton(
-                                              onPressed: () {
-                                                ancestorContext
-                                                    .read<BudgetBloc>()
-                                                    .add(
-                                                      DeleteExpenseEvent(
-                                                        widget.expense.id,
-                                                      ),
-                                                    );
-                                                AppNavigator.pop(dialogContext);
-                                              },
-                                              child: const Text(
-                                                'Delete',
-                                                style: TextStyle(
-                                                  color: AppColors.errorColor,
-                                                ),
+                                          ),
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            sl<BudgetBloc>().add(
+                                              DeleteExpenseEvent(
+                                                widget.expense.budgetId,
+                                                widget.expense.id,
                                               ),
+                                            );
+                                            AppNavigator.pop(dialogContext);
+                                          },
+                                          child: const Text(
+                                            'Delete',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.w400,
+                                              color: AppColors.errorColor,
                                             ),
-                                          ],
-                                        );
-                                      },
+                                          ),
+                                        ),
+                                      ],
                                     );
                                   },
-                                  isDelete: true,
                                 );
                               },
+                              isDelete: true,
                             ),
                           ),
                         ],

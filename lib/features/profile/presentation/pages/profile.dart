@@ -21,7 +21,7 @@ class _ProfilePageState extends State<ProfilePage> {
     final isVerified = _prefs.getBool('verified') ?? false;
 
     return Scaffold(
-      appBar: setAppBar("", context),
+      // appBar: setAppBar("", context),
       body: Stack(
         children: [
           RefreshIndicator(
@@ -178,11 +178,15 @@ class _ProfilePageState extends State<ProfilePage> {
                                       _buildDivider(),
                                       _buildSettingsItem(
                                         icon: LineIcons.passport,
-                                        title: "Passport Information",
+                                        title: "Travel Documents",
                                         onTap: () {
                                           AppNavigator.push(
                                             context,
-                                            const PassportDetailsPage(),
+                                            BlocProvider.value(
+                                              value: sl<TravelDocumentBloc>(),
+                                              child:
+                                                  const TravelDocumentDetailsPage(),
+                                            ),
                                           );
                                         },
                                       ),
@@ -404,7 +408,14 @@ class _ProfilePageState extends State<ProfilePage> {
                       onPressed: () {
                         Navigator.pop(context);
                       },
-                      child: const Text("No"),
+                      child: const Text(
+                        "No",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.defaultColor400,
+                        ),
+                      ),
                     ),
                     TextButton(
                       onPressed: () {
@@ -414,7 +425,14 @@ class _ProfilePageState extends State<ProfilePage> {
                           const LoginPage(),
                         );
                       },
-                      child: const Text("Yes"),
+                      child: const Text(
+                        "Yes",
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.primaryColor,
+                        ),
+                      ),
                     ),
                   ],
                 ),

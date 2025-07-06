@@ -35,20 +35,14 @@ class CollectionPage extends StatelessWidget {
               label: Text(
                 "Get Pro",
                 style: TextStyle(
-                  color: Colors.white,
                   fontSize: FontSize.size14,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
                 ),
               ),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                minimumSize: Size(50.w, 50.h),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 8,
-                ),
+              style: mergeWithThemeButtonStyle(
+                context,
+                ElevatedButton.styleFrom(minimumSize: Size(50.w, 50.h)),
               ),
             ),
           ),
@@ -94,11 +88,11 @@ class CollectionPage extends StatelessWidget {
                   onPressed: () {
                     // Handle Memories action
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey[200],
-                    minimumSize: const Size(170, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                  style: mergeWithThemeButtonStyle(
+                    context,
+                    ElevatedButton.styleFrom(
+                      backgroundColor: Colors.grey[200],
+                      minimumSize: const Size(170, 40),
                     ),
                   ),
                   child: const Text(
@@ -110,12 +104,9 @@ class CollectionPage extends StatelessWidget {
                   onPressed: () {
                     // Handle Collections action
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    minimumSize: const Size(170, 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                  style: mergeWithThemeButtonStyle(
+                    context,
+                    ElevatedButton.styleFrom(minimumSize: const Size(170, 40)),
                   ),
                   child: const Text(
                     "Collections",
@@ -206,11 +197,10 @@ class CollectionPage extends StatelessWidget {
                           onPressed: () {
                             // Handle "Upgrade to Pro" action
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.primaryColor,
-                            minimumSize: const Size(double.infinity, 50),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10),
+                          style: mergeWithThemeButtonStyle(
+                            context,
+                            ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
                             ),
                           ),
                           child: const Text(

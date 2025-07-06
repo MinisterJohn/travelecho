@@ -25,19 +25,20 @@ class _LoginPageState extends State<LoginPage> {
           AppNavigator.push(
             context,
             OtpForm(
-              email: _emailController.text, // Pass the email if available in the state
+              email:
+                  _emailController
+                      .text, // Pass the email if available in the state
               isSignup: false,
             ),
           );
-        }  else if(state is AuthLoginSuccess) {
-            AppNavigator.pushReplacement(
-              context,
-              BlocProvider(
-                create: (context) => sl<NavigationMenuCubit>(),
-                child: const RootPage(),
-              ),
-            );
-          
+        } else if (state is AuthLoginSuccess) {
+          AppNavigator.pushReplacement(
+            context,
+            BlocProvider(
+              create: (context) => sl<NavigationMenuCubit>(),
+              child: const RootPage(),
+            ),
+          );
         } else if (state is AuthFailure) {
           DisplayMessage.errorMessage(state.error, context);
         }
@@ -104,21 +105,32 @@ class _LoginPageState extends State<LoginPage> {
                       return ElevatedButton(
                         onPressed:
                             state is AuthLoading ? null : () => _handleLogin(),
-                        style: ElevatedButton.styleFrom(
-                          minimumSize: const Size(double.infinity, 50),
+                        style: mergeWithThemeButtonStyle(
+                          context,
+                          ElevatedButton.styleFrom(
+                            minimumSize: const Size(double.infinity, 50),
+                          ),
                         ),
-                        child: state is AuthLoading
-                            ? const SizedBox(
-                                height: 20,
-                                width: 20,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 2,
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.white),
+                        child:
+                            state is AuthLoading
+                                ? const SizedBox(
+                                  height: 20,
+                                  width: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
+                                    valueColor: AlwaysStoppedAnimation<Color>(
+                                      AppColors.white,
+                                    ),
+                                  ),
+                                )
+                                : Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    fontSize: FontSize.size18,
+                                    fontWeight: FontWeight.w400,
+                                    color: AppColors.white,
+                                  ),
                                 ),
-                              )
-                            : const Text('Login',
-                                style: TextStyle(color: AppColors.white)),
                       );
                     },
                   ),
@@ -147,7 +159,9 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(8),
@@ -155,8 +169,10 @@ class _LoginPageState extends State<LoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/images/auth/google_logo.png',
-                            height: 20),
+                        Image.asset(
+                          'assets/images/auth/google_logo.png',
+                          height: 20,
+                        ),
                         const SizedBox(width: 10),
                         const Text('Sign in with Google'),
                       ],
@@ -172,7 +188,9 @@ class _LoginPageState extends State<LoginPage> {
                   },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 12, horizontal: 16),
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
                     decoration: BoxDecoration(
                       border: Border.all(color: Colors.grey),
                       borderRadius: BorderRadius.circular(8),
@@ -180,8 +198,10 @@ class _LoginPageState extends State<LoginPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset('assets/images/auth/apple_logo.png',
-                            height: 20),
+                        Image.asset(
+                          'assets/images/auth/apple_logo.png',
+                          height: 20,
+                        ),
                         const SizedBox(width: 10),
                         const Text('Sign in with Apple ID'),
                       ],
@@ -223,10 +243,11 @@ class _LoginPageState extends State<LoginPage> {
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  AppNavigator.push(context, const ForgotPasswordPage());
-                },
+              recognizer:
+                  TapGestureRecognizer()
+                    ..onTap = () {
+                      AppNavigator.push(context, const ForgotPasswordPage());
+                    },
               text: 'Reset',
             ),
           ],
@@ -246,10 +267,11 @@ class _LoginPageState extends State<LoginPage> {
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  AppNavigator.push(context, const SignUpPage());
-                },
+              recognizer:
+                  TapGestureRecognizer()
+                    ..onTap = () {
+                      AppNavigator.push(context, const SignUpPage());
+                    },
               text: 'Sign Up',
             ),
           ],
@@ -265,9 +287,9 @@ class _LoginPageState extends State<LoginPage> {
     if (email.isEmpty || password.isEmpty) {
       DisplayMessage.errorMessage("Please enter all fields", context);
     } else {
-      context
-          .read<AuthBloc>()
-          .add(LoginEvent(email: email, password: password));
+      context.read<AuthBloc>().add(
+        LoginEvent(email: email, password: password),
+      );
     }
   }
 }

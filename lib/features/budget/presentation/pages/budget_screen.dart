@@ -11,42 +11,31 @@ class BudgetScreen extends StatefulWidget {
 
 class BudgetController {
   String name;
-  bool tripIsToMultipleDestinations;
 
-  BudgetController({
-    required this.name,
-    this.tripIsToMultipleDestinations = false,
-  });
+  BudgetController({required this.name});
 }
 
 class _BudgetScreenState extends State<BudgetScreen> {
   final TextEditingController _budgetNameController = TextEditingController();
-  final BudgetController _budget = BudgetController(
-    name: "",
-    tripIsToMultipleDestinations: false,
-  );
-  // Budget _selectedBudget = Budget(amount: 0.0, name: "");
-
-  @override
-  void initState() {
-    super.initState();
-    // Fetch all budgets when the screen is initialized
-    print("Getting budgets");
-    context.read<BudgetBloc>().add(GetAllBudgetsEvent());
-
-    // _budgetNameController.text = _budget.name;
-    // _budgetNameController.addListener(() {
-    //   setState(() {
-    //     _budget.name = _budgetNameController.text; // Update the Budget name
-    //   });
-    // });
-  }
+  final ScrollController _scrollController = ScrollController();
+  String? _currentSearch;
+  List<BudgetModel> _allBudgets = [];
+  bool _restored = false;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    print("Fetching budgets again");
-    context.read<BudgetBloc>().add(GetAllBudgetsEvent());
+    if (!_restored) {
+      context.read<BudgetBloc>().restorePreviousState();
+      _restored = true;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+    _fetchAllBudgets();
   }
 
   @override
@@ -55,105 +44,163 @@ class _BudgetScreenState extends State<BudgetScreen> {
     super.dispose();
   }
 
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      if (_currentSearch == null) {
+        _fetchAllBudgets(append: true);
+      }
+    }
+  }
+
+  void _onSearch(String value) {
+    setState(() {
+      _currentSearch = value.isEmpty ? null : value;
+      // _allBudgets = [];
+    });
+    _fetchAllBudgets();
+  }
+
+  void _fetchAllBudgets({bool append = false}) {
+    if (append && (_allBudgets.length % 10) != 0) {
+      return;
+    }
+    context.read<BudgetBloc>().add(
+      GetAllBudgetsEvent(
+        append: append,
+        sort: _currentSearch,
+        skip: append ? _allBudgets.length : 0,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: BlocBuilder<BudgetBloc, BudgetState>(
-        builder: (context, state) {
+    return SingleChildScrollView(
+      child: BlocListener<BudgetBloc, BudgetState>(
+        listener: (context, state) {
           if (state is BudgetLoading) {
-            return SizedBox(
-              height: 300,
-              child: ListView.builder(
-                itemCount: 3, // Number of placeholders to show
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2.0),
-                    child: SizedBox(
-                      height: 80,
-
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 60,
-                            height: 60,
-                            margin: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                          ),
-                          Expanded(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  height: 10,
-                                  width: 150,
-                                  color: Colors.grey[400],
-                                ),
-                                const SizedBox(height: 8),
-                                Container(
-                                  height: 10,
-                                  width: 100,
-                                  color: Colors.grey[400],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
+            // Show loading indicator
           } else if (state is BudgetsLoaded) {
-            return MultiBlocProvider(
-              providers: [
-                BlocProvider.value(value: sl<BudgetBloc>()),
-                BlocProvider.value(value: sl<CurrencyBloc>()),
-              ],
-              child: Container(
-                child:
-                    state.budgets.isNotEmpty
-                        ? ShowBudgets(budgetsData: state.budgets)
-                        : ShowEmptyBudget(
-                          onAddBudget:
-                              () => AppNavigator.push(
-                                context,
-                                MultiBlocProvider(
-                                  providers: [
-                                    BlocProvider.value(
-                                      value: sl<CurrencyBloc>(),
+            setState(() {
+              if (state.append) {
+                _allBudgets.addAll(state.budgets);
+              } else {
+                _allBudgets = state.budgets;
+              }
+            });
+          } else if (state is BudgetError) {
+            // Show error message
+            Text(state.message);
+          } else {
+            Text("WHatt's happening");
+          }
+        },
+        child: BlocBuilder<BudgetBloc, BudgetState>(
+          builder: (context, state) {
+            if (state is BudgetLoading && _allBudgets.isEmpty) {
+              return SizedBox(
+                height: 300,
+                child: ListView.builder(
+                  itemCount: 3, // Number of placeholders to show
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      child: SizedBox(
+                        height: 80,
+
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 60,
+                              height: 60,
+                              margin: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[400],
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            Expanded(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                    height: 10,
+                                    width: 150,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(height: 8),
+                                  Container(
+                                    height: 10,
+                                    width: 100,
+                                    color: Colors.grey[400],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            } else if (state is BudgetsLoaded || _allBudgets.isNotEmpty) {
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider.value(value: sl<BudgetBloc>()),
+                  BlocProvider.value(value: sl<CurrencyBloc>()),
+                ],
+                child: Container(
+                  child:
+                      (state is BudgetsLoaded && state.budgets.isNotEmpty ||
+                              _allBudgets.isNotEmpty)
+                          ? ShowBudgets(
+                            budgetsData:
+                                state is BudgetsLoaded
+                                    ? state.budgets
+                                    : _allBudgets,
+                            onSearch: _onSearch,
+                          )
+                          : ShowEmptyBudget(
+                            onAddBudget:
+                                () => AppNavigator.push(
+                                  context,
+                                  MultiBlocProvider(
+                                    providers: [
+                                      BlocProvider.value(
+                                        value: sl<CurrencyBloc>(),
+                                      ),
+                                      BlocProvider.value(
+                                        value: sl<BudgetBloc>(),
+                                      ),
+                                    ],
+                                    child: BlocBuilder<
+                                      CurrencyBloc,
+                                      CurrencyState
+                                    >(
+                                      builder: (context, state) {
+                                        return NewBudgetPage(
+                                          mergedCurrencyList:
+                                              state is MergedCurrencyListLoaded
+                                                  ? state.currencies
+                                                  : [],
+                                        );
+                                      },
                                     ),
-                                    BlocProvider.value(value: sl<BudgetBloc>()),
-                                  ],
-                                  child: BlocBuilder<
-                                    CurrencyBloc,
-                                    CurrencyState
-                                  >(
-                                    builder: (context, state) {
-                                      return NewBudgetPage(
-                                        mergedCurrencyList:
-                                            state is MergedCurrencyListLoaded
-                                                ? state.currencies
-                                                : [],
-                                      );
-                                    },
                                   ),
                                 ),
-                              ),
-                        ),
-              ),
-            );
-          } else if (state is BudgetError) {
-            // DisplayMessage.errorMessage('Error: ${state.message}', context);
-            return Center(child: Text('Error: ${state.message}'));
-          }
-          return const SizedBox.shrink();
-        },
+                          ),
+                ),
+              );
+            } else if (state is BudgetError) {
+              // DisplayMessage.errorMessage('Error: ${state.message}', context);
+              return Center(child: Text('Error: ${state.message}'));
+            }
+            return const SizedBox.shrink();
+          },
+        ),
       ),
     );
   }

@@ -32,12 +32,12 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
 
     setState(() => _isLoading = true);
     context.read<AuthBloc>().add(
-          ResetPasswordEvent(
-            email: widget.email,
-            password: _newPasswordController.text,
-            confirmPassword: _confirmNewPasswordController.text,
-          ),
-        );
+      ResetPasswordEvent(
+        email: widget.email,
+        password: _newPasswordController.text,
+        confirmPassword: _confirmNewPasswordController.text,
+      ),
+    );
   }
 
   @override
@@ -66,7 +66,7 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
                   _newPasswordForm(state),
                   WidgetsSpacer.verticalSpacer16,
                   WidgetsSpacer.verticalSpacer32,
-                  _signUpText(context)
+                  _signUpText(context),
                 ],
               ),
             ),
@@ -155,29 +155,30 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
           WidgetsSpacer.verticalSpacer32,
           ElevatedButton(
             onPressed: _isLoading ? null : _resetPassword,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryColor,
-              minimumSize: const Size(double.infinity, 50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
+            style: mergeWithThemeButtonStyle(
+              context,
+              ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
               ),
             ),
-            child: _isLoading
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
+            child:
+                _isLoading
+                    ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                    : Text(
+                      'Reset Password',
+                      style: TextStyle(
+                        fontSize: FontSize.size18,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
                     ),
-                  )
-                : const Text(
-                    'Reset Password',
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontSize: 18.0,
-                    ),
-                  ),
           ),
         ],
       ),
@@ -195,10 +196,11 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  AppNavigator.pushAndRemove(context, const LoginPage());
-                },
+              recognizer:
+                  TapGestureRecognizer()
+                    ..onTap = () {
+                      AppNavigator.pushAndRemove(context, const LoginPage());
+                    },
               text: 'Login',
             ),
           ],

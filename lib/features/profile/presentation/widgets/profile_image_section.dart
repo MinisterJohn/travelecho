@@ -78,7 +78,11 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                 },
                 child: const Text(
                   "Open Camera",
-                  style: TextStyle(color: AppColors.primaryColor),
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.primaryColor,
+                  ),
                 ),
               ),
               if (_isImageLoading)
@@ -117,11 +121,7 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
               CircleAvatar(
                 radius: 12,
                 backgroundColor: AppColors.primaryColor,
-                child: Icon(
-                  Icons.check,
-                  size: 16,
-                  color: Colors.white,
-                ),
+                child: Icon(Icons.check, size: 16, color: Colors.white),
               ),
             ],
           ),
@@ -149,27 +149,29 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: const Color.fromARGB(255, 156, 126, 126),
-                  image: _image != null
-                      ? DecorationImage(
-                          image: kIsWeb
-                              ? MemoryImage(_image as Uint8List)
-                              : FileImage(_image as File) as ImageProvider,
-                          fit: BoxFit.cover, // or BoxFit.none
-                          alignment: Alignment.topCenter, // 👈 key part
-                        )
-                      : (widget.state is ProfileLoaded &&
+                  image:
+                      _image != null
+                          ? DecorationImage(
+                            image:
+                                kIsWeb
+                                    ? MemoryImage(_image as Uint8List)
+                                    : FileImage(_image as File)
+                                        as ImageProvider,
+                            fit: BoxFit.cover, // or BoxFit.none
+                            alignment: Alignment.topCenter, // 👈 key part
+                          )
+                          : (widget.state is ProfileLoaded &&
                               (widget.state as ProfileLoaded)
                                   .profile
                                   .image
                                   .isNotEmpty)
                           ? DecorationImage(
-                              image: NetworkImage(
-                                  (widget.state as ProfileLoaded)
-                                      .profile
-                                      .image),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                            )
+                            image: NetworkImage(
+                              (widget.state as ProfileLoaded).profile.image,
+                            ),
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                          )
                           : null,
                 ),
               ),
@@ -180,8 +182,10 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                   onTap: _isImageLoading ? null : _showCameraDialog,
                   child: Container(
                     // constraints: const BoxConstraints(maxWidth: 100),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(30),
@@ -199,19 +203,20 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                       children: [
                         SizedBox(
                           width: 20,
-                          child: _isImageLoading
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
+                          child:
+                              _isImageLoading
+                                  ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                  : const Icon(
+                                    Icons.camera_alt,
+                                    size: 20,
+                                    color: Colors.black,
                                   ),
-                                )
-                              : const Icon(
-                                  Icons.camera_alt,
-                                  size: 20,
-                                  color: Colors.black,
-                                ),
                         ),
                         const SizedBox(width: 4),
                         Text(

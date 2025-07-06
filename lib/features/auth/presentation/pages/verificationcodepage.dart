@@ -73,11 +73,8 @@ class _OtpFormState extends State<OtpForm> {
 
     setState(() => _isVerifying = true);
     context.read<AuthBloc>().add(
-          VerifyOtpEvent(
-            email: widget.email,
-            otp: _otpController.text,
-          ),
-        );
+      VerifyOtpEvent(email: widget.email, otp: _otpController.text),
+    );
   }
 
   void _handleVerificationSuccess() {
@@ -97,7 +94,7 @@ class _OtpFormState extends State<OtpForm> {
 
       if (widget.isSignup) {
         // For signup, navigate to welcome page
-        AppNavigator.pushAndRemove(context,  const NewUserWelcomePage());
+        AppNavigator.pushAndRemove(context, const NewUserWelcomePage());
       } else if (widget.isPasswordReset) {
         // For password reset, navigate to reset password page
         AppNavigator.push(context, ResetPasswordPage(email: widget.email));
@@ -149,10 +146,7 @@ class _OtpFormState extends State<OtpForm> {
   Widget _subHeadingText() {
     return Text(
       "Input 6 digit code sent to ${widget.email}",
-      style: const TextStyle(
-        fontSize: 16.0,
-        color: AppColors.defaultColor,
-      ),
+      style: const TextStyle(fontSize: 16.0, color: AppColors.defaultColor),
     );
   }
 
@@ -171,13 +165,14 @@ class _OtpFormState extends State<OtpForm> {
                 _isResending
                     ? "Sending..."
                     : canResend
-                        ? "Didn't get the code? Resend"
-                        : "Maximum resend attempts reached",
+                    ? "Didn't get the code? Resend"
+                    : "Maximum resend attempts reached",
                 style: TextStyle(
                   fontSize: 16.0,
-                  color: canResend
-                      ? AppColors.primaryColor
-                      : AppColors.defaultColor400,
+                  color:
+                      canResend
+                          ? AppColors.primaryColor
+                          : AppColors.defaultColor400,
                 ),
               ),
             ),
@@ -244,22 +239,30 @@ class _OtpFormState extends State<OtpForm> {
           const SizedBox(height: 40.0),
           ElevatedButton(
             onPressed: _isVerifying ? null : _verifyOtp,
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
+            style: mergeWithThemeButtonStyle(
+              context,
+              ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
             ),
-            child: _isVerifying
-                ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
+            child:
+                _isVerifying
+                    ? const SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        color: Colors.white,
+                        strokeWidth: 2,
+                      ),
+                    )
+                    : Text(
+                      'Verify',
+                      style: TextStyle(
+                        fontSize: FontSize.size18,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
                     ),
-                  )
-                : const Text(
-                    'Verify',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
           ),
         ],
       ),

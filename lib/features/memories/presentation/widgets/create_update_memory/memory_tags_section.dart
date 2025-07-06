@@ -31,7 +31,9 @@ class _MemoryTagsSectionState extends State<MemoryTagsSection> {
 
     if (_containsSpecialCharacters(tag)) {
       DisplayMessage.errorMessage(
-          "Tags cannot contain special characters", context);
+        "Tags cannot contain special characters",
+        context,
+      );
       return;
     }
 
@@ -73,17 +75,17 @@ class _MemoryTagsSectionState extends State<MemoryTagsSection> {
             WidgetsSpacer.horizontalSpacer8,
             ElevatedButton(
               onPressed: () => _handleTagSubmission(context),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                minimumSize: const Size(0, 0),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
+              style: mergeWithThemeButtonStyle(
+                context,
+                ElevatedButton.styleFrom(minimumSize: const Size(0, 0)),
               ),
-              child: const Text(
+              child: Text(
                 'Add',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  fontSize: FontSize.size16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
+                ),
               ),
             ),
           ],
@@ -93,18 +95,19 @@ class _MemoryTagsSectionState extends State<MemoryTagsSection> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: widget.tags.map((tag) {
-              return Chip(
-                label: Text(tag),
-                onDeleted: () => widget.onRemoveTag(tag),
-                deleteIconColor: AppColors.primaryColor,
-                shape: const StadiumBorder(
-                  side: BorderSide(color: AppColors.primaryColor100),
-                ),
-                backgroundColor: AppColors.primaryColor100,
-                labelStyle: const TextStyle(color: AppColors.primaryColor),
-              );
-            }).toList(),
+            children:
+                widget.tags.map((tag) {
+                  return Chip(
+                    label: Text(tag),
+                    onDeleted: () => widget.onRemoveTag(tag),
+                    deleteIconColor: AppColors.primaryColor,
+                    shape: const StadiumBorder(
+                      side: BorderSide(color: AppColors.primaryColor100),
+                    ),
+                    backgroundColor: AppColors.primaryColor100,
+                    labelStyle: const TextStyle(color: AppColors.primaryColor),
+                  );
+                }).toList(),
           ),
       ],
     );

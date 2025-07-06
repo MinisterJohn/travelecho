@@ -5,7 +5,7 @@ import "package:flutter/services.dart";
 class AppTheme {
   static final appTheme = ThemeData(
     // useMaterial3: true,
-    fontFamily: 'Segoe UI',
+    fontFamily: 'segoe_ui',
     primaryColor: AppColors.primaryColor,
     scaffoldBackgroundColor: AppColors.white,
     brightness: Brightness.light,
@@ -81,6 +81,7 @@ class AppTheme {
         textStyle: TextStyle(
           fontSize: FontSize.size18,
           fontWeight: FontWeight.w400,
+          color: AppColors.white
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
@@ -95,6 +96,7 @@ class AppTheme {
         textStyle: TextStyle(
           fontSize: FontSize.size18,
           fontWeight: FontWeight.w400,
+          color: AppColors.primaryColor,
         ),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
       ),
@@ -106,6 +108,7 @@ class AppTheme {
         textStyle: TextStyle(
           fontSize: FontSize.size18,
           fontWeight: FontWeight.w400,
+          color: AppColors.primaryColor
         ),
         padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
         side: const BorderSide(color: AppColors.primaryColor),
@@ -146,4 +149,8 @@ class AppTheme {
       }),
     ),
   );
+}
+
+ButtonStyle mergeWithThemeButtonStyle(BuildContext context, ButtonStyle extra) {
+  return Theme.of(context).elevatedButtonTheme.style?.merge(extra) ?? extra;
 }

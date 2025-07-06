@@ -33,119 +33,109 @@ class FeaturesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "App Features",
-          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.deepPurple,
-      ),
-      body: Container(
-        color: Colors.grey[200],
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header Section
-              const Center(
-                child: Column(
-                  children: [
-                    Text(
-                      "Discover Travel Echo",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple,
+      appBar: setAppBar("App Features", context),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Header Section
+            const Center(
+              child: Column(
+                children: [
+                  Text(
+                    "Discover Travel echo",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.primaryColor,
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    "Choose a plan that suits your travel style",
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Free Features Section
+            const Text(
+              "Free Features",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            WidgetsSpacer.verticalSpacer8,
+            ...freeFeatures.map(
+              (feature) => Card(
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(
+                        Icons.check_circle_outline,
+                        color: Colors.green,
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    Text(
-                      "Choose a plan that suits your travel style",
-                      style: TextStyle(fontSize: 16, color: Colors.black54),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-              // Free Features Section
-              const Text(
-                "Free Features",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              WidgetsSpacer.verticalSpacer8,
-              ...freeFeatures.map(
-                (feature) => Card(
-                  margin: const EdgeInsets.symmetric(vertical: 6),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(
-                          Icons.check_circle_outline,
-                          color: Colors.green,
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          feature,
+                          style: const TextStyle(fontSize: 16, height: 1.5),
                         ),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            feature,
-                            style: const TextStyle(fontSize: 16, height: 1.5),
-                          ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+            // Premium Features Section
+            const Text(
+              "Premium Features",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black87,
+              ),
+            ),
+            WidgetsSpacer.verticalSpacer8,
+            ...premiumFeatures.map(
+              (feature) => Card(
+                margin: const EdgeInsets.symmetric(vertical: 6),
+                elevation: 2,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.star, color: Colors.amber),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          feature,
+                          style: const TextStyle(fontSize: 16, height: 1.5),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 24),
-              // Premium Features Section
-              const Text(
-                "Premium Features",
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
-                ),
-              ),
-              WidgetsSpacer.verticalSpacer8,
-              ...premiumFeatures.map(
-                (feature) => Card(
-                  margin: const EdgeInsets.symmetric(vertical: 6),
-                  elevation: 2,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(12.0),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Icon(Icons.star, color: Colors.amber),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Text(
-                            feature,
-                            style: const TextStyle(fontSize: 16, height: 1.5),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 24),
-            ],
-          ),
+            ),
+            const SizedBox(height: 24),
+          ],
         ),
       ),
     );

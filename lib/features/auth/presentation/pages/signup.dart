@@ -28,10 +28,7 @@ class _SignUpPageState extends State<SignUpPage> {
         if (state is AuthSignupSuccess) {
           AppNavigator.push(
             context,
-            OtpForm(
-              email: state.email,
-              isSignup: true,
-            ),
+            OtpForm(email: state.email, isSignup: true),
           );
         } else if (state is AuthFailure) {
           DisplayMessage.errorMessage(state.error, context);
@@ -72,10 +69,7 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget _signupDescriptionText() {
     return const Text(
       'Find a flight that matches your destination and schedule it instantly.',
-      style: TextStyle(
-        fontSize: 16.0,
-        color: Colors.black54,
-      ),
+      style: TextStyle(fontSize: 16.0, color: Colors.black54),
     );
   }
 
@@ -176,40 +170,54 @@ class _SignUpPageState extends State<SignUpPage> {
           BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
               return ElevatedButton(
-                onPressed: state is AuthLoading
-                    ? null
-                    : () async {
-                        if (form.currentState!.validate()) {
-                          if (_passwordController.text ==
-                              _confirmPasswordController.text) {
-                            context.read<AuthBloc>().add(
-                                  SignupEvent(
-                                    email: _emailController.text,
-                                    password: _passwordController.text,
-                                    name: _fullNameController.text,
-                                  ),
-                                );
-                          } else {
-                            DisplayMessage.errorMessage(
-                                'Passwords do not match', context);
+                onPressed:
+                    state is AuthLoading
+                        ? null
+                        : () async {
+                          if (form.currentState!.validate()) {
+                            if (_passwordController.text ==
+                                _confirmPasswordController.text) {
+                              context.read<AuthBloc>().add(
+                                SignupEvent(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                  name: _fullNameController.text,
+                                ),
+                              );
+                            } else {
+                              DisplayMessage.errorMessage(
+                                'Passwords do not match',
+                                context,
+                              );
+                            }
                           }
-                        }
-                      },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 50),
+                        },
+                style: mergeWithThemeButtonStyle(
+                  context,
+                  ElevatedButton.styleFrom(
+                    minimumSize: const Size(double.infinity, 50),
+                  ),
                 ),
-                child: state is AuthLoading
-                    ? const SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(AppColors.white),
+                child:
+                    state is AuthLoading
+                        ? const SizedBox(
+                          height: 20,
+                          width: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.white,
+                            ),
+                          ),
+                        )
+                        : Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            fontSize: FontSize.size18,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.white,
+                          ),
                         ),
-                      )
-                    : const Text('Sign Up',
-                        style: TextStyle(color: AppColors.white)),
               );
             },
           ),
@@ -291,15 +299,17 @@ class _SignUpPageState extends State<SignUpPage> {
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  AppNavigator.push(
-                      context,
-                      BlocProvider.value(
-                        value: sl<AuthBloc>(),
-                        child: const LoginPage(),
-                      ));
-                },
+              recognizer:
+                  TapGestureRecognizer()
+                    ..onTap = () {
+                      AppNavigator.push(
+                        context,
+                        BlocProvider.value(
+                          value: sl<AuthBloc>(),
+                          child: const LoginPage(),
+                        ),
+                      );
+                    },
               text: 'Login',
             ),
           ],

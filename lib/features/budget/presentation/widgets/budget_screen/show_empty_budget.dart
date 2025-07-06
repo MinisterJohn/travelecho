@@ -62,18 +62,18 @@ class ShowEmptyBudget extends StatelessWidget {
                 ),
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF930BFF),
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-              textStyle: const TextStyle(fontSize: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Row(
+
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Set your budget', style: TextStyle(color: Colors.white)),
+                Text(
+                  'Set your budget',
+                  style: TextStyle(
+                    fontSize: FontSize.size16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
+                ),
                 SizedBox(width: 8),
                 Icon(Icons.add, color: Colors.white),
               ],

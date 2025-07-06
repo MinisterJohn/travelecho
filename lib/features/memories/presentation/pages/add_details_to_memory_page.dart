@@ -417,7 +417,14 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                             _selectedImages.clear();
                           });
                         },
-                        child: const Text('Clear Images'),
+                        child: Text(
+                          'Clear Images',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            color: AppColors.defaultColor400,
+                          ),
+                        ),
                       ),
                     WidgetsSpacer.horizontalSpacer8,
                     if (_selectedImages.isNotEmpty &&
@@ -433,7 +440,14 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
                                   color: Colors.white,
                                   strokeWidth: 2,
                                 )
-                                : const Text('Upload Images'),
+                                : Text(
+                                  'Upload Images',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    color: Colors.white,
+                                  ),
+                                ),
                       ),
                   ],
                 ),

@@ -84,12 +84,14 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
         EditMemory(
           memoryId: widget.memory!.id,
           title: _titleController.text,
-          description: _descriptionController.text.isNotEmpty
-              ? _descriptionController.text
-              : null,
-          location: _locationController.text.isNotEmpty
-              ? _locationController.text
-              : null,
+          description:
+              _descriptionController.text.isNotEmpty
+                  ? _descriptionController.text
+                  : null,
+          location:
+              _locationController.text.isNotEmpty
+                  ? _locationController.text
+                  : null,
           date: _selectedDate,
           tags: _tags.isNotEmpty ? _tags : null,
           isPublic: _isPublic,
@@ -99,12 +101,14 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
       context.read<MemoriesBloc>().add(
         CreateMemory(
           title: _titleController.text,
-          description: _descriptionController.text.isNotEmpty
-              ? _descriptionController.text
-              : null,
-          location: _locationController.text.isNotEmpty
-              ? _locationController.text
-              : null,
+          description:
+              _descriptionController.text.isNotEmpty
+                  ? _descriptionController.text
+                  : null,
+          location:
+              _locationController.text.isNotEmpty
+                  ? _locationController.text
+                  : null,
           date: _selectedDate,
           tags: _tags.isNotEmpty ? _tags : null,
           isPublic: _isPublic,
@@ -240,16 +244,18 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
                       BlocProvider.value(
                         value: sl<MemoriesBloc>(),
                         child: AddDetailsToMemoryPage(
-                          memoryId: widget.memory != null
-                              ? widget.memory!.id
-                              : currentState is MemoryCreated
+                          memoryId:
+                              widget.memory != null
+                                  ? widget.memory!.id
+                                  : currentState is MemoryCreated
                                   ? currentState.memory['_id'] ??
                                       currentState.memory['id']
                                   : '',
                           isEditing: widget.isEditing,
-                          existingImages: widget.isEditing && widget.memory != null
-                              ? widget.memory!.images
-                              : null,
+                          existingImages:
+                              widget.isEditing && widget.memory != null
+                                  ? widget.memory!.images
+                                  : null,
                         ),
                       ),
                     );

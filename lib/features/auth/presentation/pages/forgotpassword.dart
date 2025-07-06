@@ -94,8 +94,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               if (email == null || email.isEmpty) {
                 return 'Please enter an email address';
               }
-              final emailRegex =
-                  RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
+              final emailRegex = RegExp(
+                r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$",
+              );
               if (!emailRegex.hasMatch(email)) {
                 return 'Please enter a valid email address';
               }
@@ -112,28 +113,36 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ),
           WidgetsSpacer.verticalSpacer32,
           ElevatedButton(
-            onPressed: _isLoading
-                ? null
-                : () {
-                    if (emailFormKey.currentState?.validate() ?? false) {
-                      context.read<AuthBloc>().add(
-                            SendOtpEvent(
-                              email: _emailController.text.trim(),
-                            ),
-                          );
-                    }
-                  },
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
+            onPressed:
+                _isLoading
+                    ? null
+                    : () {
+                      if (emailFormKey.currentState?.validate() ?? false) {
+                        context.read<AuthBloc>().add(
+                          SendOtpEvent(email: _emailController.text.trim()),
+                        );
+                      }
+                    },
+            style: mergeWithThemeButtonStyle(
+              context,
+              ElevatedButton.styleFrom(
+                minimumSize: const Size(double.infinity, 50),
+              ),
             ),
-            child: _isLoading
-                ? const CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  )
-                : const Text(
-                    'Send Code',
-                  ),
+            child:
+                _isLoading
+                    ? const CircularProgressIndicator(
+                      color: Colors.white,
+                      strokeWidth: 2,
+                    )
+                    : Text(
+                      'Send Code',
+                      style: TextStyle(
+                        fontSize: FontSize.size18,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
+                    ),
           ),
         ],
       ),
@@ -151,10 +160,11 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 color: AppColors.primaryColor,
                 fontWeight: FontWeight.bold,
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  AppNavigator.pushAndRemove(context, const LoginPage());
-                },
+              recognizer:
+                  TapGestureRecognizer()
+                    ..onTap = () {
+                      AppNavigator.pushAndRemove(context, const LoginPage());
+                    },
               text: 'Login',
             ),
           ],

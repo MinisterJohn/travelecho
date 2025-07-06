@@ -22,20 +22,24 @@ class _TagButtonState extends State<TagButton> {
           _isSelected = !_isSelected; // Toggle selection state
         });
       },
-      style: ElevatedButton.styleFrom(
-        minimumSize: Size(10.w, 50.h),
-        backgroundColor: _isSelected
-            ? AppColors.primaryColor
-            : AppColors.primaryColor100, // Change color based on selection
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      style: mergeWithThemeButtonStyle(
+        context,
+        ElevatedButton.styleFrom(
+          minimumSize: Size(10.w, 50.h),
+          backgroundColor:
+              _isSelected
+                  ? AppColors.primaryColor
+                  : AppColors
+                      .primaryColor100, // Change color based on selection
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       ),
       child: Text(
         widget.tag,
         style: TextStyle(
-            color: _isSelected ? AppColors.white : AppColors.defaultColor),
+          color: _isSelected ? AppColors.white : AppColors.defaultColor,
+          fontSize: FontSize.size14,
+          fontWeight: FontWeight.w400,
+        ),
       ),
     );
   }

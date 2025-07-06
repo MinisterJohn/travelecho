@@ -58,7 +58,10 @@ class _RootPageState extends State<RootPage> {
 
     // Container(),
     MultiBlocProvider(
-      providers: [BlocProvider(create: (context) => sl<ProfileBloc>())],
+      providers: [
+        BlocProvider(create: (context) => sl<ProfileBloc>()),
+        BlocProvider(create: (context) => sl<TravelDocumentBloc>()),
+      ],
       child: const ProfilePage(),
     ), // Replace with your Profile page widget
   ];

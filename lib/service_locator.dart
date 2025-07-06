@@ -42,16 +42,21 @@ Future<void> _registerCoreServices() async {
 void _registerApiServices() {
   sl.registerSingleton<AuthApiService>(AuthApiServiceImpl());
   sl.registerLazySingleton<CurrencyRemoteSource>(
-      () => CurrencyRemoteSourceImpl());
+    () => CurrencyRemoteSourceImpl(),
+  );
   sl.registerLazySingleton<SchoolRemoteSource>(() => SchoolRemoteSourceImpl());
   sl.registerLazySingleton<LocationRemoteSource>(
-      () => LocationRemoteSourceImpl());
+    () => LocationRemoteSourceImpl(),
+  );
   sl.registerLazySingleton<OccupationsLocalSource>(
-      () => OccupationsLocalSourceImpl());
+    () => OccupationsLocalSourceImpl(),
+  );
   sl.registerLazySingleton<LanguageLocalSource>(
-      () => LanguageLocalSourceImpl());
+    () => LanguageLocalSourceImpl(),
+  );
   sl.registerLazySingleton<InterestLocalSource>(
-      () => InterestLocalSourceImpl());
+    () => InterestLocalSourceImpl(),
+  );
   sl.registerLazySingleton<AmadeusApiService>(() => AmadeusApiService());
   sl.registerLazySingleton<AirlineApiService>(() => AirlineApiService());
   sl.registerLazySingleton<MemoriesApiService>(() => MemoriesApiServiceImpl());
@@ -59,7 +64,11 @@ void _registerApiServices() {
     () => ProfileApiServiceImpl(sl<DioClient>(), sl<SharedPreferences>()),
   );
   sl.registerLazySingleton<BudgetRemoteDataSource>(
-      () => BudgetRemoteDataSourceImpl());
+    () => BudgetRemoteDataSourceImpl(),
+  );
+  sl.registerLazySingleton<TravelDocumentRemoteDataSource>(
+    () => TravelDocumentRemoteDataSourceImpl(),
+  );
 }
 
 /// Registers all repositories
@@ -72,23 +81,33 @@ void _registerRepositories() {
   sl.registerLazySingleton<SchoolRepository>(() => SchoolRepositoryImpl());
   sl.registerLazySingleton<LocationRepository>(() => LocationRepositoryImpl());
   sl.registerLazySingleton<OccupationsRepository>(
-      () => OccupationsRepositoryImpl());
+    () => OccupationsRepositoryImpl(),
+  );
   sl.registerLazySingleton<LanguagesRepository>(
-      () => LanguagesRepositoryImpl());
+    () => LanguagesRepositoryImpl(),
+  );
   sl.registerLazySingleton<InterestsRepository>(
-      () => InterestsRepositoryImpl());
+    () => InterestsRepositoryImpl(),
+  );
   sl.registerLazySingleton<ProfileRepository>(() => ProfileRepositoryImpl());
 
   // Travel related repositories
   sl.registerLazySingleton<AirportRepository>(() => AirportRepositoryImpl());
   sl.registerLazySingleton<FlightOffersRepository>(
-      () => FlightOffersRepositoryImpl());
+    () => FlightOffersRepositoryImpl(),
+  );
   sl.registerLazySingleton<HotelBookingRepository>(
-      () => HotelBookingRepositoryImpl());
+    () => HotelBookingRepositoryImpl(),
+  );
   sl.registerLazySingleton<MemoriesRepository>(() => MemoriesRepositoryImpl());
 
   //Budget repositories
   sl.registerLazySingleton<BudgetRepository>(() => BudgetRepositoryImpl());
+
+  //TravelDocument repositories
+  sl.registerLazySingleton<TravelDocumentRepository>(
+    () => TravelDocumentRepositoryImpl(),
+  );
 }
 
 /// Registers all use cases
@@ -115,7 +134,8 @@ void _registerUseCases() {
 
   // Travel related use cases
   sl.registerLazySingleton<GetFlightOfferPricingUseCase>(
-      () => GetFlightOfferPricingUseCase());
+    () => GetFlightOfferPricingUseCase(),
+  );
   sl.registerLazySingleton<GetSeatmapUseCase>(() => GetSeatmapUseCase());
   sl.registerLazySingleton<SearchAirport>(() => SearchAirport());
 
@@ -124,31 +144,58 @@ void _registerUseCases() {
   // sl.registerLazySingleton<UploadMemoryImageUseCase>(
   //     () => UploadMemoryImageUseCase());
   sl.registerLazySingleton<UploadMultipleMemoryImagesUseCase>(
-      () => UploadMultipleMemoryImagesUseCase());
+    () => UploadMultipleMemoryImagesUseCase(),
+  );
   sl.registerLazySingleton<GetMemoriesUseCase>(() => GetMemoriesUseCase());
   sl.registerLazySingleton<DeleteMemoryUseCase>(() => DeleteMemoryUseCase());
   sl.registerLazySingleton<EditMemoryUseCase>(() => EditMemoryUseCase());
   sl.registerLazySingleton<DeleteMultipleMemoriesUseCase>(
-      () => DeleteMultipleMemoriesUseCase());
+    () => DeleteMultipleMemoriesUseCase(),
+  );
   sl.registerLazySingleton<GetUserProfileUseCase>(
-      () => GetUserProfileUseCase());
+    () => GetUserProfileUseCase(),
+  );
   sl.registerLazySingleton<UpdateProfileImageUseCase>(
-      () => UpdateProfileImageUseCase());
+    () => UpdateProfileImageUseCase(),
+  );
 
   //Budget usecases
   sl.registerLazySingleton<CreateBudgetUseCase>(() => CreateBudgetUseCase());
   sl.registerLazySingleton<UpdateBudgetUseCase>(() => UpdateBudgetUseCase());
-  sl.registerLazySingleton<GetBudgetsUseCase>(() => GetBudgetsUseCase());
+  sl.registerLazySingleton<DeleteBudgetUseCase>(() => DeleteBudgetUseCase());
+  sl.registerLazySingleton<CreateExpenseUseCase>(() => CreateExpenseUseCase());
+  sl.registerLazySingleton<UpdateExpenseUseCase>(() => UpdateExpenseUseCase());
+  sl.registerLazySingleton<DeleteExpenseUseCase>(() => DeleteExpenseUseCase());
+  sl.registerLazySingleton<UploadExpenseReceiptUseCase>(
+    () => UploadExpenseReceiptUseCase(),
+  );
   sl.registerLazySingleton<GetAllBudgetsUseCase>(() => GetAllBudgetsUseCase());
   sl.registerLazySingleton<GetBudgetByIdUseCase>(() => GetBudgetByIdUseCase());
   sl.registerLazySingleton<GetBudgetWithExpensesUseCase>(
-      () => GetBudgetWithExpensesUseCase());
-  sl.registerLazySingleton<CreateExpenseUseCase>(() => CreateExpenseUseCase());
-  sl.registerLazySingleton<DeleteBudgetUseCase>(() => DeleteBudgetUseCase());
-  sl.registerLazySingleton<UpdateExpenseUseCase>(() => UpdateExpenseUseCase());
-  sl.registerLazySingleton<DeleteExpenseUseCase>(() => DeleteExpenseUseCase());
+    () => GetBudgetWithExpensesUseCase(),
+  );
   sl.registerLazySingleton<GetExpensesUseCase>(() => GetExpensesUseCase());
-  }
+
+  //passport usecases
+  sl.registerLazySingleton<CreateTravelDocumentUseCase>(
+    () => CreateTravelDocumentUseCase(),
+  );
+  sl.registerLazySingleton<UpdateTravelDocumentUseCase>(
+    () => UpdateTravelDocumentUseCase(),
+  );
+  sl.registerLazySingleton<DeleteTravelDocumentUseCase>(
+    () => DeleteTravelDocumentUseCase(),
+  );
+  sl.registerLazySingleton<GetAllTravelDocumentsUseCase>(
+    () => GetAllTravelDocumentsUseCase(),
+  );
+  sl.registerLazySingleton<UploadTravelDocumentImagesUseCase>(
+    () => UploadTravelDocumentImagesUseCase(),
+  );
+  sl.registerLazySingleton<GetTravelDocumentByIdUseCase>(
+    () => GetTravelDocumentByIdUseCase(),
+  );
+}
 
 /// Registers all blocs
 void _registerBlocs() {
@@ -156,15 +203,14 @@ void _registerBlocs() {
   sl.registerLazySingleton<AuthBloc>(() => AuthBloc());
   sl.registerLazySingleton<CurrencyBloc>(() => CurrencyBloc());
   sl.registerLazySingleton<DataSearchBloc>(() => DataSearchBloc());
-  sl.registerLazySingleton<ProfileBloc>(
-    () => ProfileBloc(),
-  );
+  sl.registerLazySingleton<ProfileBloc>(() => ProfileBloc());
   sl.registerLazySingleton<AirportBloc>(() => AirportBloc());
   sl.registerLazySingleton<FlightBookingBloc>(() => FlightBookingBloc());
   sl.registerLazySingleton<FlightOffersBloc>(() => FlightOffersBloc());
   sl.registerLazySingleton<HotelBookingBloc>(() => HotelBookingBloc());
   sl.registerLazySingleton<MemoriesBloc>(() => MemoriesBloc());
   sl.registerLazySingleton<BudgetBloc>(() => BudgetBloc());
+  sl.registerLazySingleton<TravelDocumentBloc>(() => TravelDocumentBloc());
 }
 
 /// Registers all cubits

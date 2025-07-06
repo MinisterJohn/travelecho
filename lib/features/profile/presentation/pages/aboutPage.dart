@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import "../../profile_exports.dart";
+import "package:line_icons/line_icons.dart";
 
 class AboutPage extends StatelessWidget {
   const AboutPage({super.key});
@@ -33,147 +34,120 @@ class AboutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("About Travel Echo"),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-      ),
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Colors.deepPurple, Colors.purpleAccent],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Card(
-            color: Colors.white,
-            elevation: 8,
-            margin: const EdgeInsets.symmetric(horizontal: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Text(
-                      "Travel Echo",
-                      style: TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.deepPurple[800],
-                      ),
-                    ),
-                  ),
-                  WidgetsSpacer.verticalSpacer16,
-                  const Center(
-                    child: Text(
-                      "Your ultimate travel companion that keeps track of your journeys and memories.",
-                      style: TextStyle(
-                        fontSize: 16,
-                        height: 1.5,
-                        color: Colors.black87,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    "Free Tier",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple[800],
-                    ),
-                  ),
-                  WidgetsSpacer.verticalSpacer8,
-                  Column(
-                    children:
-                        freeTierFeatures.map((feature) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Icon(
-                                  Icons.check_circle_outline,
-                                  color: Colors.deepPurple,
-                                  size: 20,
-                                ),
-                                WidgetsSpacer.horizontalSpacer8,
-                                Expanded(
-                                  child: Text(
-                                    feature,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                  const SizedBox(height: 24),
-                  Text(
-                    "Premium Tier",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.deepPurple[800],
-                    ),
-                  ),
-                  WidgetsSpacer.verticalSpacer8,
-                  Column(
-                    children:
-                        premiumTierFeatures.map((feature) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Icon(
-                                  Icons.star_border,
-                                  color: Colors.deepPurple,
-                                  size: 20,
-                                ),
-                                WidgetsSpacer.horizontalSpacer8,
-                                Expanded(
-                                  child: Text(
-                                    feature,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        }).toList(),
-                  ),
-                  const SizedBox(height: 24),
-                  const Center(
-                    child: Text(
-                      "Join us on your next adventure with Travel Echo and experience travel like never before.",
-                      style: TextStyle(
-                        fontSize: 16,
-                        height: 1.5,
-                        color: Colors.black87,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                ],
+      appBar: setAppBar("About Travel echo", context),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Center(
+              child: Text(
+                "Travel echo",
+                style: TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                  color: AppColors.primaryColor,
+                ),
               ),
             ),
-          ),
+            WidgetsSpacer.verticalSpacer16,
+            const Center(
+              child: Text(
+                "Your ultimate travel companion that keeps track of your journeys and memories.",
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              "Free Tier",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryColor,
+              ),
+            ),
+            WidgetsSpacer.verticalSpacer8,
+            Column(
+              children:
+                  freeTierFeatures.map((feature) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            LineIcons.gift,
+                            color: AppColors.primaryColor,
+                            size: 20,
+                          ),
+                          WidgetsSpacer.horizontalSpacer8,
+                          Expanded(
+                            child: Text(
+                              feature,
+                              style: const TextStyle(fontSize: 16),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+            ),
+            const SizedBox(height: 24),
+            Text(
+              "Premium Tier",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: AppColors.primaryColor,
+              ),
+            ),
+            WidgetsSpacer.verticalSpacer8,
+            Column(
+              children:
+                  premiumTierFeatures.map((feature) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 4.0),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Icon(
+                            LineIcons.gem,
+                            color: AppColors.primaryColor,
+                            size: 20,
+                          ),
+                          WidgetsSpacer.horizontalSpacer8,
+                          Expanded(
+                            child: Text(
+                              feature,
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: Colors.black87,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+            ),
+            const SizedBox(height: 24),
+            const Center(
+              child: Text(
+                "Join us on your next adventure with Travel Echo and experience travel like never before.",
+                style: TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                  color: Colors.black87,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ],
         ),
       ),
     );

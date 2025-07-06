@@ -110,9 +110,13 @@ class _AddTagPageState extends State<AddTagPage> {
                         // Handle done action here
                       }
                       : null,
-              child: const Text(
+              child: Text(
                 'Done',
-                style: TextStyle(color: Colors.white, fontSize: 16),
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),

@@ -9,7 +9,8 @@ class ExpenseModel extends Equatable {
   final String category; // e.g., Food, Transport, Lodging
   final double? plannedAmount; // optional
   final double amount; // actual spent
-  final DateTime date;
+  final DateTime? createdAt;
+  final DateTime? updatedAt;
   final String? notes;
   final String? receiptImageUrl;
 
@@ -22,7 +23,8 @@ class ExpenseModel extends Equatable {
     required this.plannedAmount,
     required this.amount,
     required this.userId,
-    required this.date,
+    this.createdAt,
+    this.updatedAt,
     this.notes,
     this.receiptImageUrl,
   });
@@ -37,7 +39,8 @@ class ExpenseModel extends Equatable {
       'plannedAmount': plannedAmount,
       'amount': amount,
       'userId': userId,
-      'date': date.toIso8601String(),
+      'createdAt': createdAt?.toIso8601String(),
+      'updatedAt': updatedAt?.toIso8601String(),
       'notes': notes,
       'receiptImageUrl': receiptImageUrl,
     };
@@ -53,7 +56,14 @@ class ExpenseModel extends Equatable {
       plannedAmount: (map['plannedAmount'] as num?)?.toDouble(),
       amount: (map['actualAmount'] as num?)?.toDouble() ?? 0.0,
       userId: map['user'] ?? "",
-      date: map['date'] != null ? DateTime.parse(map['date']) : DateTime.now(),
+      createdAt:
+          map['createdAt'] != null
+              ? DateTime.parse(map['createdAt'])
+              : DateTime.now(),
+      updatedAt:
+          map['updatedAt'] != null
+              ? DateTime.parse(map['updatedAt'])
+              : DateTime.now(),
       notes: map['notes'] ?? "",
       receiptImageUrl: map['receiptImageUrl'] ?? "",
     );
@@ -69,13 +79,14 @@ class ExpenseModel extends Equatable {
     plannedAmount,
     amount,
     userId,
-    date,
+    createdAt,
+    updatedAt,
     notes,
     receiptImageUrl,
   ];
   @override
   String toString() {
-    return 'ExpenseModel(id: $id, tripId: $tripId, budgetId: $budgetId, title: $title, category: $category, plannedAmount: $plannedAmount, amount: $amount, userId: $userId, date: $date, notes: $notes, receiptImageUrl: $receiptImageUrl)';
+    return 'ExpenseModel(id: $id, tripId: $tripId, budgetId: $budgetId, title: $title, category: $category, plannedAmount: $plannedAmount, amount: $amount, userId: $userId, date: $createdAt, notes: $notes, receiptImageUrl: $receiptImageUrl)';
   }
 
   ExpenseModel copyWith({
@@ -87,7 +98,8 @@ class ExpenseModel extends Equatable {
     double? plannedAmount,
     double? amount,
     String? userId,
-    DateTime? date,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     String? notes,
     String? receiptImageUrl,
   }) {
@@ -100,7 +112,8 @@ class ExpenseModel extends Equatable {
       plannedAmount: plannedAmount ?? this.plannedAmount,
       amount: amount ?? this.amount,
       userId: userId ?? this.userId,
-      date: date ?? this.date,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       notes: notes ?? this.notes,
       receiptImageUrl: receiptImageUrl ?? this.receiptImageUrl,
     );

@@ -132,8 +132,7 @@ class AuthRepositoryImpl implements AuthRepository {
     late SharedPreferences sharedPreferences;
 
     sharedPreferences = await SharedPreferences.getInstance();
-    bool? isNotNewUser = sharedPreferences.getBool('is_not_new_user');
-    if (isNotNewUser == null) return false;
+    bool isNotNewUser = sharedPreferences.getBool('is_not_new_user') ?? false;
     return isNotNewUser;
   }
 

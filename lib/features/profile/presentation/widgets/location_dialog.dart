@@ -165,7 +165,14 @@ class _LocationDialogState extends State<LocationDialog> {
                 elevation: 0,
                 side: const BorderSide(color: AppColors.primaryColor),
               ),
-              child: const Text("Add Custom Location"),
+              child: const Text(
+                "Add Custom Location",
+                style: TextStyle(
+                  color: AppColors.primaryColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
             ),
           ],
         ),

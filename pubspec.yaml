@@ -25,6 +25,7 @@ dependencies:
   camera: ^0.10.5
   path_provider: ^2.0.10
   image_picker: ^1.0.7
+  image_cropper: ^9.1.0
   gal: ^2.1.0
   dio: ^5.7.0
   http: ^1.1.0
@@ -43,6 +44,8 @@ dependencies:
   shimmer: ^3.0.0
   readmore: ^3.0.0
   dropdown_search: ^6.0.2
+  fl_chart: ^1.0.0
+  syncfusion_flutter_charts: ^29.2.10
 
 dev_dependencies:
   flutter_test:

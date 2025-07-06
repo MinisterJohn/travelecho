@@ -4,6 +4,7 @@ class ExpenseParams {
   final String category; // e.g., Food, Transport, Lodging
   final double plannedAmount; // optional
   final double? actualAmount; // actual spent
+  final dynamic receiptFilePath;
   final String? notes;
 
   const ExpenseParams({
@@ -12,6 +13,7 @@ class ExpenseParams {
     required this.category,
     required this.plannedAmount,
     this.actualAmount,
+    this.receiptFilePath,
     this.notes,
   });
 
@@ -22,6 +24,7 @@ class ExpenseParams {
       'category': category,
       'plannedAmount': plannedAmount,
       'actualAmount': actualAmount ?? 0.0,
+      're'
       'notes': notes,
     };
   }

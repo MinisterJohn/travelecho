@@ -329,14 +329,24 @@ Widget _buildNextButton(
           );
           AppNavigator.pop(context);
         },
-        style: ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+        style: mergeWithThemeButtonStyle(
+          context,
+          ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
+        ),
         child:
             state is ProfileUpdating
                 ? CircularProgressIndicator(
                   strokeWidth: 1.5,
                   color: AppColors.white,
                 )
-                : const Text("Done"),
+                : Text(
+                  "Done",
+                  style: TextStyle(
+                    fontSize: FontSize.size16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
+                ),
       );
     },
   );

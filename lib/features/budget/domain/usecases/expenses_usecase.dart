@@ -6,7 +6,7 @@ class CreateExpenseUseCase {
 
   CreateExpenseUseCase();
 
-  Future<Either<String, void>> call(ExpenseParams expense) {
+  Future<Either<String, ExpenseModel>> call(ExpenseParams expense) {
     return repository.createExpense(expense);
   }
 }
@@ -16,7 +16,7 @@ class UpdateExpenseUseCase {
 
   UpdateExpenseUseCase();
 
-  Future<Either<String, void>> call(String id, ExpenseParams expense) {
+  Future<Either<String, ExpenseModel>> call(String id, ExpenseParams expense) {
     return repository.updateExpense(id, expense);
   }
 }
@@ -28,6 +28,17 @@ class DeleteExpenseUseCase {
 
   Future<Either<String, void>> call(String id) {
     return repository.deleteExpense(id);
+  }
+}
+
+class UploadExpenseReceiptUseCase {
+  final BudgetRepository repository = sl<BudgetRepository>();
+
+  UploadExpenseReceiptUseCase();
+
+  Future<Either<String, void>> call(String expenseId, dynamic filePath) {
+    print("filePath $filePath");
+    return repository.uploadReceipt(expenseId: expenseId, filePath: filePath);
   }
 }
 

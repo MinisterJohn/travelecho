@@ -177,19 +177,22 @@ class _AddCardDetailsPageState extends State<AddCardDetailsPage> {
                   // Add your save functionality here
                   print("Card details saved");
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.purple,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 150,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                style: mergeWithThemeButtonStyle(
+                  context,
+                  ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 150,
+                      vertical: 15,
+                    ),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   "Save",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: FontSize.size16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
                 ),
               ),
             ),

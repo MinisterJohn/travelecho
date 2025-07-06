@@ -44,6 +44,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final budgetBloc = context.read<BudgetBloc>();
     return Scaffold(
       appBar: setAppBar("Track Expense", context),
       floatingActionButton: FloatingActionButton(
@@ -73,7 +74,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -144,12 +145,16 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                             // fontWeight: FontWeight.bold,
                           ),
                         ),
-                        Text(
-                          "${widget.currency.symbol.isNotEmpty ? widget.currency.symbol : widget.budget.currency} ${widget.budget.spentAmount.toString()}",
-                          style: const TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        BlocBuilder<BudgetBloc, BudgetState>(
+                          builder: (context, state) {
+                            return Text(
+                              "${widget.currency.symbol.isNotEmpty ? widget.currency.symbol : widget.budget.currency} ${state is SingleBudgetLoaded ? BudgetUtils.calculateSpentAmount(state.budget.expenses) : 0.0}",
+                              style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
@@ -225,7 +230,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                       ],
                       child: Container(
                         child:
-                            expensesData != null && expensesData.isNotEmpty
+                            expensesData.isNotEmpty
                                 ? ShowExpenses(
                                   expensesData: expensesData,
                                   budget: widget.budget,

@@ -23,19 +23,26 @@ void validatePostDiscard(BuildContext context) {
                   onPressed: () {
                     Navigator.of(context).pop(); // Close the dialog
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  style: mergeWithThemeButtonStyle(
+                    context,
+                    ElevatedButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'No',
-                    style: TextStyle(color: AppColors.white),
+                    style: TextStyle(
+                      fontSize: FontSize.size14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -44,19 +51,26 @@ void validatePostDiscard(BuildContext context) {
                     Navigator.of(context).pop(); // Close the dialog
                     // Add discard logic here
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.errorColor,
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 20,
-                      vertical: 10,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
+                  style: mergeWithThemeButtonStyle(
+                    context,
+                    ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.errorColor,
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 20,
+                        vertical: 10,
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     'Yes',
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      fontSize: FontSize.size14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
               ],

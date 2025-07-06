@@ -21,7 +21,7 @@ class TripProgressDisplay extends StatelessWidget {
         minimumSize: const Size(50, 70),
         backgroundColor: Colors.white,
         shadowColor: AppColors.defaultColor100,
-        // foregroundColor: Colors.black,
+        foregroundColor: Colors.black,
         elevation: 1.5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(6),
@@ -41,9 +41,9 @@ class TripProgressDisplay extends StatelessWidget {
               WidgetsSpacer.horizontalSpacer8,
               Text(
                 progressValue,
-                style: const TextStyle(
+                style: TextStyle(
                     color: AppColors.defaultColor,
-                    fontSize: 16,
+                    fontSize: FontSize.size16,
                     fontWeight: FontWeight.bold),
                 softWrap: true,
               ),

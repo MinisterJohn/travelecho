@@ -35,26 +35,10 @@ class BudgetForm extends StatelessWidget {
           ),
         ),
         WidgetsSpacer.verticalSpacer20,
-        TextField(
+        FormattedAmountField(
           controller: plannedAmountController,
-          decoration: InputDecoration(
-            prefixIcon:
-                selectedCurrencyInfo.symbol.isNotEmpty
-                    ? Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 16.0,
-                      ),
-                      child: Text(
-                        selectedCurrencyInfo.symbol,
-                        style: TextStyle(fontSize: FontSize.size28),
-                      ),
-                    )
-                    : const Icon(Icons.attach_money),
-            labelText: 'Planned Amount',
-            border: const OutlineInputBorder(),
-          ),
-          keyboardType: TextInputType.number,
+          currencySymbol: selectedCurrencyInfo.symbol,
+          labelText: "Planned Amount"
         ),
         WidgetsSpacer.verticalSpacer20,
         CurrencySearchableDropdown(

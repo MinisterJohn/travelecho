@@ -54,7 +54,7 @@ export 'presentation/pages/helpPage.dart';
 export 'presentation/pages/changepassword.dart';
 // export 'presentation/pages/forgotmypassword.dart';
 export 'presentation/pages/loginandsecurity.dart';
-export 'presentation/pages/passportpage.dart';
+// export '../passport/presentation/pages/passportpage.dart';
 export 'presentation/pages/passsavepref.dart';
 export 'presentation/pages/saveinterest.dart';
 export 'presentation/widgets/interests_dialog.dart';
@@ -74,4 +74,7 @@ export 'presentation/widgets/editable_fields_section.dart';
 // export 'presentation/widgets/languages_dialog.dart';
 // export 'presentation/widgets/interests_dialog.dart';
 
+
+//utils
+export 'presentation/utils/faq_items.dart';
 export "../features_exports.dart";

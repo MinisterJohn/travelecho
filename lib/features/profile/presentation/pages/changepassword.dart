@@ -115,7 +115,14 @@ class PasswordChangedPage extends StatelessWidget {
                             onPressed: () {
                               Navigator.pop(context);
                             },
-                            child: const Text('No'),
+                            child: const Text(
+                              'No',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.defaultColor400,
+                              ),
+                            ),
                           ),
                           TextButton(
                             onPressed: () {
@@ -124,16 +131,27 @@ class PasswordChangedPage extends StatelessWidget {
                                 (route) => route.isFirst,
                               );
                             },
-                            child: const Text('Yes'),
+                            child: const Text(
+                              'Yes',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: AppColors.defaultColor400,
+                              ),
+                            ),
                           ),
                         ],
                       ),
                 );
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
-              child: const Text(
+              child: Text(
                 'Go Back',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  fontSize: FontSize.size16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
+                ),
               ),
             ),
           ],
@@ -193,16 +211,22 @@ class _PasswordInputPageState extends State<PasswordInputPage> {
                   widget.onConfirm();
                 }
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.purple,
-                minimumSize: const Size(
-                  300,
-                  50,
-                ), // Increase width and height here
+              style: mergeWithThemeButtonStyle(
+                context,
+                ElevatedButton.styleFrom(
+                  minimumSize: const Size(
+                    300,
+                    50,
+                  ), // Increase width and height here
+                ),
               ),
-              child: const Text(
+              child: Text(
                 'Confirm',
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  fontSize: FontSize.size16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
+                ),
               ),
             ),
           ),

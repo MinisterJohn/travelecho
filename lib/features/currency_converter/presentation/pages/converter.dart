@@ -158,8 +158,11 @@ class _ConverterPageState extends State<ConverterPage> {
                     WidgetsSpacer.verticalSpacer16,
                     ElevatedButton(
                       onPressed: _isLoading ? null : _convertCurrency,
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
+                      style: mergeWithThemeButtonStyle(
+                        context,
+                        ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
                       ),
                       child:
                           _isLoading
@@ -168,11 +171,12 @@ class _ConverterPageState extends State<ConverterPage> {
                                   Colors.white,
                                 ),
                               )
-                              : const Text(
+                              : Text(
                                 "Convert",
                                 style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 16,
+                                  fontSize: FontSize.size16,
+                                  fontWeight: FontWeight.w400,
+                                  color: AppColors.white,
                                 ),
                               ),
                     ),

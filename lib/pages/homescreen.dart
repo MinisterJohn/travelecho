@@ -195,11 +195,12 @@ class _HomeScreenState extends State<HomeScreen2> {
                                 minimumSize: const Size(double.infinity,
                                     30), // Adjusted width and height
                               ),
-                              child: const Text(
+                              child: Text(
                                 "See more",
                                 style: TextStyle(
                                   color: Color.fromARGB(255, 41, 40, 41),
                                   fontWeight: FontWeight.bold,
+                                  fontSize: FontSize.size14
                                 ),
                               ),
                             ),

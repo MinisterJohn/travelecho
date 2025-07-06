@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../budget_exports.dart';
 
 class ShowExpenses extends StatelessWidget {
-  final BudgetModel budget;
+  final BudgetModel? budget;
   final List<ExpenseModel> expensesData;
   final CurrencyInfo currency;
 
   const ShowExpenses({
     super.key,
-    required this.budget,
+    this.budget,
     required this.currency,
     required this.expensesData,
   });
@@ -42,42 +42,50 @@ class ShowExpenses extends StatelessWidget {
               }).toList(),
         ),
         WidgetsSpacer.verticalSpacer20,
-        ElevatedButton(
-          onPressed: () {
-            AppNavigator.push(
-              context,
+        if (budget != null)
+          ElevatedButton(
+            onPressed: () {
+              AppNavigator.push(
+                context,
 
-              MultiBlocProvider(
-                providers: [
-                  BlocProvider.value(value: sl<BudgetBloc>()),
-                  BlocProvider.value(value: sl<CurrencyBloc>()),
-                ],
-                child: BlocBuilder<CurrencyBloc, CurrencyState>(
-                  builder: (context, state) {
-                    return AddExpensePage(
-                      budget: budget,
-                      mergedCurrencies:
-                          state is MergedCurrencyListLoaded
-                              ? state.currencies
-                              : [],
-                    );
-                  },
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: sl<BudgetBloc>()),
+                    BlocProvider.value(value: sl<CurrencyBloc>()),
+                  ],
+                  child: BlocBuilder<CurrencyBloc, CurrencyState>(
+                    builder: (context, state) {
+                      return AddExpensePage(
+                        budget: budget!,
+                        mergedCurrencies:
+                            state is MergedCurrencyListLoaded
+                                ? state.currencies
+                                : [],
+                      );
+                    },
+                  ),
                 ),
-              ),
-            );
-            // Add your logic here
-          },
+              );
+              // Add your logic here
+            },
 
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.add, color: Colors.white),
-              SizedBox(width: 8),
-              Text('Add Expense', style: TextStyle(color: Colors.white)),
-            ],
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.add, color: Colors.white),
+                SizedBox(width: 8),
+                Text(
+                  'Add Expense',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
       ],
     );
   }

@@ -153,7 +153,10 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
                         decorationColor: AppColors.primaryColor,
                       ),
                     ),
-                    child: const Text('Clear Filters'),
+                    child: const Text(
+                      'Clear Filters',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
                 WidgetsSpacer.horizontalSpacer16,
@@ -168,13 +171,14 @@ class _MemoryFilterDialogState extends State<MemoryFilterDialog> {
                       );
                       Navigator.pop(context);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                    ),
+
                     child: const Text(
                       'Apply Filters',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),

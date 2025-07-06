@@ -43,6 +43,7 @@ class ShowEmptyExpense extends StatelessWidget {
           ),
         ),
         WidgetsSpacer.verticalSpacer20,
+
         Center(
           child: ElevatedButton(
             onPressed: () {
@@ -68,20 +69,17 @@ class ShowEmptyExpense extends StatelessWidget {
                 ),
               );
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF930BFF),
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-              textStyle: const TextStyle(fontSize: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-            child: const Row(
+
+            child:  Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   'Plan your Expense',
-                  style: TextStyle(color: Colors.white),
+                 style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
                 ),
                 SizedBox(width: 8),
                 Icon(Icons.add, color: Colors.white),

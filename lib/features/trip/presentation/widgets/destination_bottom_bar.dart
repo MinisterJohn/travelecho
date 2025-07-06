@@ -27,16 +27,28 @@ class DestinationBottomBar extends StatelessWidget {
               ),
               side: const BorderSide(color: AppColors.primaryColor300),
             ),
-            child: const Text("Clear"),
+            child: const Text(
+              "Clear",
+              style: TextStyle(
+                color: AppColors.primaryColor300,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
           ),
           ElevatedButton(
             onPressed: onNext,
-            style: ElevatedButton.styleFrom(
-              minimumSize: const Size(100, 40),
+            style: mergeWithThemeButtonStyle(
+              context,
+              ElevatedButton.styleFrom(minimumSize: const Size(100, 40)),
             ),
-            child: const Text(
+            child: Text(
               "Next",
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(
+                fontSize: FontSize.size16,
+                fontWeight: FontWeight.w400,
+                color: AppColors.white,
+              ),
             ),
           ),
         ],

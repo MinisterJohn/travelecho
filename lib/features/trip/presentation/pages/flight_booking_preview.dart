@@ -24,37 +24,35 @@ class FlightBookingPreview extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSection(
-                          "Flight Details",
-                          [
-                            _buildDetailRow(
-                                "From", originDestination.originLocationName),
-                            _buildDetailRow("To",
-                                originDestination.destinationLocationName),
-                            _buildDetailRow(
-                              "Date",
-                              "${originDestination.departureDateTimeRange.date} ${originDestination.departureDateTimeRange.time}",
-                            ),
-                          ],
-                        ),
+                        _buildSection("Flight Details", [
+                          _buildDetailRow(
+                            "From",
+                            originDestination.originLocationName,
+                          ),
+                          _buildDetailRow(
+                            "To",
+                            originDestination.destinationLocationName,
+                          ),
+                          _buildDetailRow(
+                            "Date",
+                            "${originDestination.departureDateTimeRange.date} ${originDestination.departureDateTimeRange.time}",
+                          ),
+                        ]),
                         WidgetsSpacer.verticalSpacer16,
-                        _buildSection(
-                          "Travelers",
-                          [
-                            _buildDetailRow(
-                              "Adults",
-                              "${booking.travelers.where((t) => t.travelerType == "ADULT").length}",
-                            ),
-                            _buildDetailRow(
-                              "Children",
-                              "${booking.travelers.where((t) => t.travelerType == "CHILD").length}",
-                            ),
-                            _buildDetailRow(
-                              "Infants",
-                              "${booking.travelers.where((t) => t.travelerType == "INFANT").length}",
-                            ),
-                          ],
-                        ),
+                        _buildSection("Travelers", [
+                          _buildDetailRow(
+                            "Adults",
+                            "${booking.travelers.where((t) => t.travelerType == "ADULT").length}",
+                          ),
+                          _buildDetailRow(
+                            "Children",
+                            "${booking.travelers.where((t) => t.travelerType == "CHILD").length}",
+                          ),
+                          _buildDetailRow(
+                            "Infants",
+                            "${booking.travelers.where((t) => t.travelerType == "INFANT").length}",
+                          ),
+                        ]),
                         WidgetsSpacer.verticalSpacer32,
                         ElevatedButton(
                           onPressed: () {
@@ -63,26 +61,32 @@ class FlightBookingPreview extends StatelessWidget {
                               MultiBlocProvider(
                                 providers: [
                                   BlocProvider.value(
-                                      value: sl<FlightBookingBloc>()),
+                                    value: sl<FlightBookingBloc>(),
+                                  ),
                                   BlocProvider.value(
-                                      value: sl<FlightOffersBloc>()),
+                                    value: sl<FlightOffersBloc>(),
+                                  ),
                                   BlocProvider(
-                                      create: (context) => sl<AirlineCubit>())
+                                    create: (context) => sl<AirlineCubit>(),
+                                  ),
                                 ],
                                 child: const FlightOffers(),
                               ),
                             );
                           },
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                            backgroundColor: AppColors.primaryColor,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                          style: mergeWithThemeButtonStyle(
+                            context,
+                            ElevatedButton.styleFrom(
+                              minimumSize: const Size(double.infinity, 50),
                             ),
                           ),
-                          child: const Text(
+                          child: Text(
                             "Book Now",
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                              fontSize: FontSize.size16,
+                              fontWeight: FontWeight.w400,
+                              color: AppColors.white,
+                            ),
                           ),
                         ),
                       ],
@@ -104,10 +108,7 @@ class FlightBookingPreview extends StatelessWidget {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         WidgetsSpacer.verticalSpacer8,
         Container(
@@ -116,9 +117,7 @@ class FlightBookingPreview extends StatelessWidget {
             border: Border.all(color: AppColors.defaultColor100),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: Column(
-            children: children,
-          ),
+          child: Column(children: children),
         ),
       ],
     );
@@ -130,19 +129,10 @@ class FlightBookingPreview extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 16,
-              color: Colors.grey,
-            ),
-          ),
+          Text(label, style: const TextStyle(fontSize: 16, color: Colors.grey)),
           Text(
             value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-            ),
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
           ),
         ],
       ),

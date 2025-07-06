@@ -22,25 +22,30 @@ class NewUserWelcomePage extends StatelessWidget {
                 Text(
                   "Welcome",
                   style: TextStyle(
-                      color: AppColors.primaryColor,
-                      fontSize: FontSize.size32,
-                      fontWeight: FontWeight.bold),
+                    color: AppColors.primaryColor,
+                    fontSize: FontSize.size32,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 WidgetsSpacer.verticalSpacer32,
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text("Your Account has been Created",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: FontSize.size16,
-                        ),
-                        textAlign: TextAlign.center),
+                    Text(
+                      "Your Account has been Created",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: FontSize.size16,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
                     WidgetsSpacer.verticalSpacer8,
-                    Text("Experience a flawless, stress free journey",
-                        style: TextStyle(fontSize: FontSize.size16),
-                        textAlign: TextAlign.center)
+                    Text(
+                      "Experience a flawless, stress free journey",
+                      style: TextStyle(fontSize: FontSize.size16),
+                      textAlign: TextAlign.center,
+                    ),
                   ],
                 ),
                 WidgetsSpacer.verticalSpacer32,
@@ -51,14 +56,20 @@ class NewUserWelcomePage extends StatelessWidget {
                   onPressed: () {
                     AppNavigator.pushAndRemove(context, const LoginPage());
                   },
-                  style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(double.infinity, 50)),
+                  style: mergeWithThemeButtonStyle(
+                    context,
+                    ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 50),
+                    ),
+                  ),
                   child: Text(
                     "Login",
                     style: TextStyle(
-                        color: AppColors.white, fontSize: FontSize.size16),
+                      color: AppColors.white,
+                      fontSize: FontSize.size16,
+                    ),
                   ),
-                )
+                ),
               ],
             ),
           ),

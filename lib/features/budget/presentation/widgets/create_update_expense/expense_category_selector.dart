@@ -67,8 +67,8 @@ class _ExpenseCategorySelectorState extends State<ExpenseCategorySelector> {
                             onTap: () {
                               setState(() {
                                 selectedCategory = category.name;
-                              });
                               widget.onCategorySelected(category.name);
+                              });
                               Navigator.pop(context);
                             },
                           );

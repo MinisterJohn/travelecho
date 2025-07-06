@@ -232,9 +232,19 @@ class _FlightDetailState extends State<FlightDetail> {
                         // TODO: Implement booking functionality
                       },
                       icon: const Icon(Icons.flight_takeoff),
-                      label: const Text('Book This Flight'),
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(double.infinity, 50),
+                      label: Text(
+                        'Book This Flight',
+                        style: TextStyle(
+                          fontSize: FontSize.size16,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.white,
+                        ),
+                      ),
+                      style: mergeWithThemeButtonStyle(
+                        context,
+                        ElevatedButton.styleFrom(
+                          minimumSize: const Size(double.infinity, 50),
+                        ),
                       ),
                     ),
                   ),

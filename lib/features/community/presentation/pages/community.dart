@@ -70,12 +70,19 @@ class CommunityPage extends StatelessWidget {
               onPressed: () {
                 AppNavigator.push(context, const ProfileIDPage());
               },
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(double.infinity, 50),
+              style: mergeWithThemeButtonStyle(
+                context,
+                ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
+                ),
               ),
-              child: const Text(
+              child: Text(
                 'Get Started',
-                style: TextStyle(color: AppColors.white, fontSize: 18),
+                style: TextStyle(
+                  fontSize: FontSize.size18,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
+                ),
               ),
             ),
           ),

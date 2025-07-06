@@ -120,7 +120,11 @@ class MemoriesListSection extends StatelessWidget {
           children: [
             Text((state as MemoryError).message),
             WidgetsSpacer.verticalSpacer16,
-            ElevatedButton(onPressed: onRetry, child: const Text('Retry')),
+            ElevatedButton(onPressed: onRetry, child: Text('Retry', style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w400,
+                                  color: Colors.white,
+                                ))),
           ],
         ),
       );

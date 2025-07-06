@@ -25,7 +25,10 @@ class _BudgetTrackerState extends State<BudgetTracker> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: setAppBar('Travel Budget', context),
+      appBar: AppBar(
+        title: Text('Travel Budget', style: TextStyle(fontSize: 20)),
+        centerTitle: true,
+      ),
       body: Stack(
         children: [
           RefreshIndicator(
@@ -39,7 +42,6 @@ class _BudgetTrackerState extends State<BudgetTracker> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Row with Budget Overview and Expense Tracker images
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -52,15 +54,27 @@ class _BudgetTrackerState extends State<BudgetTracker> {
                       ],
                     ),
                     const SizedBox(height: 30),
-                    // currentBudgetTool == "Budget Overview"
-                    MultiBlocProvider(
-                      providers: [
-                        BlocProvider.value(value: sl<BudgetBloc>()),
-                        BlocProvider.value(value: sl<CurrencyBloc>()),
-                      ],
-                      child: BudgetScreen(),
-                    ),
-                    // : Container()
+                    currentBudgetTool == "Budget Overview"
+                        ? MultiBlocProvider(
+                          providers: [
+                            BlocProvider.value(value: sl<BudgetBloc>()),
+                            BlocProvider.value(value: sl<CurrencyBloc>()),
+                          ],
+                          child: BudgetScreen(),
+                        )
+                        : MultiBlocProvider(
+                          providers: [
+                            BlocProvider.value(value: sl<BudgetBloc>()),
+                            BlocProvider.value(value: sl<CurrencyBloc>()),
+                          ],
+                          child: ExpenseTracker(
+                            currencyInfo: CurrencyInfo(
+                              key: "USD",
+                              name: "US Dollar",
+                              symbol: "\$",
+                            ),
+                          ),
+                        ),
                   ],
                 ),
               ),
@@ -174,28 +188,9 @@ class _BudgetTrackerState extends State<BudgetTracker> {
           ),
         ],
       ),
-
-      // floatingActionButton: Positioned(
-      //   bottom: 16, // Distance from the bottom of the screen
-      //   left: 16, // Distance from the left of the screen
-      //   child: FloatingActionButton(
-      //     shape: RoundedRectangleBorder(
-      //       borderRadius: BorderRadius.all(Radius.circular(50)), // Rounded corners
-      //     ),
-      //     onPressed: () {
-      //       // Add your onPressed logic here
-      //     },
-      //     backgroundColor: AppColors.primaryColor,
-      //     child: const Icon(
-      //       Icons.add,
-      //       color: Colors.white,
-      //     ),
-      //   ),
-      // ),
     );
   }
 
-  // Widget for Budget Overview and Expense Tracker images
   Widget _budgetTools(IconData icon, String label) {
     return Expanded(
       child: GestureDetector(
@@ -226,6 +221,7 @@ class _BudgetTrackerState extends State<BudgetTracker> {
                   color:
                       currentBudgetTool == label ? Colors.white : Colors.black,
                   size: 50,
+                  weight: 5,
                 ),
                 const SizedBox(height: 10),
                 Text(

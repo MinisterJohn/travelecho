@@ -168,7 +168,10 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                 children: [
                   Text(
                     'Add Custom Expense Category',
-                    style: TextStyle(color: AppColors.primaryColor),
+                    style: TextStyle(
+                      color: AppColors.primaryColor,
+                      fontSize: 16,
+                    ),
                   ),
                   SizedBox(width: 8),
                   Icon(Icons.add, color: AppColors.primaryColor),
@@ -196,17 +199,7 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                     // Implement save functionality
                     // print('Selected Expenses: ${widget.budget.expenseList}');
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF930BFF),
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 13,
-                      vertical: 12,
-                    ),
-                    textStyle: const TextStyle(fontSize: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                  ),
+
                   child: const Text(
                     'Done',
                     style: TextStyle(color: Colors.white),
@@ -305,7 +298,14 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
               actions: [
                 TextButton(
                   onPressed: () => Navigator.pop(context),
-                  child: const Text('Close'),
+                  child: const Text(
+                    'Close',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.defaultColor400,
+                    ),
+                  ),
                 ),
                 ElevatedButton(
                   onPressed: () {
@@ -336,9 +336,13 @@ class _AddCategoriesScreenState extends State<AddCategoriesScreen> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Add",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      fontSize: FontSize.size18,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
               ],

@@ -92,7 +92,11 @@ class _NewBudgetPageState extends State<NewBudgetPage> {
 
   void handleSave() {
     final budgetName = _budgetNameController.text.trim();
-    final plannedAmount = _plannedAmountController.text.trim();
+    final plannedAmount = _plannedAmountController.text.trim().replaceAll(
+      ',',
+      '',
+    );
+
     final notes = _notesController.text.trim();
 
     if (budgetName.isEmpty || plannedAmount.isEmpty) {
@@ -101,6 +105,7 @@ class _NewBudgetPageState extends State<NewBudgetPage> {
     }
 
     final parsedAmount = double.tryParse(plannedAmount);
+    print(parsedAmount);
     if (parsedAmount == null || parsedAmount <= 0) {
       DisplayMessage.errorMessage(
         'Please enter a valid planned amount',
@@ -173,7 +178,17 @@ class _NewBudgetPageState extends State<NewBudgetPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            TextButton(onPressed: () {}, child: const Text("Reset")),
+            TextButton(
+              onPressed: () {},
+              child: const Text(
+                "Reset",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.defaultColor400,
+                ),
+              ),
+            ),
             BlocBuilder<BudgetBloc, BudgetState>(
               builder: (BuildContext context, BudgetState state) {
                 if (state is BudgetLoading) {
@@ -181,7 +196,14 @@ class _NewBudgetPageState extends State<NewBudgetPage> {
                 }
                 return ElevatedButton(
                   onPressed: state is BudgetLoading ? null : handleSave,
-                  child: const Text("Save"),
+                  child: Text(
+                    "Save",
+                    style: TextStyle(
+                      fontSize: FontSize.size16,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.white,
+                    ),
+                  ),
                 );
               },
             ),

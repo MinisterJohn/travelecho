@@ -13,13 +13,13 @@ void showWhereISchooledDialog(BuildContext context) {
     debounce = Timer(const Duration(milliseconds: 500), () {
       if (!context.mounted) return;
       if (value.isEmpty || value.length <= 1) {
-        context
-            .read<DataSearchBloc>()
-            .add(const ClearSearchResults(type: SearchType.school));
+        context.read<DataSearchBloc>().add(
+          const ClearSearchResults(type: SearchType.school),
+        );
       } else {
-        context
-            .read<DataSearchBloc>()
-            .add(SchoolListRequested(schoolHint: value));
+        context.read<DataSearchBloc>().add(
+          SchoolListRequested(schoolHint: value),
+        );
       }
     });
   }
@@ -46,15 +46,19 @@ void showWhereISchooledDialog(BuildContext context) {
               return relatedSchools.isNotEmpty ||
                       schoolNameController.text.length >= 2
                   ? _relatedSchoolsWidget(
-                      relatedSchools, context, schoolNameController)
+                    relatedSchools,
+                    context,
+                    schoolNameController,
+                  )
                   : const SizedBox();
             },
           ),
           BlocBuilder<ProfileBloc, ProfileState>(
             builder: (context, state) {
-              final selectedSchool = state is ProfileLoaded
-                  ? state.profile.school
-                  : const SchoolModel(name: "", country: "");
+              final selectedSchool =
+                  state is ProfileLoaded
+                      ? state.profile.school
+                      : const SchoolModel(name: "", country: "");
               return selectedSchool.name.isNotEmpty &&
                       schoolNameController.text.isEmpty
                   ? _selectedSchoolWidget(selectedSchool)
@@ -75,20 +79,26 @@ Widget _buildHeader(BuildContext context) {
     children: [
       Text(
         "Where I schooled",
-        style:
-            TextStyle(fontSize: FontSize.size16, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: FontSize.size16,
+          fontWeight: FontWeight.bold,
+        ),
       ),
       GestureDetector(
         onTap: () => Navigator.of(context).pop(),
-        child:
-            const Icon(LineIcons.timesCircleAlt, color: AppColors.primaryColor),
+        child: const Icon(
+          LineIcons.timesCircleAlt,
+          color: AppColors.primaryColor,
+        ),
       ),
     ],
   );
 }
 
 Widget _buildSearchField(
-    TextEditingController controller, Function(String) onChanged) {
+  TextEditingController controller,
+  Function(String) onChanged,
+) {
   return TextField(
     controller: controller,
     onChanged: onChanged,
@@ -110,24 +120,38 @@ Widget _buildSearchField(
   );
 }
 
-Widget _relatedSchoolsWidget(List<SchoolModel> schools, BuildContext context,
-    TextEditingController schoolNameController) {
+Widget _relatedSchoolsWidget(
+  List<SchoolModel> schools,
+  BuildContext context,
+  TextEditingController schoolNameController,
+) {
   if (schools.isEmpty) {
     return Center(
-        child: Column(
-      children: [
-        const Text("Not Found"),
-        WidgetsSpacer.verticalSpacer16,
-        OutlinedButton(
+      child: Column(
+        children: [
+          const Text("Not Found"),
+          WidgetsSpacer.verticalSpacer16,
+          OutlinedButton(
             onPressed: () {},
             style: OutlinedButton.styleFrom(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8)),
-                elevation: 0,
-                side: const BorderSide(color: AppColors.primaryColor)),
-            child: const Text("Add Custom School"))
-      ],
-    ));
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+              elevation: 0,
+              side: const BorderSide(color: AppColors.primaryColor),
+            ),
+            child: const Text(
+              "Add Custom School",
+              style: TextStyle(
+                color: AppColors.primaryColor,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   return Container(
@@ -137,9 +161,10 @@ Widget _relatedSchoolsWidget(List<SchoolModel> schools, BuildContext context,
       borderRadius: BorderRadius.circular(20),
       boxShadow: const [
         BoxShadow(
-            color: AppColors.defaultColor100,
-            blurRadius: 5,
-            offset: Offset(0, 2)),
+          color: AppColors.defaultColor100,
+          blurRadius: 5,
+          offset: Offset(0, 2),
+        ),
       ],
     ),
     constraints: const BoxConstraints(maxHeight: 200),
@@ -150,19 +175,21 @@ Widget _relatedSchoolsWidget(List<SchoolModel> schools, BuildContext context,
         itemBuilder: (context, index) {
           final school = schools[index];
           return ListTile(
-            title: Text(school.name,
-                style: const TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(
+              school.name,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
             subtitle: Text(school.country),
             contentPadding: EdgeInsets.zero,
             onTap: () {
               schoolNameController.clear();
-              context
-                  .read<ProfileBloc>()
-                  .add(ProfileUpdateRequested(school, ProfileUpdateKey.school));
+              context.read<ProfileBloc>().add(
+                ProfileUpdateRequested(school, ProfileUpdateKey.school),
+              );
 
-              context
-                  .read<DataSearchBloc>()
-                  .add(const ClearSearchResults(type: SearchType.school));
+              context.read<DataSearchBloc>().add(
+                const ClearSearchResults(type: SearchType.school),
+              );
             },
           );
         },
@@ -178,8 +205,10 @@ Widget _selectedSchoolWidget(SchoolModel selectedSchool) {
     child: Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(selectedSchool.name,
-            style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          selectedSchool.name,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         WidgetsSpacer.horizontalSpacer8,
         Text(selectedSchool.country, style: const TextStyle(fontSize: 12)),
       ],
@@ -207,7 +236,10 @@ Widget _buildAddButton(BuildContext context, TextEditingController controller) {
         child: Text(
           "Done",
           style: TextStyle(
-              color: Colors.white, fontSize: 16.0, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     ),

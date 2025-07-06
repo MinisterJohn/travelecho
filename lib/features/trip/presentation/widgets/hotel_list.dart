@@ -82,10 +82,7 @@ class HotelList extends StatelessWidget {
                       // Show booking dialog
                       _showBookingDialog(context, hotel);
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primaryColor,
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
+                   
                     child: const Text(
                       'Book Now',
                       style: TextStyle(

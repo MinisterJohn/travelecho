@@ -293,7 +293,10 @@ class _TravelerDetailsScreenState extends State<TravelerDetailsScreen> {
                 border: OutlineInputBorder(),
               ),
               items: const [
-                DropdownMenuItem(value: 'PASSPORT', child: Text('Passport')),
+                DropdownMenuItem(
+                  value: 'PASSPORT',
+                  child: Text('TravelDocument'),
+                ),
                 DropdownMenuItem(value: 'ID_CARD', child: Text('ID Card')),
               ],
               onChanged: (value) {

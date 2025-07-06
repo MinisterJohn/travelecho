@@ -52,26 +52,17 @@ class _FlightBookingState extends State<FlightBooking> {
 
     // Add adults
     for (int i = 0; i < adults; i++) {
-      flightBookingBloc.addTraveler(
-        id: "ADT_$i",
-        travelerType: "ADULT",
-      );
+      flightBookingBloc.addTraveler(id: "ADT_$i", travelerType: "ADULT");
     }
 
     // Add children
     for (int i = 0; i < children; i++) {
-      flightBookingBloc.addTraveler(
-        id: "CHD_$i",
-        travelerType: "CHILD",
-      );
+      flightBookingBloc.addTraveler(id: "CHD_$i", travelerType: "CHILD");
     }
 
     // Add infants
     for (int i = 0; i < infants; i++) {
-      flightBookingBloc.addTraveler(
-        id: "INF_$i",
-        travelerType: "INFANT",
-      );
+      flightBookingBloc.addTraveler(id: "INF_$i", travelerType: "INFANT");
     }
   }
 
@@ -109,9 +100,13 @@ class _FlightBookingState extends State<FlightBooking> {
                       borderRadius: BorderRadius.circular(8),
                     ),
                   ),
-                  child: const Text(
+                  child: Text(
                     "Next",
-                    style: TextStyle(color: Colors.white),
+                    style: TextStyle(
+                      fontSize: FontSize.size16,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.white,
+                    ),
                   ),
                 ),
             ],
@@ -128,66 +123,84 @@ class _FlightBookingState extends State<FlightBooking> {
           final originDestination =
               state.flightBooking.originDestinations.first;
           return SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(children: [
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
                 TripProgressDisplay(
-                    progressIcon: Icons.flight_takeoff_outlined,
-                    progressKey: "Origin Airport",
-                    progressValue: originDestination.originLocationCode,
-                    onPressed: () {
-                      AppNavigator.push(
-                          context,
-                          BlocProvider.value(
-                              value: sl<FlightBookingBloc>(),
-                              child: const TripScreen()));
-                    }),
+                  progressIcon: Icons.flight_takeoff_outlined,
+                  progressKey: "Origin Airport",
+                  progressValue: originDestination.originLocationCode,
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      BlocProvider.value(
+                        value: sl<FlightBookingBloc>(),
+                        child: const TripScreen(),
+                      ),
+                    );
+                  },
+                ),
                 WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
-                    progressIcon: Icons.flight_land_outlined,
-                    progressKey: "Destination Airport",
-                    progressValue: originDestination.destinationLocationCode,
-                    onPressed: () {
-                      AppNavigator.push(
-                          context,
-                          BlocProvider.value(
-                              value: sl<FlightBookingBloc>(),
-                              child: const SetDestination()));
-                    }),
+                  progressIcon: Icons.flight_land_outlined,
+                  progressKey: "Destination Airport",
+                  progressValue: originDestination.destinationLocationCode,
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      BlocProvider.value(
+                        value: sl<FlightBookingBloc>(),
+                        child: const SetDestination(),
+                      ),
+                    );
+                  },
+                ),
                 WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
-                    progressIcon: Icons.calendar_month_outlined,
-                    progressKey: "Date",
-                    progressValue:
-                        originDestination.departureDateTimeRange.date,
-                    onPressed: () {
-                      AppNavigator.push(
-                          context,
-                          BlocProvider.value(
-                              value: sl<FlightBookingBloc>(),
-                              child: const FlightDate()));
-                    }),
+                  progressIcon: Icons.calendar_month_outlined,
+                  progressKey: "Date",
+                  progressValue: originDestination.departureDateTimeRange.date,
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      BlocProvider.value(
+                        value: sl<FlightBookingBloc>(),
+                        child: const FlightDate(),
+                      ),
+                    );
+                  },
+                ),
                 WidgetsSpacer.horizontalSpacer8,
                 TripProgressDisplay(
-                    progressIcon: Icons.access_time_outlined,
-                    progressKey: "Departure Time",
-                    progressValue:
-                        originDestination.departureDateTimeRange.time,
-                    onPressed: () {
-                      AppNavigator.push(
-                          context,
-                          BlocProvider.value(
-                              value: sl<FlightBookingBloc>(),
-                              child: const FlightDate()));
-                    }),
-              ]));
+                  progressIcon: Icons.access_time_outlined,
+                  progressKey: "Departure Time",
+                  progressValue: originDestination.departureDateTimeRange.time,
+                  onPressed: () {
+                    AppNavigator.push(
+                      context,
+                      BlocProvider.value(
+                        value: sl<FlightBookingBloc>(),
+                        child: const FlightDate(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          );
         }
         return const SizedBox.shrink();
       },
     );
   }
 
-  Widget _setofpeople(String category, String categoryDescription, int value,
-      VoidCallback onIncrement, VoidCallback onDecrement) {
+  Widget _setofpeople(
+    String category,
+    String categoryDescription,
+    int value,
+    VoidCallback onIncrement,
+    VoidCallback onDecrement,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -197,13 +210,17 @@ class _FlightBookingState extends State<FlightBooking> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(category,
-                    style: const TextStyle(fontWeight: FontWeight.bold)),
+                Text(
+                  category,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
                 const SizedBox(height: 1),
                 Text(
                   categoryDescription,
                   style: const TextStyle(
-                      fontSize: 12, color: Color.fromRGBO(0, 0, 0, .5)),
+                    fontSize: 12,
+                    color: Color.fromRGBO(0, 0, 0, .5),
+                  ),
                 ),
               ],
             ),
@@ -215,25 +232,26 @@ class _FlightBookingState extends State<FlightBooking> {
                       onDecrement();
                       _updateTravelers();
                     },
-                    icon: const Icon(LineIcons.minusSquare,
-                        color: AppColors.defaultColor400),
+                    icon: const Icon(
+                      LineIcons.minusSquare,
+                      color: AppColors.defaultColor400,
+                    ),
                   ),
                 const SizedBox(width: 4),
-                Text(
-                  "$value",
-                  style: const TextStyle(fontSize: 16),
-                ),
+                Text("$value", style: const TextStyle(fontSize: 16)),
                 const SizedBox(width: 4),
                 IconButton(
                   onPressed: () {
                     onIncrement();
                     _updateTravelers();
                   },
-                  icon: const Icon(LineIcons.plusSquare,
-                      color: AppColors.defaultColor400),
+                  icon: const Icon(
+                    LineIcons.plusSquare,
+                    color: AppColors.defaultColor400,
+                  ),
                 ),
               ],
-            )
+            ),
           ],
         ),
         WidgetsSpacer.verticalSpacer8,

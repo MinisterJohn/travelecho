@@ -32,7 +32,14 @@ void handleDeleteMemory(BuildContext context, MemoryModel memory) {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: AppColors.defaultColor400,
+              ),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -41,7 +48,14 @@ void handleDeleteMemory(BuildContext context, MemoryModel memory) {
                 DeleteMemory(memoryId: memory.id),
               );
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                color: AppColors.errorColor,
+              ),
+            ),
           ),
         ],
       );

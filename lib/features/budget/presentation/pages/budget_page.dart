@@ -33,16 +33,22 @@ class BudgetPage extends StatelessWidget {
                 // );
                 // Navigate to Add Budget Screen
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 15,
+              style: mergeWithThemeButtonStyle(
+                context,
+                ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 15,
+                  ),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Add New Budget',
-                style: TextStyle(fontSize: 16, color: Colors.white),
+                style: TextStyle(
+                  fontSize: FontSize.size16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
+                ),
               ),
             ),
             WidgetsSpacer.verticalSpacer20,

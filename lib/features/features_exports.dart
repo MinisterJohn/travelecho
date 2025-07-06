@@ -3,6 +3,7 @@ export 'profile/profile_exports.dart';
 export 'auth/auth_exports.dart';
 export 'milestones/milestones_exports.dart';
 export 'community/community_exports.dart';
+export 'passport/passport_exports.dart';
 export 'currency_converter/currency_converter_exports.dart';
 export 'memories/memories_exports.dart';
 export 'visa_and_immigration/visa_and_immigration_exports.dart';

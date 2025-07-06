@@ -70,12 +70,13 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
                     color: AppColors.primaryColor,
                   ),
                   suffixIcon: IconButton(
-                    icon: interestController.text.trim().isNotEmpty
-                        ? const Icon(
-                            Icons.clear,
-                            color: AppColors.primaryColor,
-                          )
-                        : const SizedBox.shrink(),
+                    icon:
+                        interestController.text.trim().isNotEmpty
+                            ? const Icon(
+                              Icons.clear,
+                              color: AppColors.primaryColor,
+                            )
+                            : const SizedBox.shrink(),
                     onPressed: () {
                       interestController.clear();
                       if (debounce?.isActive ?? false) debounce!.cancel();
@@ -154,11 +155,19 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
             );
             AppNavigator.pop(context);
           },
-          style: ElevatedButton.styleFrom(
-            minimumSize: Size(double.infinity, 50),
+          style: mergeWithThemeButtonStyle(
+            context,
+            ElevatedButton.styleFrom(minimumSize: Size(double.infinity, 50)),
           ),
 
-          child: const Text("Done"),
+          child: Text(
+            "Done",
+            style: TextStyle(
+              fontSize: FontSize.size16,
+              fontWeight: FontWeight.w400,
+              color: AppColors.white,
+            ),
+          ),
         ),
       ],
     );
@@ -264,7 +273,7 @@ class _InterestSelectionPageState extends State<InterestSelectionPage> {
         interest,
         textAlign: TextAlign.center,
         style: TextStyle(
-          fontSize: 12.0, // Reduced font size for smaller buttons
+          fontSize: FontSize.size14, // Reduced font size for smaller buttons
           fontWeight: FontWeight.bold,
           color: isSelected ? AppColors.primaryColor : AppColors.defaultColor,
         ),

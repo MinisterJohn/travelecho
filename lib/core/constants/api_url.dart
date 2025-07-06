@@ -35,6 +35,14 @@ class ApiUrl {
   static String dynamicExpenseReceiptURL(String expenseId) =>
       "/users/me/expenses/$expenseId/receipt";
 
+  //passport
+  static const passportURL = "/users/me/passport";
+  static String dynamicTravelDocumentURL(String passportId) =>
+      "/users/me/passport/$passportId";
+  static String dynamicTravelDocumentImageUploadURL(String passportId) =>
+      "/users/me/passport/$passportId/images";
+  // static const passportImagesURL = "/users/me/passport/image";
+
   // Optional helper
   static String fullUrl(String path) {
     if (path.startsWith('/')) {

@@ -9,7 +9,7 @@ class CurrencyConverterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(leading: appBarIconButton(context)),
+      appBar: setAppBar("", context),
       body: const CurrencyConverterBody(),
     );
   }
@@ -120,17 +120,14 @@ class _CurrencyConverterBodyState extends State<CurrencyConverterBody>
                       child: const ConverterPage(),
                     ));
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryColor,
-                padding: const EdgeInsets.symmetric(vertical: 15),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                minimumSize: const Size(double.infinity, 0),
-              ),
-              child: const Text(
+            
+              child: Text(
                 "Get Started",
-                style: TextStyle(fontSize: 18, color: Colors.white),
+               style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.white,
+                ),
               ),
             ),
           ),

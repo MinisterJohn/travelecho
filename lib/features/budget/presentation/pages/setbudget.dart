@@ -167,20 +167,22 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
                         ),
                       );
                     },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF930BFF),
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 13,
-                        vertical: 12,
-                      ),
-                      textStyle: const TextStyle(fontSize: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
+                    style: mergeWithThemeButtonStyle(
+                      context,
+                      ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 13,
+                          vertical: 12,
+                        ),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Save',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(
+                        fontSize: FontSize.size16,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -341,20 +343,25 @@ class _SetBudgetScreenState extends State<SetBudgetScreen> {
               // _showNewBudgetDialog(context);
               _showModal(context);
             },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF930BFF),
-              padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-              textStyle: const TextStyle(fontSize: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+            style: mergeWithThemeButtonStyle(
+              context,
+              ElevatedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 30,
+                  vertical: 12,
+                ),
               ),
             ),
-            child: const Row(
+            child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   'Add Expense Category',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(
+                    fontSize: FontSize.size16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
                 ),
                 SizedBox(width: 8),
                 Icon(Icons.add, color: Colors.white),

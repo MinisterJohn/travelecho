@@ -64,8 +64,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     child: const Text(
                       'Login',
                       style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.primaryColor,
                       ),
                     ),
                   ),
@@ -131,9 +132,13 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                 borderRadius: BorderRadius.circular(10.0),
               ),
             ),
-            child: const Text(
+            child: Text(
               'Next',
-              style: TextStyle(color: Colors.white, fontSize: 18.0),
+              style: TextStyle(
+                fontSize: FontSize.size16,
+                fontWeight: FontWeight.w400,
+                color: AppColors.white,
+              ),
             ),
           ),
         ],
@@ -201,16 +206,19 @@ class _CodeValidationPageState extends State<CodeValidationPage> {
                 // Proceed to reset password page
                 Navigator.pushNamed(context, '/resetpassword');
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xff930BFF),
-                minimumSize: const Size(double.infinity, 50),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10.0),
+              style: mergeWithThemeButtonStyle(
+                context,
+                ElevatedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 50),
                 ),
               ),
-              child: const Text(
+              child: Text(
                 'Validate',
-                style: TextStyle(color: Colors.white, fontSize: 18.0),
+                style: TextStyle(
+                  fontSize: FontSize.size16,
+                  fontWeight: FontWeight.w400,
+                  color: AppColors.white,
+                ),
               ),
             ),
           ],

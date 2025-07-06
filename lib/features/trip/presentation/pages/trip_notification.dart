@@ -68,17 +68,7 @@ class TripNotification extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => const RootPage()),
                 ); // Go back to the budget screen
               },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF930BFF),
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 20,
-                  vertical: 12,
-                ),
-                textStyle: const TextStyle(fontSize: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(5),
-                ),
-              ),
+             
               child: const Text(
                 'Track your trip here!',
                 style: TextStyle(color: Colors.white),

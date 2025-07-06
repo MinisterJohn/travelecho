@@ -103,19 +103,22 @@ class TravelGuidePage extends StatelessWidget {
                     ),
                   );
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 100,
-                    vertical: 15,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                style: mergeWithThemeButtonStyle(
+                  context,
+                  ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 100,
+                      vertical: 15,
+                    ),
                   ),
                 ),
-                child: const Text(
+                child: Text(
                   "Start Exploring",
-                  style: TextStyle(fontSize: 16, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: FontSize.size16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.white,
+                  ),
                 ),
               ),
               WidgetsSpacer.verticalSpacer20,
