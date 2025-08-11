@@ -93,6 +93,7 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
               suffixIcon: IconButton(
                 icon: Icon(
                   _isPasswordVisible ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey,
                 ),
                 onPressed: () {
                   setState(() {
@@ -134,6 +135,7 @@ class _ResetPasswordState extends State<ResetPasswordPage> {
                   _isConfirmPasswordVisible
                       ? Icons.visibility_off
                       : Icons.visibility,
+                      color: Colors.grey,
                 ),
                 onPressed: () {
                   setState(() {

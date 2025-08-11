@@ -12,7 +12,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final IsLoggedInUseCase isLoggedInUseCase = sl<IsLoggedInUseCase>();
 
   final VerifyOtpUseCase verifyOtpUseCase = sl<VerifyOtpUseCase>();
+  final RecoveryVerifyOtpUseCase recoveryVerifyOtpUseCase =
+      sl<RecoveryVerifyOtpUseCase>();
   final SendOtpUseCase sendOtpUseCase = sl<SendOtpUseCase>();
+  final RecoveryResendOtpUseCase recoveryResendOtpUseCase =
+      sl<RecoveryResendOtpUseCase>();
   final ResetPasswordUseCase resetPasswordUseCase = sl<ResetPasswordUseCase>();
 
   AuthBloc() : super(AuthInitial()) {
@@ -42,19 +46,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
               final Map userData = data['user'];
               // Store user data in SharedPreferences
 
-              emit(AuthLoginSuccess(User(
-                id: userData['_id'],
-                token: userData['token'],
-                name: userData['name'],
-                email: userData['email'],
-                verified: userData['verified'],
-                plan: userData['plan'],
-                subscription: userData['subscription'],
-                profile: Profile.fromJson(userData['profile']),
-                createdAt: DateTime.parse(userData['createdAt']),
-                updatedAt: DateTime.parse(userData['updatedAt']),
-                role: userData['role'],
-              )));
+              emit(
+                AuthLoginSuccess(
+                  User(
+                    id: userData['_id'],
+                    token: userData['token'],
+                    name: userData['name'],
+                    email: userData['email'],
+                    verified: userData['verified'],
+                    plan: userData['plan'],
+                    subscription: userData['subscription'],
+                    profile: Profile.fromJson(userData['profile']),
+                    createdAt: DateTime.parse(userData['createdAt']),
+                    updatedAt: DateTime.parse(userData['updatedAt']),
+                    role: userData['role'],
+                  ),
+                ),
+              );
             }
           },
         );
@@ -120,10 +128,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       try {
         final result = await verifyOtpUseCase.call(
-          params: {
-            'email': event.email,
-            'otp': event.otp,
-          },
+          params: {'email': event.email, 'otp': event.otp},
         );
 
         result.fold(
@@ -132,8 +137,27 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         );
       } catch (e) {
         print("OTP verification error: $e");
-        emit(AuthFailure(
-            "An unexpected error occurred during OTP verification"));
+        emit(
+          AuthFailure("An unexpected error occurred during OTP verification"),
+        );
+      }
+    });
+    on<RecoveryVerifyOtpEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final result = await recoveryVerifyOtpUseCase.call(
+          params: {'email': event.email, 'otp': event.otp},
+        );
+
+        result.fold(
+          (error) => emit(AuthFailure(error)),
+          (success) => emit(AuthSuccess()),
+        );
+      } catch (e) {
+        print("OTP verification error: $e");
+        emit(
+          AuthFailure("An unexpected error occurred during OTP verification"),
+        );
       }
     });
 
@@ -172,11 +196,39 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     });
 
+    on<RecoveryResendOtpEvent>((event, emit) async {
+      emit(AuthLoading());
+      try {
+        final result = await recoveryResendOtpUseCase.call(params: event.email);
+        result.fold(
+          (error) => emit(AuthFailure(error)),
+          (success) => emit(AuthSuccess()),
+        );
+      } catch (e) {
+        print("Send OTP error: $e");
+        emit(AuthFailure("Failed to send OTP: $e"));
+      }
+    });
+
     on<LogoutEvent>((event, emit) async {
       emit(AuthLoading());
       try {
         final prefs = await SharedPreferences.getInstance();
-        await prefs.clear(); // Clear all saved credentials
+        final lastEmail = prefs.getString('last_biometric_email');
+        final biometricsFlag =
+            lastEmail != null
+                ? prefs.getBool('biometrics_enabled_$lastEmail')
+                : null;
+        print('biometricsFlag: $biometricsFlag');
+        print('lastEmail: $lastEmail');
+
+        await prefs.clear();
+
+        if (lastEmail != null && biometricsFlag == true) {
+          await prefs.setString('last_biometric_email', lastEmail);
+          await prefs.setBool('biometrics_enabled_$lastEmail', true);
+        }
+
         emit(AuthInitial()); // Emit initial state after logout
       } catch (e) {
         print("Logout error: $e");

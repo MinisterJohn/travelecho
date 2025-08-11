@@ -2,6 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth_exports.dart';
+import '../widgets/signup/signup_text_widgets.dart';
+import '../widgets/signup/signup_button.dart';
+import '../widgets/signup/signup_google_button.dart';
+import '../widgets/signup/signup_apple_button.dart';
+import '../utils/signup/signup_text_utils.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -24,7 +29,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthSignupSuccess) {
           AppNavigator.push(
             context,
@@ -40,13 +45,13 @@ class _SignUpPageState extends State<SignUpPage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _signupTitleText(),
+                const SignupTitleText(),
                 WidgetsSpacer.verticalSpacer8,
-                _signupDescriptionText(),
+                const SignupDescriptionText(),
                 WidgetsSpacer.verticalSpacer32,
                 _signupForm(context),
                 WidgetsSpacer.verticalSpacer16,
-                _signInText(context),
+                signInText(context),
               ],
             ),
           ),
@@ -169,55 +174,31 @@ class _SignUpPageState extends State<SignUpPage> {
           // Sign Up Button
           BlocBuilder<AuthBloc, AuthState>(
             builder: (context, state) {
-              return ElevatedButton(
-                onPressed:
-                    state is AuthLoading
-                        ? null
-                        : () async {
-                          if (form.currentState!.validate()) {
-                            if (_passwordController.text ==
-                                _confirmPasswordController.text) {
-                              context.read<AuthBloc>().add(
-                                SignupEvent(
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
-                                  name: _fullNameController.text,
-                                ),
-                              );
-                            } else {
-                              DisplayMessage.errorMessage(
-                                'Passwords do not match',
-                                context,
-                              );
-                            }
+              return SignupButton(
+                isLoading: state is AuthLoading,
+                onPressed: () {
+                  state is AuthLoading
+                      ? null
+                      : () async {
+                        if (form.currentState!.validate()) {
+                          if (_passwordController.text ==
+                              _confirmPasswordController.text) {
+                            context.read<AuthBloc>().add(
+                              SignupEvent(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                                name: _fullNameController.text,
+                              ),
+                            );
+                          } else {
+                            DisplayMessage.errorMessage(
+                              'Passwords do not match',
+                              context,
+                            );
                           }
-                        },
-                style: mergeWithThemeButtonStyle(
-                  context,
-                  ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                  ),
-                ),
-                child:
-                    state is AuthLoading
-                        ? const SizedBox(
-                          height: 20,
-                          width: 20,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(
-                              AppColors.white,
-                            ),
-                          ),
-                        )
-                        : Text(
-                          'Sign Up',
-                          style: TextStyle(
-                            fontSize: FontSize.size18,
-                            fontWeight: FontWeight.w400,
-                            color: AppColors.white,
-                          ),
-                        ),
+                        }
+                      };
+                },
               );
             },
           ),
@@ -238,48 +219,18 @@ class _SignUpPageState extends State<SignUpPage> {
           WidgetsSpacer.verticalSpacer16,
 
           // Login with Google
-          GestureDetector(
+          SignupGoogleButton(
             onTap: () {
               // Handle Google Login Logic
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/images/auth/google_logo.png', height: 20),
-                  const SizedBox(width: 10),
-                  const Text('Sign in with Google'),
-                ],
-              ),
-            ),
           ),
           WidgetsSpacer.verticalSpacer8,
 
           // Login with Apple ID
-          GestureDetector(
+          SignupAppleButton(
             onTap: () {
               // Handle Apple ID Login Logic
             },
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Image.asset('assets/images/auth/apple_logo.png', height: 20),
-                  const SizedBox(width: 10),
-                  const Text('Sign in with Apple ID'),
-                ],
-              ),
-            ),
           ),
 
           WidgetsSpacer.verticalSpacer16,

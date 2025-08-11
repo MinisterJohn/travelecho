@@ -4,16 +4,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth_exports.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+  final String email;
+  const ForgotPasswordPage({super.key, required this.email});
 
   @override
   _ForgotPasswordPageState createState() => _ForgotPasswordPageState();
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
-  final TextEditingController _emailController = TextEditingController();
+  late final TextEditingController _emailController;
   GlobalKey<FormState> emailFormKey = GlobalKey<FormState>();
   bool _isLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _emailController = TextEditingController(text: widget.email);
+  }
 
   @override
   void dispose() {
@@ -119,7 +126,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     : () {
                       if (emailFormKey.currentState?.validate() ?? false) {
                         context.read<AuthBloc>().add(
-                          SendOtpEvent(email: _emailController.text.trim()),
+                          RecoveryResendOtpEvent(
+                            email: _emailController.text.trim(),
+                          ),
                         );
                       }
                     },

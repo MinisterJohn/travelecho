@@ -42,6 +42,14 @@ class SendOtpUseCase extends UseCases<Either<String, bool>, String> {
     return await repository.sendOtp(params!);
   }
 }
+class RecoveryResendOtpUseCase extends UseCases<Either<String, bool>, String> {
+  final AuthRepository repository = sl<AuthRepository>();
+
+  @override
+  Future<Either<String, bool>> call({String? params}) async {
+    return await repository.recoveryResendOtp(params!);
+  }
+}
 
 class VerifyOtpUseCase
     extends UseCases<Either<String, bool>, Map<String, String>> {
@@ -50,6 +58,15 @@ class VerifyOtpUseCase
   @override
   Future<Either<String, bool>> call({Map<String, String>? params}) async {
     return await repository.verifyOtp(params!['email']!, params['otp']!);
+  }
+}
+class RecoveryVerifyOtpUseCase
+    extends UseCases<Either<String, bool>, Map<String, String>> {
+  final AuthRepository repository = sl<AuthRepository>();
+
+  @override
+  Future<Either<String, bool>> call({Map<String, String>? params}) async {
+    return await repository.recoveryVerifyOtp(params!['email']!, params['otp']!);
   }
 }
 

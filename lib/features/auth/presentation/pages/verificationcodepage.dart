@@ -46,7 +46,10 @@ class _OtpFormState extends State<OtpForm> {
 
     setState(() => _isResending = true);
     try {
-      final result = await sl<SendOtpUseCase>().call(params: widget.email);
+      final result =
+          await (widget.isPasswordReset
+              ? sl<RecoveryResendOtpUseCase>().call(params: widget.email)
+              : sl<SendOtpUseCase>().call(params: widget.email));
       if (!mounted) return;
 
       result.fold(
@@ -73,7 +76,12 @@ class _OtpFormState extends State<OtpForm> {
 
     setState(() => _isVerifying = true);
     context.read<AuthBloc>().add(
-      VerifyOtpEvent(email: widget.email, otp: _otpController.text),
+      widget.isPasswordReset
+          ? RecoveryVerifyOtpEvent(
+            email: widget.email,
+            otp: _otpController.text,
+          )
+          : VerifyOtpEvent(email: widget.email, otp: _otpController.text),
     );
   }
 

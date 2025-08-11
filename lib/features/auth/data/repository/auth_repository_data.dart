@@ -106,11 +106,33 @@ class AuthRepositoryImpl implements AuthRepository {
       return Left('Error sending OTP: $e.toString()');
     }
   }
+  @override
+  Future<Either<String, bool>> recoveryResendOtp(String email) async {
+    try {
+      _logger.i('Sending OTP to email: $email');
+      final response = await _authApiService.recoveryResendOtp(email);
+      return response;
+    } catch (e) {
+      _logger.e('Error sending OTP: $e');
+      _logger.e('Error type: ${e.runtimeType}');
+      return Left('Error sending OTP: $e.toString()');
+    }
+  }
 
   @override
   Future<Either<String, bool>> verifyOtp(String email, String otp) async {
     try {
       final response = await _authApiService.verifyOtp(email, otp);
+      return response;
+    } catch (e) {
+      _logger.e('Verify OTP Error: ${e.toString()}');
+      return Left('Verify OTP Error: ${e.toString()}');
+    }
+  }
+  @override
+  Future<Either<String, bool>> recoveryVerifyOtp(String email, String otp) async {
+    try {
+      final response = await _authApiService.recoveryVerifyOtp(email, otp);
       return response;
     } catch (e) {
       _logger.e('Verify OTP Error: ${e.toString()}');

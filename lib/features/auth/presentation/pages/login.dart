@@ -1,6 +1,7 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_auth/local_auth.dart';
+
 import 'package:travelecho/navigation_menu/blocs/navigation_menu_cubit.dart';
 import '../../auth_exports.dart';
 
@@ -15,11 +16,75 @@ class _LoginPageState extends State<LoginPage> {
   bool _isPasswordVisible = false; // Track password visibility
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  // bool _showBiometricOption = false;
+  bool _isPasswordFieldVisible = true;
+  bool _isBiometricEnabledForEmail = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadLastBiometricEmail();
+    _emailController.addListener(_checkBiometricForEmail);
+  }
+
+  Future<void> _loadLastBiometricEmail() async {
+    final lastEmail = await LoginStorageUtils.getLastBiometricEmail();
+    print(lastEmail);
+    if (lastEmail != null && lastEmail.isNotEmpty) {
+      _emailController.text = lastEmail; // prefill
+      await _checkBiometricForEmail();
+      // Auto-trigger biometric login
+      if (_isBiometricEnabledForEmail) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _handleBiometricLogin();
+        });
+      }
+    }
+  }
+
+  Future<void> _checkBiometricForEmail() async {
+    final email = _emailController.text.trim().toLowerCase();
+    final biometricsEnabled =
+        email.isNotEmpty
+            ? await LoginStorageUtils.isBiometricsEnabledForEmail(email)
+            : false;
+    setState(() {
+      _isBiometricEnabledForEmail = biometricsEnabled;
+      _isPasswordFieldVisible = !biometricsEnabled;
+    });
+  }
+
+  Future<void> _handleBiometricLogin() async {
+    final localAuth = LocalAuthentication();
+    final didAuthenticate = await localAuth.authenticate(
+      localizedReason: 'Authenticate to login',
+      options: const AuthenticationOptions(
+        biometricOnly: true,
+        stickyAuth: true,
+      ),
+    );
+
+    if (didAuthenticate) {
+      final email = await LoginStorageUtils.getLastBiometricEmail() ?? '';
+      final password = await LoginStorageUtils.getBiometricPassword(email);
+      if (email.isNotEmpty && password != null) {
+        // Call your login API automatically
+        context.read<AuthBloc>().add(
+          LoginEvent(email: email, password: password),
+        );
+      } else {
+        DisplayMessage.errorMessage(
+          'Stored credentials not found. Please login manually.',
+          context,
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocListener<AuthBloc, AuthState>(
-      listener: (context, state) {
+      listener: (context, state) async {
         if (state is AuthUnverifiedUser) {
           // Navigate to VerificationCodePage for unverified users
           AppNavigator.push(
@@ -32,6 +97,12 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (state is AuthLoginSuccess) {
+          await BiometricsPrompt.maybeShow(
+            context,
+            email: _emailController.text,
+            password: _passwordController.text,
+            onEnabled: () => debugPrint("Biometrics setup done"),
+          );
           AppNavigator.pushReplacement(
             context,
             BlocProvider(
@@ -51,245 +122,76 @@ class _LoginPageState extends State<LoginPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Login Text
-                _signInTitle(),
+                signInTitle(),
                 WidgetsSpacer.verticalSpacer32,
 
                 // Email Address Field
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email Address',
-                    prefixIcon: Icon(Icons.email_outlined),
-                    prefixIconColor: AppColors.primaryColor300,
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
+                LoginEmailField(controller: _emailController),
                 WidgetsSpacer.verticalSpacer16,
 
-                // Password Field
-                TextField(
-                  controller: _passwordController,
-                  obscureText:
-                      !_isPasswordVisible, // Toggle password visibility
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                    border: const OutlineInputBorder(),
-                    prefixIcon: const Icon(Icons.lock_outline),
-                    prefixIconColor: AppColors.primaryColor300,
-                    suffixIcon: IconButton(
-                      icon: Icon(
-                        _isPasswordVisible
-                            ? Icons.visibility
-                            : Icons.visibility_off,
-                        color: Colors.grey,
-                      ),
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordVisible =
-                              !_isPasswordVisible; // Toggle visibility
-                        });
+                if (_isBiometricEnabledForEmail)
+                  LoginBiometricButton(onPressed: _handleBiometricLogin),
+                if (_isPasswordFieldVisible) ...[
+                  LoginPasswordField(
+                    controller: _passwordController,
+                    isPasswordVisible: _isPasswordVisible,
+                    onVisibilityToggle: () {
+                      setState(() {
+                        _isPasswordVisible = !_isPasswordVisible;
+                      });
+                    },
+                  ),
+                  WidgetsSpacer.verticalSpacer8,
+                  forgotPasswordText(context, _emailController.text),
+                  WidgetsSpacer.verticalSpacer16,
+                  Center(
+                    child: BlocBuilder<AuthBloc, AuthState>(
+                      builder: (context, state) {
+                        return LoginButton(
+                          onPressed:
+                              () => handleLogin(
+                                context: context,
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                          isLoading: state is AuthLoading,
+                        );
                       },
                     ),
                   ),
-                ),
-                WidgetsSpacer.verticalSpacer8,
-
-                _forgotPasswordText(context),
-
-                WidgetsSpacer.verticalSpacer16,
-
-                // Login Button
-                Center(
-                  child: BlocBuilder<AuthBloc, AuthState>(
-                    builder: (context, state) {
-                      return ElevatedButton(
-                        onPressed:
-                            state is AuthLoading ? null : () => _handleLogin(),
-                        style: mergeWithThemeButtonStyle(
-                          context,
-                          ElevatedButton.styleFrom(
-                            minimumSize: const Size(double.infinity, 50),
-                          ),
-                        ),
-                        child:
-                            state is AuthLoading
-                                ? const SizedBox(
-                                  height: 20,
-                                  width: 20,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
-                                    valueColor: AlwaysStoppedAnimation<Color>(
-                                      AppColors.white,
-                                    ),
-                                  ),
-                                )
-                                : Text(
-                                  'Login',
-                                  style: TextStyle(
-                                    fontSize: FontSize.size18,
-                                    fontWeight: FontWeight.w400,
-                                    color: AppColors.white,
-                                  ),
-                                ),
-                      );
+                  WidgetsSpacer.verticalSpacer16,
+                  const Row(
+                    children: [
+                      Expanded(child: Divider(thickness: 1)),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Text('OR'),
+                      ),
+                      Expanded(child: Divider(thickness: 1)),
+                    ],
+                  ),
+                  WidgetsSpacer.verticalSpacer16,
+                  LoginGoogleButton(
+                    onTap: () {
+                      // Handle Google Login Logic
                     },
                   ),
-                ),
-
-                WidgetsSpacer.verticalSpacer16,
-
-                // Line Separator
-                const Row(
-                  children: [
-                    Expanded(child: Divider(thickness: 1)),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text('OR'),
-                    ),
-                    Expanded(child: Divider(thickness: 1)),
-                  ],
-                ),
-
-                WidgetsSpacer.verticalSpacer16,
-
-                // Login with Google
-                GestureDetector(
-                  onTap: () {
-                    // Handle Google Login Logic
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/auth/google_logo.png',
-                          height: 20,
-                        ),
-                        const SizedBox(width: 10),
-                        const Text('Sign in with Google'),
-                      ],
-                    ),
+                  WidgetsSpacer.verticalSpacer8,
+                  LoginAppleButton(
+                    onTap: () {
+                      // Handle Apple ID Login Logic
+                    },
                   ),
-                ),
-                WidgetsSpacer.verticalSpacer8,
-
-                // Login with Apple ID
-                GestureDetector(
-                  onTap: () {
-                    // Handle Apple ID Login Logic
-                  },
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                      horizontal: 16,
-                    ),
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.grey),
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Image.asset(
-                          'assets/images/auth/apple_logo.png',
-                          height: 20,
-                        ),
-                        const SizedBox(width: 10),
-                        const Text('Sign in with Apple ID'),
-                      ],
-                    ),
-                  ),
-                ),
-
+                ],
                 WidgetsSpacer.verticalSpacer16,
 
                 // Sign Up Prompt
-                _signUpText(context),
+                signUpText(context),
               ],
             ),
           ),
         ),
       ),
     );
-  }
-
-  Widget _signInTitle() {
-    return const Text(
-      'Login',
-      style: TextStyle(
-        color: Color(0xff930BFF),
-        fontSize: 32,
-        fontWeight: FontWeight.bold,
-      ),
-    );
-  }
-
-  Widget _forgotPasswordText(BuildContext context) {
-    return Center(
-      child: Text.rich(
-        TextSpan(
-          children: [
-            const TextSpan(text: "Forgot Password? "),
-            TextSpan(
-              style: const TextStyle(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-              recognizer:
-                  TapGestureRecognizer()
-                    ..onTap = () {
-                      AppNavigator.push(context, const ForgotPasswordPage());
-                    },
-              text: 'Reset',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _signUpText(BuildContext context) {
-    return Center(
-      child: Text.rich(
-        TextSpan(
-          children: [
-            const TextSpan(text: "Don't have an account? "),
-            TextSpan(
-              style: const TextStyle(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-              recognizer:
-                  TapGestureRecognizer()
-                    ..onTap = () {
-                      AppNavigator.push(context, const SignUpPage());
-                    },
-              text: 'Sign Up',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _handleLogin() {
-    final email = _emailController.text;
-    final password = _passwordController.text;
-
-    if (email.isEmpty || password.isEmpty) {
-      DisplayMessage.errorMessage("Please enter all fields", context);
-    } else {
-      context.read<AuthBloc>().add(
-        LoginEvent(email: email, password: password),
-      );
-    }
   }
 }
