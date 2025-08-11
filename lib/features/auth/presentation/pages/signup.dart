@@ -1,12 +1,6 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../auth_exports.dart';
-import '../widgets/signup/signup_text_widgets.dart';
-import '../widgets/signup/signup_button.dart';
-import '../widgets/signup/signup_google_button.dart';
-import '../widgets/signup/signup_apple_button.dart';
-import '../utils/signup/signup_text_utils.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -57,24 +51,6 @@ class _SignUpPageState extends State<SignUpPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _signupTitleText() {
-    return const Text(
-      'Sign Up',
-      style: TextStyle(
-        fontSize: 32.0,
-        fontWeight: FontWeight.bold,
-        color: Color(0xff930BFF),
-      ),
-    );
-  }
-
-  Widget _signupDescriptionText() {
-    return const Text(
-      'Find a flight that matches your destination and schedule it instantly.',
-      style: TextStyle(fontSize: 16.0, color: Colors.black54),
     );
   }
 
@@ -239,33 +215,4 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 
-  Widget _signInText(BuildContext context) {
-    return Center(
-      child: Text.rich(
-        TextSpan(
-          children: [
-            const TextSpan(text: 'Already have an account? '),
-            TextSpan(
-              style: const TextStyle(
-                color: AppColors.primaryColor,
-                fontWeight: FontWeight.bold,
-              ),
-              recognizer:
-                  TapGestureRecognizer()
-                    ..onTap = () {
-                      AppNavigator.push(
-                        context,
-                        BlocProvider.value(
-                          value: sl<AuthBloc>(),
-                          child: const LoginPage(),
-                        ),
-                      );
-                    },
-              text: 'Login',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }

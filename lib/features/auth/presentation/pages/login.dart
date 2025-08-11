@@ -17,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   // bool _showBiometricOption = false;
-  bool _isPasswordFieldVisible = true;
+  bool _isPasswordFieldVisible = false;
   bool _isBiometricEnabledForEmail = false;
 
   @override
@@ -44,10 +44,16 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _checkBiometricForEmail() async {
     final email = _emailController.text.trim().toLowerCase();
+    final emailRegex = RegExp(r'^[\w\.-]+@[\w\.-]+\.[a-zA-Z]{2,}$');
+    if (email.isEmpty || !emailRegex.hasMatch(email)) {
+      setState(() {
+        _isBiometricEnabledForEmail = false;
+        _isPasswordFieldVisible = false;
+      });
+      return;
+    }
     final biometricsEnabled =
-        email.isNotEmpty
-            ? await LoginStorageUtils.isBiometricsEnabledForEmail(email)
-            : false;
+        await LoginStorageUtils.isBiometricsEnabledForEmail(email);
     setState(() {
       _isBiometricEnabledForEmail = biometricsEnabled;
       _isPasswordFieldVisible = !biometricsEnabled;
@@ -129,8 +135,21 @@ class _LoginPageState extends State<LoginPage> {
                 LoginEmailField(controller: _emailController),
                 WidgetsSpacer.verticalSpacer16,
 
-                if (_isBiometricEnabledForEmail)
+                if (_isBiometricEnabledForEmail &&
+                    !_isPasswordFieldVisible) ...[
                   LoginBiometricButton(onPressed: _handleBiometricLogin),
+                  WidgetsSpacer.verticalSpacer8,
+                  Center(
+                    child: TextButton(
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordFieldVisible = true;
+                        });
+                      },
+                      child: const Text('Use password instead'),
+                    ),
+                  ),
+                ],
                 if (_isPasswordFieldVisible) ...[
                   LoginPasswordField(
                     controller: _passwordController,
@@ -140,6 +159,18 @@ class _LoginPageState extends State<LoginPage> {
                         _isPasswordVisible = !_isPasswordVisible;
                       });
                     },
+                  ),
+                  WidgetsSpacer.verticalSpacer8,
+                  Center(
+                    child: TextButton.icon(
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordFieldVisible = false;
+                        });
+                      },
+                      icon: Icon(Icons.fingerprint),
+                      label: const Text('Use fingerprint instead'),
+                    ),
                   ),
                   WidgetsSpacer.verticalSpacer8,
                   forgotPasswordText(context, _emailController.text),

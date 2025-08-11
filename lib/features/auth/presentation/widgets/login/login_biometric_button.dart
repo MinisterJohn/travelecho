@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "../../../auth_exports.dart";
 
 class LoginBiometricButton extends StatelessWidget {
   final VoidCallback onPressed;
@@ -7,14 +8,22 @@ class LoginBiometricButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
-      icon: const Icon(Icons.fingerprint),
-      label: const Text('Login with Fingerprint'),
-      style: TextButton.styleFrom(
-        foregroundColor: Color(0xff930BFF),
-        minimumSize: const Size(double.infinity, 50),
-      ),
-      onPressed: onPressed,
+    return Column(
+      children: [
+        Icon(Icons.fingerprint, color: AppColors.primaryColor, size: 73),
+        WidgetsSpacer.verticalSpacer16,
+        ElevatedButton.icon(
+          style: mergeWithThemeButtonStyle(
+            context,
+            ElevatedButton.styleFrom(
+              minimumSize: const Size(double.infinity, 50),
+            ),
+          ),
+          onPressed: onPressed,
+          icon: const Icon(Icons.fingerprint),
+          label: const Text('Login with Fingerprint'),
+        ),
+      ],
     );
   }
 }

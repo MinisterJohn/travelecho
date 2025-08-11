@@ -104,7 +104,7 @@ class BiometricsPrompt extends StatelessWidget {
               children: [
                 Expanded(
                   child: TextButton(
-                    onPressed: () => Navigator.of(context).pop(false),
+                    onPressed: () => AppNavigator.pop(context),
                     child: const Text('No'),
                   ),
                 ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import '../../../auth_exports.dart';
-import '../../pages/login.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 Widget signInText(BuildContext context) {

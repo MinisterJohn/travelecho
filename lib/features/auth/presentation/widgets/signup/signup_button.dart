@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../auth_exports.dart';
 
 class SignupButton extends StatelessWidget {
   final VoidCallback onPressed;
