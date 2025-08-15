@@ -55,6 +55,12 @@ class TravelPlanSection extends StatelessWidget {
               label: "Car Rentals",
               onTap: () {
                 // Car rental functionality will be added later
+                AppNavigator.push(
+                  context,
+                  // Scaffold(body: const Center(child: Text("Car Rentals feature coming soon!"))),
+                  const CarRentalsSplashScreen(),
+                  
+                );
               },
             ),
           ],
