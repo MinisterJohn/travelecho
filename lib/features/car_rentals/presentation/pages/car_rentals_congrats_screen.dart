@@ -67,6 +67,10 @@ class CarRentalsCongratsScreen extends StatelessWidget {
                     ),
                     onPressed: () {
                       // Navigate to track ride
+                      AppNavigator.push(
+                            context,
+                            const CarRentalsTrackRideScreen(),
+                          );
                     },
                     child: const Text(
                       "Track ride",

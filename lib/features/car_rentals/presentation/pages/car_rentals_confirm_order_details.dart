@@ -13,7 +13,8 @@ class _CarRentalsConfirmOrderDetailsState
   DateTime? _selectedDate;
   TimeOfDay? _selectedTime;
   Map<String, dynamic>? _selectedRide;
-  String? _selectedLocation;
+  String? _selectedToLocation;
+  String? _selectedFromLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -106,9 +107,27 @@ class _CarRentalsConfirmOrderDetailsState
                                         ),
                                       ),
                                     ),
-                                    IconButton(
-                                      icon: const Icon(Icons.edit, size: 18),
-                                      onPressed: () {}, // Edit from
+                                    EditIconButton(
+                                      onPressed: () async {
+                                        final result = await Navigator.push<
+                                          Map<String, dynamic>
+                                        >(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder:
+                                                (context) =>
+                                                    const CarRentalFromScreen(
+                                                      returnResult: true,
+                                                    ),
+                                          ),
+                                        );
+                                        if (result != null) {
+                                          setState(() {
+                                            _selectedFromLocation =
+                                                result['location'];
+                                          });
+                                        }
+                                      },
                                     ),
                                   ],
                                 ),
@@ -140,14 +159,14 @@ class _CarRentalsConfirmOrderDetailsState
                                           MaterialPageRoute(
                                             builder:
                                                 (context) =>
-                                                    const CarRentalsScheduleRideScreen(
+                                                    const CarRentalWhereToScreen(
                                                       returnResult: true,
                                                     ),
                                           ),
                                         );
                                         if (result != null) {
                                           setState(() {
-                                            _selectedLocation =
+                                            _selectedToLocation =
                                                 result['location'];
                                           });
                                         }

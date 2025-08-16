@@ -6,12 +6,15 @@ class CarRentalsChooseRideScreen extends StatefulWidget {
   const CarRentalsChooseRideScreen({super.key, this.returnResult = false});
 
   @override
-  State<CarRentalsChooseRideScreen> createState() => _CarRentalsChooseRideScreenState();
+  State<CarRentalsChooseRideScreen> createState() =>
+      _CarRentalsChooseRideScreenState();
 }
 
-class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen> {
+class _CarRentalsChooseRideScreenState
+    extends State<CarRentalsChooseRideScreen> {
   int _selectedRide = 0;
-  String _selectedLocation = '';
+  String _selectedFromLocation = '';
+  String _selectedToLocation = '';
 
   final List<Map<String, dynamic>> _rides = [
     {
@@ -77,13 +80,21 @@ class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen>
                     children: [
                       Column(
                         children: [
-                          Icon(Icons.radio_button_checked, color: AppColors.primaryColor, size: 20),
+                          Icon(
+                            Icons.radio_button_checked,
+                            color: AppColors.primaryColor,
+                            size: 20,
+                          ),
                           Container(
                             width: 2,
                             height: 24,
                             color: Colors.grey[300],
                           ),
-                          Icon(Icons.location_on, color: Colors.black, size: 20),
+                          Icon(
+                            Icons.location_on,
+                            color: Colors.black,
+                            size: 20,
+                          ),
                         ],
                       ),
                       WidgetsSpacer.verticalSpacer16,
@@ -93,53 +104,79 @@ class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen>
                           children: const [
                             Text(
                               "From",
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
                             ),
                             Text(
                               "Berkely Avenue, New York",
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                             SizedBox(height: 8),
                             Text(
                               "To",
-                              style: TextStyle(fontSize: 12, color: Colors.grey),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: Colors.grey,
+                              ),
                             ),
                             Text(
                               "Silicia, Bahamas",
-                              style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ],
                         ),
                       ),
                       Column(
                         children: [
-                          IconButton(
-                            icon: const Icon(Icons.edit, size: 18),
-                            onPressed: () {}, // Edit from
+                          EditIconButton(
+                            onPressed: () async {
+                              final result =
+                                  await Navigator.push<Map<String, dynamic>>(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) =>
+                                              const CarRentalFromScreen(
+                                                returnResult: true,
+                                              ),
+                                    ),
+                                  );
+                              if (result != null) {
+                                setState(() {
+                                  _selectedFromLocation = result['location'];
+                                });
+                              }
+                            },
                           ),
                           const SizedBox(height: 32),
                           EditIconButton(
-                                      onPressed: () async {
-                                        final result = await Navigator.push<
-                                          Map<String, dynamic>
-                                        >(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder:
-                                                (context) =>
-                                                    const CarRentalsScheduleRideScreen(
-                                                      returnResult: true,
-                                                    ),
-                                          ),
-                                        );
-                                        if (result != null) {
-                                          setState(() {
-                                            _selectedLocation =
-                                                result['location'];
-                                          });
-                                        }
-                                      },
+                            onPressed: () async {
+                              final result =
+                                  await Navigator.push<Map<String, dynamic>>(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder:
+                                          (context) =>
+                                              const CarRentalWhereToScreen(
+                                                returnResult: true,
+                                              ),
                                     ),
+                                  );
+                              if (result != null) {
+                                setState(() {
+                                  _selectedToLocation = result['location'];
+                                });
+                              }
+                            },
+                          ),
                         ],
                       ),
                     ],
@@ -161,11 +198,18 @@ class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen>
                             width: 120,
                             padding: const EdgeInsets.all(12),
                             decoration: BoxDecoration(
-                              color: isSelected ? AppColors.primaryColor : Colors.grey[100],
+                              color:
+                                  isSelected
+                                      ? AppColors.primaryColor
+                                      : Colors.grey[100],
                               borderRadius: BorderRadius.circular(16),
-                              border: isSelected
-                                  ? Border.all(color: AppColors.primaryColor, width: 2)
-                                  : null,
+                              border:
+                                  isSelected
+                                      ? Border.all(
+                                        color: AppColors.primaryColor,
+                                        width: 2,
+                                      )
+                                      : null,
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +217,10 @@ class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen>
                                 Text(
                                   ride["name"],
                                   style: TextStyle(
-                                    color: isSelected ? AppColors.white : AppColors.defaultColor,
+                                    color:
+                                        isSelected
+                                            ? AppColors.white
+                                            : AppColors.defaultColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -189,7 +236,10 @@ class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen>
                                 Text(
                                   ride["price"],
                                   style: TextStyle(
-                                    color: isSelected ? AppColors.white : AppColors.primaryColor,
+                                    color:
+                                        isSelected
+                                            ? AppColors.white
+                                            : AppColors.primaryColor,
                                     fontWeight: FontWeight.bold,
                                   ),
                                 ),
@@ -208,7 +258,12 @@ class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.credit_card, color: AppColors.defaultColor),
+                      leading: Image.asset(
+                        "assets/images/profile/master.png", // Replace with your actual card image asset path
+                        width: 32,
+                        height: 32,
+                        fit: BoxFit.contain,
+                      ),
                       title: const Text("****456749"),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                       onTap: () {}, // Change payment
@@ -221,10 +276,18 @@ class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: ListTile(
-                      leading: const Icon(Icons.account_balance_wallet_outlined, color: AppColors.defaultColor),
+                      leading: const Icon(
+                        Icons.account_balance_wallet_outlined,
+                        color: AppColors.defaultColor,
+                      ),
                       title: const Text("Travel Wallet"),
                       trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-                      onTap: () {}, // Open wallet
+                      onTap: () {
+                        AppNavigator.push(
+                          context,
+                          const CarRentalsTravelWalletScreen(),
+                        );
+                      }, // Open wallet
                     ),
                   ),
                   WidgetsSpacer.verticalSpacer20,
@@ -241,16 +304,16 @@ class _CarRentalsChooseRideScreenState extends State<CarRentalsChooseRideScreen>
                     onPressed: () {
                       // Handle next
                       if (widget.returnResult) {
-                    // Edit flow: pop with result
-                    Navigator.of(context).pop({
-                      'rides': _rides[_selectedRide],
-                    });
-                  } else {
-                    AppNavigator.push(
-                      context,
-                      const CarRentalsConfirmOrderDetails(),
-                    );
-                  }
+                        // Edit flow: pop with result
+                        Navigator.of(
+                          context,
+                        ).pop({'rides': _rides[_selectedRide]});
+                      } else {
+                        AppNavigator.push(
+                          context,
+                          const CarRentalsConfirmOrderDetails(),
+                        );
+                      }
                     },
                   ),
                 ],

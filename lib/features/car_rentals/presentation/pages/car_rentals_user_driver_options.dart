@@ -31,7 +31,7 @@ class CarRentalsUserDriverOptions extends StatelessWidget {
                       // Handle user selection
                       AppNavigator.push(
                         context,
-                        const CarRentalsScheduleRideScreen(),
+                        const CarRentalFromScreen(),
                       );
                     },
                   ),

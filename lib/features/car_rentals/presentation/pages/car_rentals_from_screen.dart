@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import '../../../features_exports.dart';
 
-class CarRentalWhereToScreen extends StatefulWidget {
+class CarRentalFromScreen extends StatefulWidget {
   final bool returnResult;
-  const CarRentalWhereToScreen({super.key, this.returnResult = false});
+  const CarRentalFromScreen({super.key, this.returnResult = false});
 
   @override
-  _CarRentalWhereToScreenState createState() =>
-      _CarRentalWhereToScreenState();
+  _CarRentalFromScreenState createState() =>
+      _CarRentalFromScreenState();
 }
 
-class _CarRentalWhereToScreenState
-    extends State<CarRentalWhereToScreen> {
-  final TextEditingController _whereToController = TextEditingController();
+class _CarRentalFromScreenState
+    extends State<CarRentalFromScreen> {
+  final TextEditingController _fromController = TextEditingController();
 
   // Simulate a selected location (you'll want to update this when returning from the location screen)
   String _selectedLocation = '';
@@ -49,7 +49,7 @@ class _CarRentalWhereToScreenState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    'Where to?',
+                    'From?',
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
                   ),
                   WidgetsSpacer.verticalSpacer16,
@@ -86,19 +86,19 @@ class _CarRentalWhereToScreenState
                       if (result != null) {
                         setState(() {
                           _selectedLocation = result;
-                          _whereToController.text = result;
+                          _fromController.text = result;
                         });
                       }
                     },
                     child: AbsorbPointer(
                       child: TextField(
-                        controller: _whereToController,
+                        controller: _fromController,
                         decoration: InputDecoration(
                           prefixIcon: const Icon(
                             Icons.location_on_outlined,
                             color: Colors.grey,
                           ),
-                          hintText: 'Where to?',
+                          hintText: 'From?',
                           filled: true,
                           fillColor: Colors.grey[100],
                           contentPadding: const EdgeInsets.symmetric(
@@ -134,7 +134,7 @@ class _CarRentalWhereToScreenState
                                 } else {
                                   AppNavigator.push(
                                     context,
-                                    const CarRentalsSelectTimeScreen(),
+                                    const CarRentalWhereToScreen(),
                                   );
                                 }
                               }
