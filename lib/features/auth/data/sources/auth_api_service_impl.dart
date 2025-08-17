@@ -14,7 +14,9 @@ class AuthApiServiceImpl implements AuthApiService {
   AuthApiServiceImpl() : _utils = AuthApiServiceUtils(sl<Logger>());
 
   @override
-  Future<Either<String, Map<String, dynamic>>> signin(SigninReqParams params) async {
+  Future<Either<String, Map<String, dynamic>>> signin(
+    SigninReqParams params,
+  ) async {
     try {
       _utils.validateSigninParams(params);
       _logger.i('Attempting to sign in with email: ${params.email}');
@@ -53,6 +55,8 @@ class AuthApiServiceImpl implements AuthApiService {
       await prefs.setString('token', userData['token']);
       await prefs.setString('name', userData['name']);
       await prefs.setString('email', userData['email']);
+      await prefs.setBool('isDriver', userData['isDriver']);
+      await prefs.setString('email', userData['email']);
       await prefs.setString('plan', userData['plan'] ?? 'FREE');
       await prefs.setString('role', userData['role']);
       await prefs.setBool('is_not_new_user', true);
@@ -69,7 +73,9 @@ class AuthApiServiceImpl implements AuthApiService {
   }
 
   @override
-  Future<Either<String, Map<String, dynamic>>> signup(SignupReqParams params) async {
+  Future<Either<String, Map<String, dynamic>>> signup(
+    SignupReqParams params,
+  ) async {
     try {
       _logger.i('Attempting to sign up with email: ${params.email}');
       final response = await _dioClient.post(
@@ -81,7 +87,8 @@ class AuthApiServiceImpl implements AuthApiService {
         return Right(response.data);
       } else {
         _logger.w(
-            'Signup failed with status: ${response.statusCode}, ${response.data["message"]?.toString()}');
+          'Signup failed with status: ${response.statusCode}, ${response.data["message"]?.toString()}',
+        );
         return Left(response.data["message"]);
       }
     } on DioException catch (e) {
@@ -110,12 +117,14 @@ class AuthApiServiceImpl implements AuthApiService {
         } else {
           _logger.w('Unexpected response format: $responseData');
           return Left(
-              "Failed to send OTP: Unexpected response format: $responseData");
+            "Failed to send OTP: Unexpected response format: $responseData",
+          );
         }
       } else {
         final errorMessage = response.data?['message'] ?? 'Unknown error';
         _logger.w(
-            'Failed to send OTP. Status code: ${response.statusCode}, Message: $errorMessage');
+          'Failed to send OTP. Status code: ${response.statusCode}, Message: $errorMessage',
+        );
         return Left("Failed to send OTP: $errorMessage");
       }
     } on DioException catch (e) {
@@ -125,7 +134,7 @@ class AuthApiServiceImpl implements AuthApiService {
       return const Left("Failed to send OTP");
     }
   }
- 
+
   @override
   Future<Either<String, bool>> recoveryResendOtp(String email) async {
     try {
@@ -144,12 +153,14 @@ class AuthApiServiceImpl implements AuthApiService {
         } else {
           _logger.w('Unexpected response format: $responseData');
           return Left(
-              "Failed to send OTP: Unexpected response format: $responseData");
+            "Failed to send OTP: Unexpected response format: $responseData",
+          );
         }
       } else {
         final errorMessage = response.data?['message'] ?? 'Unknown error';
         _logger.w(
-            'Failed to send OTP. Status code: ${response.statusCode}, Message: $errorMessage');
+          'Failed to send OTP. Status code: ${response.statusCode}, Message: $errorMessage',
+        );
         return Left("Failed to send OTP: $errorMessage");
       }
     } on DioException catch (e) {
@@ -182,9 +193,12 @@ class AuthApiServiceImpl implements AuthApiService {
       return const Left("Failed to verify OTP");
     }
   }
- 
+
   @override
-  Future<Either<String, bool>> recoveryVerifyOtp(String email, String otp) async {
+  Future<Either<String, bool>> recoveryVerifyOtp(
+    String email,
+    String otp,
+  ) async {
     try {
       _logger.i('Verifying OTP for email: $email');
       final response = await _dioClient.post(
@@ -208,7 +222,10 @@ class AuthApiServiceImpl implements AuthApiService {
 
   @override
   Future<Either<String, Map<String, dynamic>>> resetPassword(
-      String email, String password, String confirmPassword) async {
+    String email,
+    String password,
+    String confirmPassword,
+  ) async {
     try {
       _logger.i('Attempting to reset password for: $email');
       final response = await _dioClient.post(
@@ -249,11 +266,7 @@ class AuthApiServiceImpl implements AuthApiService {
       _logger.i('Using token: ${token.substring(0, 10)}...');
       final response = await _dioClient.get(
         ApiUrl.fullUrl(ApiUrl.userProfileURL),
-        options: Options(
-          headers: {
-            'Authorization': 'Bearer $token',
-          },
-        ),
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
       );
       if (response.statusCode == 403) {
         _logger.w('Access forbidden - token might be invalid or expired');

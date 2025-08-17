@@ -1,7 +1,7 @@
-
 import 'package:flutter/material.dart';
 
 import '../../../milestones_exports.dart';
+
 /// Bottom sheet for not-yet-earned badges
 class NextBadgeProgressSheet extends StatelessWidget {
   final BadgeEntity badge;
@@ -27,7 +27,17 @@ class NextBadgeProgressSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(imageUrl, width: 100, height: 100),
+          Image.asset(
+            imageUrl,
+            width: 100,
+            height: 100,
+            errorBuilder:
+                (context, error, stackTrace) => const Icon(
+                  Icons.emoji_events,
+                  size: 100,
+                  color: Colors.grey,
+                ),
+          ),
           const SizedBox(height: 16),
           Text(
             badge.name,

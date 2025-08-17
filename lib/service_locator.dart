@@ -69,6 +69,9 @@ void _registerApiServices() {
   sl.registerLazySingleton<TravelDocumentRemoteDataSource>(
     () => TravelDocumentRemoteDataSourceImpl(),
   );
+  sl.registerLazySingleton<LevelRemoteDataSource>(
+    () => LevelRemoteDataSourceImpl(),
+  );
 }
 
 /// Registers all repositories
@@ -108,6 +111,10 @@ void _registerRepositories() {
   sl.registerLazySingleton<TravelDocumentRepository>(
     () => TravelDocumentRepositoryImpl(),
   );
+  //Milestone repositories
+  sl.registerLazySingleton<LevelRepository>(
+    () => LevelRepositoryImpl(),
+  );
 }
 
 /// Registers all use cases
@@ -116,7 +123,13 @@ void _registerUseCases() {
   sl.registerLazySingleton<SignupUseCase>(() => SignupUseCase());
   sl.registerLazySingleton<SigninUseCase>(() => SigninUseCase());
   sl.registerLazySingleton<VerifyOtpUseCase>(() => VerifyOtpUseCase());
+  sl.registerLazySingleton<RecoveryVerifyOtpUseCase>(
+    () => RecoveryVerifyOtpUseCase(),
+  );
   sl.registerLazySingleton<SendOtpUseCase>(() => SendOtpUseCase());
+  sl.registerLazySingleton<RecoveryResendOtpUseCase>(
+    () => RecoveryResendOtpUseCase(),
+  );
   sl.registerLazySingleton<ResetPasswordUseCase>(() => ResetPasswordUseCase());
   sl.registerSingleton<IsLoggedInUseCase>(IsLoggedInUseCase());
   sl.registerSingleton<IsNotNewUserUseCase>(IsNotNewUserUseCase());
@@ -195,6 +208,14 @@ void _registerUseCases() {
   sl.registerLazySingleton<GetTravelDocumentByIdUseCase>(
     () => GetTravelDocumentByIdUseCase(),
   );
+
+  //Milestone use cases
+  sl.registerLazySingleton<GetLevelsUseCase>(
+    () => GetLevelsUseCase(),
+  );
+  sl.registerLazySingleton<GetEarnedBadgesUseCase>(
+    () => GetEarnedBadgesUseCase(),
+  );
 }
 
 /// Registers all blocs
@@ -211,6 +232,8 @@ void _registerBlocs() {
   sl.registerLazySingleton<MemoriesBloc>(() => MemoriesBloc());
   sl.registerLazySingleton<BudgetBloc>(() => BudgetBloc());
   sl.registerLazySingleton<TravelDocumentBloc>(() => TravelDocumentBloc());
+
+  sl.registerLazySingleton<LevelBloc>(() => LevelBloc());
 }
 
 /// Registers all cubits

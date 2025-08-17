@@ -16,3 +16,5 @@ export 'splashscreen/presentation/bloc/splash_cubit.dart';
 export 'onboarding/presentation/pages/welcomepage.dart';
 export 'onboarding/presentation/blocs/onboardingpage_cubit.dart';
 export '../navigation_menu/presentation/root_page.dart';
+
+export '../route_observer.dart';

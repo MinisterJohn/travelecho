@@ -23,20 +23,24 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     super.initState();
-    _loadLastBiometricEmail();
+    _loadLastBiometricEmail(context);
     _emailController.addListener(_checkBiometricForEmail);
   }
 
-  Future<void> _loadLastBiometricEmail() async {
+  Future<void> _loadLastBiometricEmail(BuildContext context) async {
     final lastEmail = await LoginStorageUtils.getLastBiometricEmail();
     print(lastEmail);
+    if (!mounted) return;
     if (lastEmail != null && lastEmail.isNotEmpty) {
       _emailController.text = lastEmail; // prefill
       await _checkBiometricForEmail();
+      if (!mounted) return;
       // Auto-trigger biometric login
       if (_isBiometricEnabledForEmail) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
-          _handleBiometricLogin();
+          if (mounted) {
+            _handleBiometricLogin(context);
+          }
         });
       }
     }
@@ -60,7 +64,7 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
-  Future<void> _handleBiometricLogin() async {
+  Future<void> _handleBiometricLogin(BuildContext context) async {
     final localAuth = LocalAuthentication();
     final didAuthenticate = await localAuth.authenticate(
       localizedReason: 'Authenticate to login',
@@ -70,9 +74,11 @@ class _LoginPageState extends State<LoginPage> {
       ),
     );
 
+    if (!mounted) return;
     if (didAuthenticate) {
       final email = await LoginStorageUtils.getLastBiometricEmail() ?? '';
       final password = await LoginStorageUtils.getBiometricPassword(email);
+      if (!mounted) return;
       if (email.isNotEmpty && password != null) {
         // Call your login API automatically
         context.read<AuthBloc>().add(
@@ -103,12 +109,14 @@ class _LoginPageState extends State<LoginPage> {
             ),
           );
         } else if (state is AuthLoginSuccess) {
-          await BiometricsPrompt.maybeShow(
-            context,
-            email: _emailController.text,
-            password: _passwordController.text,
-            onEnabled: () => debugPrint("Biometrics setup done"),
-          );
+          // if (_isBiometricEnabledForEmail) {
+            await BiometricsPrompt.maybeShow(
+              context,
+              email: _emailController.text,
+              password: _passwordController.text,
+              onEnabled: () => debugPrint("Biometrics setup done"),
+            );
+          // }
           AppNavigator.pushReplacement(
             context,
             BlocProvider(
@@ -137,7 +145,14 @@ class _LoginPageState extends State<LoginPage> {
 
                 if (_isBiometricEnabledForEmail &&
                     !_isPasswordFieldVisible) ...[
-                  LoginBiometricButton(onPressed: _handleBiometricLogin),
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      return LoginBiometricButton(
+                        onPressed: () => _handleBiometricLogin(context),
+                        isLoading: state is AuthLoading,
+                      );
+                    },
+                  ),
                   WidgetsSpacer.verticalSpacer8,
                   Center(
                     child: TextButton(
@@ -146,7 +161,10 @@ class _LoginPageState extends State<LoginPage> {
                           _isPasswordFieldVisible = true;
                         });
                       },
-                      child: const Text('Use password instead'),
+                      child: const Text(
+                        'Use password instead',
+                        style: TextStyle(color: AppColors.primaryColor),
+                      ),
                     ),
                   ),
                 ],
@@ -161,17 +179,21 @@ class _LoginPageState extends State<LoginPage> {
                     },
                   ),
                   WidgetsSpacer.verticalSpacer8,
-                  Center(
-                    child: TextButton.icon(
-                      onPressed: () {
-                        setState(() {
-                          _isPasswordFieldVisible = false;
-                        });
-                      },
-                      icon: Icon(Icons.fingerprint),
-                      label: const Text('Use fingerprint instead'),
+                  if (_isBiometricEnabledForEmail)
+                    Center(
+                      child: TextButton.icon(
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordFieldVisible = false;
+                          });
+                        },
+                        icon: Icon(Icons.fingerprint),
+                        label: const Text(
+                          'Use fingerprint instead',
+                          style: TextStyle(color: AppColors.primaryColor),
+                        ),
+                      ),
                     ),
-                  ),
                   WidgetsSpacer.verticalSpacer8,
                   forgotPasswordText(context, _emailController.text),
                   WidgetsSpacer.verticalSpacer16,

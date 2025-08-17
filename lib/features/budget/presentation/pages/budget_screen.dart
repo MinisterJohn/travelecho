@@ -151,6 +151,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
                 providers: [
                   BlocProvider.value(value: sl<BudgetBloc>()),
                   BlocProvider.value(value: sl<CurrencyBloc>()),
+                  BlocProvider.value(value: sl<LevelBloc>(),)
                 ],
                 child: Container(
                   child:

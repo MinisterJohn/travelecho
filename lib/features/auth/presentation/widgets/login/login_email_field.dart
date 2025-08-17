@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class LoginEmailField extends StatelessWidget {
   final TextEditingController controller;
-  const LoginEmailField({Key? key, required this.controller}) : super(key: key);
+  const LoginEmailField({super.key, required this.controller});
 
   @override
   Widget build(BuildContext context) {

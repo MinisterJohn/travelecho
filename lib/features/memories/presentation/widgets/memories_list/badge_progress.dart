@@ -4,7 +4,12 @@ import '../../../memories_exports.dart';
 
 class BadgeProgressBar extends StatelessWidget {
   final LevelInfoEntity level;
-  const BadgeProgressBar({super.key, required this.level});
+  final bool showProgress;
+  const BadgeProgressBar({
+    super.key,
+    required this.level,
+    this.showProgress = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +37,7 @@ class BadgeProgressBar extends StatelessWidget {
                       minHeight: 10,
                       borderRadius: BorderRadius.circular(12),
                     ),
+
                     Text(
                       "${level.progress.toStringAsFixed(0)}%",
                       style: const TextStyle(
@@ -42,13 +48,14 @@ class BadgeProgressBar extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 6),
-                Text(
-                  "${level.currentValue} / ${level.requiredValue} ${level.currentBadge?.category.toLowerCase() ?? ''}",
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: AppColors.defaultColor400,
+                if (showProgress)
+                  Text(
+                    "${level.currentValue} / ${level.requiredValue} ${level.currentBadge?.category.toLowerCase() ?? ''}",
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: AppColors.defaultColor400,
+                    ),
                   ),
-                ),
               ],
             ),
           ),

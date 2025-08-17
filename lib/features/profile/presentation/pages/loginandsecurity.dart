@@ -39,7 +39,7 @@ class LoginAndSecurityPage extends StatelessWidget {
             trailing: const Icon(Icons.chevron_right),
             onTap: () {
               // Add navigation logic here later
-              AppNavigator.push(context, const ForgotPasswordPage());
+              // AppNavigator.push(context, const ForgotPasswordPage());
             },
           ),
           const Divider(),

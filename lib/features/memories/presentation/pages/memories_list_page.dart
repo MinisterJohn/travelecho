@@ -181,7 +181,10 @@ class _MemoriesListPageState extends State<MemoriesListPage> with RouteAware {
                               nextBadge: null,
                             ),
                       );
-                      return BadgeProgressBar(level: memoryLevel);
+                      return BadgeProgressBar(
+                        level: memoryLevel,
+                        showProgress: false,
+                      );
                     }
                     return const Text('No level data available');
                   },

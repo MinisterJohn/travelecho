@@ -25,7 +25,7 @@ class MemoryDetailsBlocListener extends StatelessWidget {
               state is MemoryCreated
                   ? state.memory
                   : (state as MemoryUpdated).memory;
-          final memoryId = memoryData.id;
+          // final memoryId = memoryData.id;
           onMemoryCreatedOrUpdated(memoryData);
         } else if (state is MemoryError) {
           onError(state.message);

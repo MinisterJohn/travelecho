@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SignupTitleText extends StatelessWidget {
-  const SignupTitleText({Key? key}) : super(key: key);
+  const SignupTitleText({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class SignupTitleText extends StatelessWidget {
 }
 
 class SignupDescriptionText extends StatelessWidget {
-  const SignupDescriptionText({Key? key}) : super(key: key);
+  const SignupDescriptionText({super.key});
 
   @override
   Widget build(BuildContext context) {

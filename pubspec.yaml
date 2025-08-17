@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_colorpicker: ^1.0.3
   cupertino_icons: ^1.0.2
   pinput: ^5.0.0
   carousel_slider: ^5.0.0
@@ -46,6 +47,8 @@ dependencies:
   dropdown_search: ^6.0.2
   fl_chart: ^1.0.0
   syncfusion_flutter_charts: ^29.2.10
+  local_auth: ^2.3.0
+  flutter_secure_storage: ^9.2.4
 
 dev_dependencies:
   flutter_test:
@@ -73,6 +76,7 @@ flutter:
     - assets/json/language-list-json.json
     - assets/json/countries.json
     - assets/json/currencies.json
+    - assets/json/car-models.json
     - assets/images/
     - assets/images/auth/
     - assets/images/home_images/
@@ -81,6 +85,7 @@ flutter:
     - assets/images/milestones/
     - assets/images/trip_images/
     - assets/images/memories/
+    - assets/images/milestones/memory/
     - assets/images/culture_guide/
     - assets/images/profile/
     - assets/images/onboarding/

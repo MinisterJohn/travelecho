@@ -1,4 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../../features_exports.dart';
 
 part 'splash_state.dart';
@@ -8,17 +9,21 @@ class SplashCubit extends Cubit<SplashState> {
 
   void appStarted() async {
     await Future.delayed(const Duration(seconds: 8));
-    var isLoggedIn = await sl<IsLoggedInUseCase>().call();
-    var isNotNewUser = await sl<IsNotNewUserUseCase>().call();
+    final prefs = await SharedPreferences.getInstance();
+    bool isNotNewUser = prefs.getBool('is_not_new_user') ?? false;
 
-    if (isNotNewUser) {
-      if (isLoggedIn) {
-        emit(Authenticated());
-      } else {
-        emit(UnAuthenticated());
-      }
-    } else {
+    // If it's the first launch, set the flag so user never sees onboarding again
+    if (!isNotNewUser) {
+      await prefs.setBool('is_not_new_user', true);
       emit(FirstLaunch());
+      return;
+    }
+
+    var isLoggedIn = await sl<IsLoggedInUseCase>().call();
+    if (isLoggedIn) {
+      emit(Authenticated());
+    } else {
+      emit(UnAuthenticated());
     }
   }
 

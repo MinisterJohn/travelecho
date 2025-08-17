@@ -152,29 +152,29 @@ class _SignUpPageState extends State<SignUpPage> {
             builder: (context, state) {
               return SignupButton(
                 isLoading: state is AuthLoading,
-                onPressed: () {
-                  state is AuthLoading
-                      ? null
-                      : () async {
-                        if (form.currentState!.validate()) {
-                          if (_passwordController.text ==
-                              _confirmPasswordController.text) {
-                            context.read<AuthBloc>().add(
-                              SignupEvent(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                                name: _fullNameController.text,
-                              ),
-                            );
-                          } else {
-                            DisplayMessage.errorMessage(
-                              'Passwords do not match',
-                              context,
-                            );
+                onPressed:
+                    state is AuthLoading
+                        ? null
+                        : () async {
+                          print("hello");
+                          if (form.currentState!.validate()) {
+                            if (_passwordController.text ==
+                                _confirmPasswordController.text) {
+                              context.read<AuthBloc>().add(
+                                SignupEvent(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                  name: _fullNameController.text,
+                                ),
+                              );
+                            } else {
+                              DisplayMessage.errorMessage(
+                                'Passwords do not match',
+                                context,
+                              );
+                            }
                           }
-                        }
-                      };
-                },
+                        },
               );
             },
           ),
@@ -214,5 +214,4 @@ class _SignUpPageState extends State<SignUpPage> {
       ),
     );
   }
-
 }

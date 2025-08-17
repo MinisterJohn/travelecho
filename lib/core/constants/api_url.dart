@@ -23,6 +23,9 @@ class ApiUrl {
   static String dynamicMemoryImageURL(String memoryId, String imageId) =>
       "/users/me/memories/$memoryId/images/$imageId";
 
+  // Milestones
+  static const earnedBadgesURL = "/users/me/earned-badges";
+  static const nextLevelBadgesURL = "/users/me/next-level-badges";
   // Budget
   static const budgetURL = "/users/me/budgets";
   static String dynamicBudgetURL(String budgetId) =>
@@ -42,6 +45,10 @@ class ApiUrl {
   static String dynamicTravelDocumentImageUploadURL(String passportId) =>
       "/users/me/passport/$passportId/images";
   // static const passportImagesURL = "/users/me/passport/image";
+
+  //service_provider
+  static String dynamicServiceProviderURL(String userId) =>
+      "/users/me/driver-profile/$userId";
 
   // Optional helper
   static String fullUrl(String path) {

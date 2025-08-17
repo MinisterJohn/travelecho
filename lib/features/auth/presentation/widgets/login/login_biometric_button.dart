@@ -3,25 +3,53 @@ import "../../../auth_exports.dart";
 
 class LoginBiometricButton extends StatelessWidget {
   final VoidCallback onPressed;
-  const LoginBiometricButton({Key? key, required this.onPressed})
-    : super(key: key);
+  final bool isLoading;
+
+  const LoginBiometricButton({
+    super.key,
+    required this.onPressed,
+    required this.isLoading,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Icon(Icons.fingerprint, color: AppColors.primaryColor, size: 73),
+        Center(
+          child: Icon(
+            Icons.fingerprint,
+            color: AppColors.primaryColor,
+            size: 73,
+          ),
+        ),
         WidgetsSpacer.verticalSpacer16,
-        ElevatedButton.icon(
-          style: mergeWithThemeButtonStyle(
-            context,
-            ElevatedButton.styleFrom(
-              minimumSize: const Size(double.infinity, 50),
+        Center(
+          child: ElevatedButton.icon(
+            icon:
+                isLoading
+                    ? const SizedBox(
+                      width: 24,
+                      height: 24,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                      ),
+                    )
+                    : const Icon(Icons.fingerprint),
+            label:
+                isLoading
+                    ? const Text('Logging in...')
+                    : const Text(
+                      'Login with Fingerprint',
+                      style: TextStyle(color: AppColors.white),
+                    ),
+            onPressed: isLoading ? null : onPressed,
+            style: ElevatedButton.styleFrom(
+              shape: const StadiumBorder(),
+              padding: EdgeInsets.symmetric(horizontal: 16),
             ),
           ),
-          onPressed: onPressed,
-          icon: const Icon(Icons.fingerprint),
-          label: const Text('Login with Fingerprint'),
         ),
       ],
     );

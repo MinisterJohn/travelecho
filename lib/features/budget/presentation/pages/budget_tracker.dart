@@ -20,15 +20,22 @@ class _BudgetTrackerState extends State<BudgetTracker> {
     context.read<CurrencyBloc>().add(
       MergedCurrencyListRequested(context: context),
     );
+    context.read<LevelBloc>().add(FetchLevels());
+  }
+
+  @override
+  void dispose() {
+    // Add any controllers or resources to dispose here if needed in future
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Travel Budget', style: TextStyle(fontSize: 20)),
-        centerTitle: true,
-      ),
+      // appBar: AppBar(
+      //   title: Text('Travel Budget', style: TextStyle(fontSize: 20)),
+      //   centerTitle: true,
+      // ),
       body: Stack(
         children: [
           RefreshIndicator(
@@ -37,46 +44,79 @@ class _BudgetTrackerState extends State<BudgetTracker> {
             },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  BlocBuilder<LevelBloc, LevelState>(
+                    builder: (context, state) {
+                      if (state is LevelLoading) {
+                        return const LinearProgressIndicator(
+                          backgroundColor: AppColors.defaultColor100,
+                          color: AppColors.primaryColor,
+                        );
+                      } else if (state is LevelLoaded) {
+                        final budgetLevel = state.levels.firstWhere(
+                          (lvl) => lvl.category == 'BUDGET',
+                          orElse:
+                              () => LevelInfoModel(
+                                category: 'BUDGET',
+                                progress: 0,
+                                currentBadge: null,
+                                nextBadge: null,
+                              ),
+                        );
+                        return BadgeProgressBar(level: budgetLevel, showProgress: false);
+                      }
+                      return const Text('No budget level data available');
+                    },
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
                       children: [
-                        _budgetTools(LineIcons.piggyBank, "Budget Overview"),
-                        const SizedBox(width: 8.0),
-                        _budgetTools(
-                          LineIcons.clipboardList,
-                          "Expense Tracker",
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            _budgetTools(
+                              LineIcons.piggyBank,
+                              "Budget Overview",
+                            ),
+                            const SizedBox(width: 8.0),
+                            _budgetTools(
+                              LineIcons.clipboardList,
+                              "Expense Tracker",
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 30),
+                        currentBudgetTool == "Budget Overview"
+                            ? MultiBlocProvider(
+                              providers: [
+                                BlocProvider.value(value: sl<BudgetBloc>()),
+                                BlocProvider.value(value: sl<CurrencyBloc>()),
+                              ],
+                              child: BudgetScreen(),
+                            )
+                            : MultiBlocProvider(
+                              providers: [
+                                BlocProvider.value(value: sl<BudgetBloc>()),
+                                BlocProvider.value(value: sl<CurrencyBloc>()),
+                              ],
+                              child: ExpenseTracker(
+                                currencyInfo: CurrencyInfo(
+                                  key: "USD",
+                                  name: "US Dollar",
+                                  symbol: "\$",
+                                ),
+                              ),
+                            ),
                       ],
                     ),
-                    const SizedBox(height: 30),
-                    currentBudgetTool == "Budget Overview"
-                        ? MultiBlocProvider(
-                          providers: [
-                            BlocProvider.value(value: sl<BudgetBloc>()),
-                            BlocProvider.value(value: sl<CurrencyBloc>()),
-                          ],
-                          child: BudgetScreen(),
-                        )
-                        : MultiBlocProvider(
-                          providers: [
-                            BlocProvider.value(value: sl<BudgetBloc>()),
-                            BlocProvider.value(value: sl<CurrencyBloc>()),
-                          ],
-                          child: ExpenseTracker(
-                            currencyInfo: CurrencyInfo(
-                              key: "USD",
-                              name: "US Dollar",
-                              symbol: "\$",
-                            ),
-                          ),
-                        ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -178,6 +218,7 @@ class _BudgetTrackerState extends State<BudgetTracker> {
               return const SizedBox.shrink();
             },
           ),
+
           BlocBuilder<CurrencyBloc, CurrencyState>(
             builder: (context, state) {
               if (state is MergedCurrencyListLoaded) {

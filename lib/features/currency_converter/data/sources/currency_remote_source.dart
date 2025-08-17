@@ -47,24 +47,24 @@ class CurrencyRemoteSourceImpl extends CurrencyRemoteSource {
     BuildContext context,
   ) async {
     try {
-      Logger().d("Fetching merged currency list...");
+      // Logger().d("Fetching merged currency list...");
 
       // Load remote data
       final response = await dio.get(
         "https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies.json",
       );
-      Logger().d("Remote API Response: ${response.data}");
+      // Logger().d("Remote API Response: ${response.data}");
 
       // Fixed the undefined 'apiData' issue by ensuring it is assigned correctly
       final Map<String, dynamic> apiData =
           response.data as Map<String, dynamic>;
-      Logger().d("Remote API Data: $apiData");
+      // Logger().d("Remote API Data: $apiData");
 
       // Load local JSON data
       final jsonString = await DefaultAssetBundle.of(
         context,
       ).loadString("assets/json/currencies.json");
-      Logger().d("Local JSON Data: $jsonString");
+      // Logger().d("Local JSON Data: $jsonString");
       final List localList = json.decode(jsonString);
 
       final Map<String, CurrencyInfo> localMap = {
@@ -84,7 +84,7 @@ class CurrencyRemoteSourceImpl extends CurrencyRemoteSource {
           merged.add(CurrencyInfo(key: key, name: name, symbol: ''));
         }
       }
-      Logger().d("Merged Currency List: $merged");
+      // Logger().d("Merged Currency List: $merged");
 
       return merged;
     } catch (e) {

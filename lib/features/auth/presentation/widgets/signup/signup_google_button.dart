@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SignupGoogleButton extends StatelessWidget {
   final VoidCallback onTap;
-  const SignupGoogleButton({Key? key, required this.onTap}) : super(key: key);
+  const SignupGoogleButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

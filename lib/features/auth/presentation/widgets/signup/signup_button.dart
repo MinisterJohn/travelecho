@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 class SignupButton extends StatelessWidget {
-  final VoidCallback onPressed;
+  final Future<Null> Function()? onPressed;
   final bool isLoading;
-  const SignupButton({Key? key, required this.onPressed, required this.isLoading}) : super(key: key);
+  const SignupButton({super.key, required this.onPressed, required this.isLoading});
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isLoading ? null : onPressed,
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         minimumSize: const Size(double.infinity, 50),
       ),

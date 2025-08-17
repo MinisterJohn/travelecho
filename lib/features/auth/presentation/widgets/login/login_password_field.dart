@@ -5,11 +5,11 @@ class LoginPasswordField extends StatelessWidget {
   final bool isPasswordVisible;
   final VoidCallback onVisibilityToggle;
   const LoginPasswordField({
-    Key? key,
+    super.key,
     required this.controller,
     required this.isPasswordVisible,
     required this.onVisibilityToggle,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

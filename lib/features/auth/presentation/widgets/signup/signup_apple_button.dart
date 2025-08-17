@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class SignupAppleButton extends StatelessWidget {
   final VoidCallback onTap;
-  const SignupAppleButton({Key? key, required this.onTap}) : super(key: key);
+  const SignupAppleButton({super.key, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

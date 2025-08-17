@@ -1,8 +1,8 @@
 import 'dart:async';
 
 import 'package:dartz/dartz.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../../memories_exports.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
+// import '../../memories_exports.dart';
 
 import 'memory_crud_handler.dart';
 import 'memory_image_handler.dart';
@@ -56,8 +56,8 @@ abstract class MemoriesApiService {
 }
 
 class MemoriesApiServiceImpl implements MemoriesApiService {
-  final DioClient _dioClient = sl<DioClient>();
-  final SharedPreferences _prefs = sl<SharedPreferences>();
+  // final DioClient _dioClient = sl<DioClient>();
+  // final SharedPreferences _prefs = sl<SharedPreferences>();
   final MemoryCrudHandler _crudHandler;
   final MemoryImageHandler _imageHandler;
 

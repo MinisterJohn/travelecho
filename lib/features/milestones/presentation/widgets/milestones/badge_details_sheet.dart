@@ -16,7 +16,17 @@ class BadgeDetailsSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(imageUrl, width: 100, height: 100),
+          Image.asset(
+            imageUrl,
+            width: 100,
+            height: 100,
+            errorBuilder:
+                (context, error, stackTrace) => const Icon(
+                  Icons.emoji_events,
+                  size: 100,
+                  color: Colors.grey,
+                ),
+          ),
           const SizedBox(height: 16),
           Text(
             badge.name,

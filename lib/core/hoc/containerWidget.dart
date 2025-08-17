@@ -15,7 +15,7 @@ class _ScreenContainerState extends State<ScreenContainer> {
       child: Container(
         width: 375.w,
         margin: EdgeInsets.only(top: 10.h),
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: widget.child,
       ),
     );

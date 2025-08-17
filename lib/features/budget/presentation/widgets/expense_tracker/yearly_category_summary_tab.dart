@@ -15,7 +15,8 @@ class YearlyCategorySummaryTab extends StatefulWidget {
   });
 
   @override
-  State<YearlyCategorySummaryTab> createState() => _YearlyCategorySummaryTabState();
+  State<YearlyCategorySummaryTab> createState() =>
+      _YearlyCategorySummaryTabState();
 }
 
 class _YearlyCategorySummaryTabState extends State<YearlyCategorySummaryTab> {
@@ -33,16 +34,16 @@ class _YearlyCategorySummaryTabState extends State<YearlyCategorySummaryTab> {
   Widget build(BuildContext context) {
     final categories = widget.yearlyCategoryPercentages.keys.toList();
     if (categories.isEmpty) {
-      return EmptyScreen(
-        description: "No yearly category data available.",
-      );
+      return EmptyScreen(description: "No yearly category data available.");
     }
-    final selectedAmounts = selectedCategory != null
-        ? widget.yearlyCategoryAmounts[selectedCategory!]
-        : null;
-    final selectedPercentage = selectedCategory != null
-        ? widget.yearlyCategoryPercentages[selectedCategory!] ?? 0.0
-        : 0.0;
+    final selectedAmounts =
+        selectedCategory != null
+            ? widget.yearlyCategoryAmounts[selectedCategory!]
+            : null;
+    final selectedPercentage =
+        selectedCategory != null
+            ? widget.yearlyCategoryPercentages[selectedCategory!] ?? 0.0
+            : 0.0;
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -51,46 +52,56 @@ class _YearlyCategorySummaryTabState extends State<YearlyCategorySummaryTab> {
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: categories.map((cat) {
-                return InkWell(
-                  onTap: () => setState(() => selectedCategory = cat),
-                  child: Container(
-                    constraints: const BoxConstraints(minWidth: 100, minHeight: 40),
-                    decoration: BoxDecoration(
-                      color: selectedCategory == cat
-                          ? AppColors.primaryColor
-                          : AppColors.primaryColor100,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          width: 16,
-                          height: 16,
-                          decoration: BoxDecoration(
-                            color: expenseCategories.firstWhere(
-                              (e) => e.name == cat,
-                              orElse: () => expenseCategories.first,
-                            ).color ?? Colors.grey,
-                            borderRadius: BorderRadius.circular(50),
-                          ),
+              children:
+                  categories.map((cat) {
+                    return InkWell(
+                      onTap: () => setState(() => selectedCategory = cat),
+                      child: Container(
+                        constraints: const BoxConstraints(
+                          minWidth: 100,
+                          minHeight: 40,
                         ),
-                        const SizedBox(width: 8),
-                        Text(
-                          cat,
-                          style: TextStyle(
-                            color: selectedCategory == cat
-                                ? AppColors.white
-                                : AppColors.defaultColor,
-                          ),
+                        decoration: BoxDecoration(
+                          color:
+                              selectedCategory == cat
+                                  ? AppColors.primaryColor
+                                  : AppColors.primaryColor100,
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ],
-                    ),
-                  ),
-                );
-              }).toList(),
+                        padding: const EdgeInsets.all(8),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Container(
+                              width: 16,
+                              height: 16,
+                              decoration: BoxDecoration(
+                                color:
+                                    expenseCategories
+                                        .firstWhere(
+                                          (e) => e.name == cat,
+                                          orElse: () => expenseCategories.first,
+                                        )
+                                        .color ??
+                                    Colors.grey,
+                                borderRadius: BorderRadius.circular(50),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              cat,
+                              style: TextStyle(
+                                color:
+                                    selectedCategory == cat
+                                        ? AppColors.white
+                                        : AppColors.defaultColor,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }).toList(),
             ),
             WidgetsSpacer.verticalSpacer16,
             Container(
@@ -102,16 +113,25 @@ class _YearlyCategorySummaryTabState extends State<YearlyCategorySummaryTab> {
                     child: SfCircularChart(
                       series: [
                         DoughnutSeries<_YearlyCategoryData, String>(
-                          dataSource: categories
-                              .map((cat) => _YearlyCategoryData(
-                                    cat,
-                                    widget.yearlyCategoryPercentages[cat] ?? 0.0,
-                                    expenseCategories.firstWhere(
-                                      (e) => e.name == cat,
-                                      orElse: () => expenseCategories.first,
-                                    ).color ?? Colors.grey,
-                                  ))
-                              .toList(),
+                          dataSource:
+                              categories
+                                  .map(
+                                    (cat) => _YearlyCategoryData(
+                                      cat,
+                                      widget.yearlyCategoryPercentages[cat] ??
+                                          0.0,
+                                      expenseCategories
+                                              .firstWhere(
+                                                (e) => e.name == cat,
+                                                orElse:
+                                                    () =>
+                                                        expenseCategories.first,
+                                              )
+                                              .color ??
+                                          Colors.grey,
+                                    ),
+                                  )
+                                  .toList(),
                           xValueMapper: (data, _) => data.category,
                           yValueMapper: (data, _) => data.percentage,
                           pointColorMapper: (data, _) => data.color,
@@ -130,11 +150,16 @@ class _YearlyCategorySummaryTabState extends State<YearlyCategorySummaryTab> {
                       children: [
                         Text(
                           "Average",
-                          style: TextStyle(color: AppColors.defaultColor400, fontSize: 14),
+                          style: TextStyle(
+                            color: AppColors.defaultColor400,
+                            fontSize: 14,
+                          ),
                         ),
                         Text(
                           BudgetUtils.formatAmount(
-                            selectedAmounts.length > 2 ? selectedAmounts[2] : 0.0,
+                            selectedAmounts.length > 2
+                                ? selectedAmounts[2]
+                                : 0.0,
                             widget.currencySymbol,
                           ),
                           style: const TextStyle(
@@ -150,7 +175,8 @@ class _YearlyCategorySummaryTabState extends State<YearlyCategorySummaryTab> {
                             ),
                             children: [
                               TextSpan(
-                                text: " of this year was spent on $selectedCategory",
+                                text:
+                                    " of this year was spent on $selectedCategory",
                                 style: const TextStyle(
                                   color: AppColors.defaultColor400,
                                 ),
@@ -167,7 +193,9 @@ class _YearlyCategorySummaryTabState extends State<YearlyCategorySummaryTab> {
                             buildBudgetInfoCard(
                               title: "Minimum Amount",
                               amount: BudgetUtils.formatAmount(
-                                selectedAmounts.isNotEmpty ? selectedAmounts[0] : 0.0,
+                                selectedAmounts.isNotEmpty
+                                    ? selectedAmounts[0]
+                                    : 0.0,
                                 widget.currencySymbol,
                               ),
                             ),
@@ -180,7 +208,9 @@ class _YearlyCategorySummaryTabState extends State<YearlyCategorySummaryTab> {
                             buildBudgetInfoCard(
                               title: "Maximum Amount",
                               amount: BudgetUtils.formatAmount(
-                                selectedAmounts.length > 1 ? selectedAmounts[1] : 0.0,
+                                selectedAmounts.length > 1
+                                    ? selectedAmounts[1]
+                                    : 0.0,
                                 widget.currencySymbol,
                               ),
                               updatedBudget: null,
