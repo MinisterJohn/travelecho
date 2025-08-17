@@ -47,48 +47,44 @@ class _MemoryTagsSectionState extends State<MemoryTagsSection> {
       children: [
         Text(
           'Add tags that describe your experience',
-          style: TextStyle(
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-            fontSize: FontSize.size14,
-          ),
+          style: TextStyle(fontSize: FontSize.size16),
         ),
         WidgetsSpacer.verticalSpacer8,
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: widget.tagController,
-                decoration: InputDecoration(
-                  hintText: 'Enter tag',
-                  hintStyle: const TextStyle(color: AppColors.secondaryColor),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+        StatefulBuilder(
+          builder: (context, setState) {
+            return TextField(
+              controller: widget.tagController,
+              decoration: InputDecoration(
+                hintText: 'Enter tag',
+                hintStyle: const TextStyle(color: AppColors.secondaryColor),
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.only(right: 4.0),
+                  child: TextButton(
+                    onPressed:
+                        widget.tagController.text.trim().isEmpty
+                            ? null
+                            : () => _handleTagSubmission(context),
+                    child: Text(
+                      'Add',
+                      style: TextStyle(
+                        fontSize: FontSize.size16,
+                        fontWeight: FontWeight.w400,
+                        color:
+                            widget.tagController.text.trim().isEmpty
+                                ? AppColors.defaultColor400
+                                : AppColors.primaryColor,
+                      ),
+                    ),
                   ),
                 ),
-                style: const TextStyle(fontSize: 16),
-                maxLines: 1,
-                onSubmitted: (_) => _handleTagSubmission(context),
-                onEditingComplete: () => _handleTagSubmission(context),
               ),
-            ),
-            WidgetsSpacer.horizontalSpacer8,
-            ElevatedButton(
-              onPressed: () => _handleTagSubmission(context),
-              style: mergeWithThemeButtonStyle(
-                context,
-                ElevatedButton.styleFrom(minimumSize: const Size(0, 0)),
-              ),
-              child: Text(
-                'Add',
-                style: TextStyle(
-                  fontSize: FontSize.size16,
-                  fontWeight: FontWeight.w400,
-                  color: AppColors.white,
-                ),
-              ),
-            ),
-          ],
+              style: const TextStyle(fontSize: 16),
+              maxLines: 1,
+              onChanged: (_) => setState(() {}),
+              onSubmitted: (_) => _handleTagSubmission(context),
+              onEditingComplete: () => _handleTagSubmission(context),
+            );
+          },
         ),
         WidgetsSpacer.verticalSpacer8,
         if (widget.tags.isNotEmpty)

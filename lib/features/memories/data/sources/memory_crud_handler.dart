@@ -1,11 +1,13 @@
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:logger/logger.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../memories_exports.dart';
 
 class MemoryCrudHandler {
   final DioClient _dioClient = sl<DioClient>();
   final SharedPreferences _prefs = sl<SharedPreferences>();
+  final Logger _logger = sl<Logger>();
   MemoryCrudHandler();
 
   Future<Options> _getOptions() async {
@@ -67,7 +69,7 @@ class MemoryCrudHandler {
         },
         options: options,
       );
-
+      _logger.d("Create Memory Response: ${response.data}");
       if (response.statusCode == 201 || response.statusCode == 200) {
         return Right(response.data);
       } else {
@@ -116,14 +118,14 @@ class MemoryCrudHandler {
         final List<dynamic> memoriesData = response.data['memories'] ?? [];
         final List<Map<String, dynamic>> memoriesJson =
             memoriesData.map((memory) {
-          if (memory is Map<String, dynamic>) {
-            return memory;
-          } else if (memory is Map) {
-            return Map<String, dynamic>.from(memory);
-          } else {
-            return <String, dynamic>{};
-          }
-        }).toList();
+              if (memory is Map<String, dynamic>) {
+                return memory;
+              } else if (memory is Map) {
+                return Map<String, dynamic>.from(memory);
+              } else {
+                return <String, dynamic>{};
+              }
+            }).toList();
 
         return Right({'memories': memoriesJson});
       } else {
@@ -151,7 +153,7 @@ class MemoryCrudHandler {
         ApiUrl.fullUrl(ApiUrl.dynamicMemoryURL(memoryId)),
         options: options,
       );
-      print("Delete Response: ${response.data}");
+      // print("Delete Response: ${response.data}");
 
       if (response.statusCode == 200) {
         return const Right(null);
@@ -209,7 +211,8 @@ class MemoryCrudHandler {
   }
 
   Future<Either<String, Map<String, dynamic>>> getMemoryDetails(
-      String memoryId) async {
+    String memoryId,
+  ) async {
     try {
       final options = await _getOptions();
       final response = await _dioClient.get(
@@ -221,7 +224,8 @@ class MemoryCrudHandler {
         return Right(response.data);
       } else {
         return Left(
-            response.data['message'] ?? 'Failed to fetch memory details');
+          response.data['message'] ?? 'Failed to fetch memory details',
+        );
       }
     } on DioException catch (e) {
       return Left(_handleError(e));
@@ -231,7 +235,8 @@ class MemoryCrudHandler {
   }
 
   Future<Either<String, void>> deleteMultipleMemories(
-      List<String> memoryIds) async {
+    List<String> memoryIds,
+  ) async {
     try {
       if (memoryIds.isEmpty) {
         return const Left('No memory IDs provided');
@@ -261,7 +266,8 @@ class MemoryCrudHandler {
             failedDeletions.add('$memoryId: Permission denied');
           } else {
             failedDeletions.add(
-                '$memoryId: ${response.data['message'] ?? 'Failed to delete'}');
+              '$memoryId: ${response.data['message'] ?? 'Failed to delete'}',
+            );
           }
         } catch (e) {
           failedDeletions.add('$memoryId: $e');

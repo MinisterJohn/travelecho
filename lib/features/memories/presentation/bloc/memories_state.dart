@@ -62,19 +62,19 @@ class MemoriesState extends Equatable {
 
   @override
   List<Object?> get props => [
-        memories,
-        isLoading,
-        error,
-        isCreating,
-        isUpdating,
-        isDeleting,
-        createError,
-        updateError,
-        deleteError,
-        multipleDeleteError,
-        isMultipleDeleting,
-        successfullyDeletedIds,
-      ];
+    memories,
+    isLoading,
+    error,
+    isCreating,
+    isUpdating,
+    isDeleting,
+    createError,
+    updateError,
+    deleteError,
+    multipleDeleteError,
+    isMultipleDeleting,
+    successfullyDeletedIds,
+  ];
 }
 
 class MemoriesInitial extends MemoriesState {}
@@ -82,7 +82,7 @@ class MemoriesInitial extends MemoriesState {}
 class CreatingMemory extends MemoriesState {}
 
 class MemoryCreated extends MemoriesState {
-  final Map<String, dynamic> memory;
+  final MemoryModel memory;
 
   const MemoryCreated(this.memory);
 
@@ -139,13 +139,13 @@ class MemoriesLoaded extends MemoriesState {
 
   @override
   List<Object> get props => [
-        memories,
-        hasMore,
-        currentPage,
-        deletingMemoryId ?? '',
-        isSearching,
-        append
-      ];
+    memories,
+    hasMore,
+    currentPage,
+    deletingMemoryId ?? '',
+    isSearching,
+    append,
+  ];
 }
 
 class MemoryError extends MemoriesState {
@@ -167,7 +167,7 @@ class MemoryDeleted extends MemoriesState {
 }
 
 class MemoryUpdated extends MemoriesState {
-  final Map<String, dynamic> memory;
+final MemoryModel memory;
 
   const MemoryUpdated(this.memory);
 

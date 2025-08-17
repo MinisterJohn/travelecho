@@ -10,7 +10,7 @@ class MemoriesListPage extends StatefulWidget {
   State<MemoriesListPage> createState() => _MemoriesListPageState();
 }
 
-class _MemoriesListPageState extends State<MemoriesListPage> {
+class _MemoriesListPageState extends State<MemoriesListPage> with RouteAware {
   final ScrollController _scrollController = ScrollController();
   final TextEditingController _searchController = TextEditingController();
   String? _currentSearch;
@@ -30,6 +30,15 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
     _loadUsername();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final route = ModalRoute.of(context);
+    if (route is PageRoute) {
+      routeObserver.subscribe(this, route);
+    }
+  }
+
   Future<void> _loadUsername() async {
     final prefs = await SharedPreferences.getInstance();
     setState(() {
@@ -41,6 +50,7 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
   void dispose() {
     _scrollController.dispose();
     _searchController.dispose();
+    routeObserver.unsubscribe(this);
     super.dispose();
   }
 
@@ -89,6 +99,7 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
         append: append,
       ),
     );
+    context.read<LevelBloc>().add(FetchLevels());
   }
 
   void _handleViewMemory(MemoryModel memory) {
@@ -101,6 +112,12 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
 
   void _handleDeleteMemory(MemoryModel memory) {
     handleDeleteMemory(context, memory);
+  }
+
+  @override
+  void didPopNext() {
+    // Called when coming back to this screen
+    _fetchMemories();
   }
 
   @override
@@ -146,6 +163,29 @@ class _MemoriesListPageState extends State<MemoriesListPage> {
           children: [
             Column(
               children: [
+                BlocBuilder<LevelBloc, LevelState>(
+                  builder: (context, state) {
+                    if (state is LevelLoading) {
+                      return const LinearProgressIndicator(
+                        backgroundColor: AppColors.defaultColor100,
+                        color: AppColors.primaryColor,
+                      );
+                    } else if (state is LevelLoaded) {
+                      final memoryLevel = state.levels.firstWhere(
+                        (lvl) => lvl.category == 'MEMORY',
+                        orElse:
+                            () => LevelInfoModel(
+                              category: 'MEMORY',
+                              progress: 0,
+                              currentBadge: null,
+                              nextBadge: null,
+                            ),
+                      );
+                      return BadgeProgressBar(level: memoryLevel);
+                    }
+                    return const Text('No level data available');
+                  },
+                ),
                 MemorySearchFilterSection(
                   searchController: _searchController,
                   onSearch: _onSearch,

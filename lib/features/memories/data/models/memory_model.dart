@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import '../../memories_exports.dart'; // import your badge model here
 
 class MemoryModel extends Equatable {
   final String id;
@@ -15,6 +16,10 @@ class MemoryModel extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
 
+  /// 🔥 New fields
+  final bool hasEarnedNewBadge;
+  final BadgeModel? badge;
+
   const MemoryModel({
     required this.id,
     required this.title,
@@ -29,28 +34,45 @@ class MemoryModel extends Equatable {
     required this.isPublic,
     required this.createdAt,
     required this.updatedAt,
+    this.hasEarnedNewBadge = false,
+    this.badge,
   });
 
   factory MemoryModel.fromJson(Map<String, dynamic> json) {
+    // Support both top-level and nested memory object
+    final memoryJson =
+        json.containsKey('memory') && json['memory'] is Map<String, dynamic>
+            ? json['memory'] as Map<String, dynamic>
+            : json;
     return MemoryModel(
-      id: json['_id']?.toString() ?? '',
-      title: json['title'] ?? '',
-      description: json['description'] ?? '',
-      location: json['location'] ?? '',
+      id: memoryJson['_id']?.toString() ?? '',
+      title: memoryJson['title'] ?? '',
+      description: memoryJson['description'] ?? '',
+      location: memoryJson['location'] ?? '',
       date:
-          json['date'] != null ? DateTime.parse(json['date']) : DateTime.parse(json['createdAt']),
-      images: List<dynamic>.from(json['images'] ?? []),
-      tags: List<String>.from(json['tags'] ?? []),
-      userId: json['userId']?.toString() ?? '',
-      name: json['name'] ?? '',
-      email: json['email'] ?? '',
-      isPublic: json['isPublic'] ?? false,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : DateTime.now(),
+          memoryJson['date'] != null
+              ? DateTime.parse(memoryJson['date'])
+              : (memoryJson['createdAt'] != null
+                  ? DateTime.parse(memoryJson['createdAt'])
+                  : DateTime.now()),
+      images: List<dynamic>.from(memoryJson['images'] ?? []),
+      tags: List<String>.from(memoryJson['tags'] ?? []),
+      userId: memoryJson['userId']?.toString() ?? '',
+      name: memoryJson['name'] ?? '',
+      email: memoryJson['email'] ?? '',
+      isPublic: memoryJson['isPublic'] ?? false,
+      createdAt:
+          memoryJson['createdAt'] != null
+              ? DateTime.parse(memoryJson['createdAt'])
+              : DateTime.now(),
+      updatedAt:
+          memoryJson['updatedAt'] != null
+              ? DateTime.parse(memoryJson['updatedAt'])
+              : DateTime.now(),
+      hasEarnedNewBadge:
+          json['hasEarnedNewBadge'] == true ||
+          json['hasEarnedNewBadge'] == 'true',
+      badge: json['badge'] != null ? BadgeModel.fromJson(json['badge']) : null,
     );
   }
 
@@ -69,6 +91,8 @@ class MemoryModel extends Equatable {
       'isPublic': isPublic,
       'createdAt': createdAt.toIso8601String(),
       'updatedAt': updatedAt.toIso8601String(),
+      'hasEarnedNewBadge': hasEarnedNewBadge,
+      'badge': badge,
     };
   }
 
@@ -78,7 +102,7 @@ class MemoryModel extends Equatable {
     String? description,
     String? location,
     DateTime? date,
-    List<String>? images,
+    List<dynamic>? images,
     List<String>? tags,
     String? userId,
     String? name,
@@ -86,6 +110,8 @@ class MemoryModel extends Equatable {
     bool? isPublic,
     DateTime? createdAt,
     DateTime? updatedAt,
+    bool? hasEarnedNewBadge,
+    BadgeModel? badge,
   }) {
     return MemoryModel(
       id: id ?? this.id,
@@ -101,27 +127,32 @@ class MemoryModel extends Equatable {
       isPublic: isPublic ?? this.isPublic,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
+      hasEarnedNewBadge: hasEarnedNewBadge ?? this.hasEarnedNewBadge,
+      badge: badge ?? this.badge,
     );
   }
 
   @override
   List<Object?> get props => [
-        id,
-        title,
-        description,
-        location,
-        date,
-        images,
-        tags,
-        userId,
-        name,
-        email,
-        isPublic,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    title,
+    description,
+    location,
+    date,
+    images,
+    tags,
+    userId,
+    name,
+    email,
+    isPublic,
+    createdAt,
+    updatedAt,
+    hasEarnedNewBadge,
+    badge,
+  ];
 }
 
+/// Collection model stays the same
 class CollectionModel extends Equatable {
   final String id;
   final String name;
@@ -151,12 +182,14 @@ class CollectionModel extends Equatable {
       coverImageUrl: json['coverImageUrl'] ?? '',
       userId: json['userId']?.toString() ?? '',
       isPublic: json['isPublic'] ?? false,
-      createdAt: json['createdAt'] != null
-          ? DateTime.parse(json['createdAt'])
-          : DateTime.now(),
-      updatedAt: json['updatedAt'] != null
-          ? DateTime.parse(json['updatedAt'])
-          : DateTime.now(),
+      createdAt:
+          json['createdAt'] != null
+              ? DateTime.parse(json['createdAt'])
+              : DateTime.now(),
+      updatedAt:
+          json['updatedAt'] != null
+              ? DateTime.parse(json['updatedAt'])
+              : DateTime.now(),
     );
   }
 
@@ -197,13 +230,13 @@ class CollectionModel extends Equatable {
 
   @override
   List<Object?> get props => [
-        id,
-        name,
-        description,
-        coverImageUrl,
-        userId,
-        isPublic,
-        createdAt,
-        updatedAt,
-      ];
+    id,
+    name,
+    description,
+    coverImageUrl,
+    userId,
+    isPublic,
+    createdAt,
+    updatedAt,
+  ];
 }

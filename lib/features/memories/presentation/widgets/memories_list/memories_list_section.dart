@@ -166,7 +166,7 @@ class MemoriesListSection extends StatelessWidget {
           (state is MemoriesLoaded && (state as MemoriesLoaded).hasMore
               ? 1
               : 0),
-      itemBuilder: (context, index) {
+      itemBuilder: (context, index) {   
         if (index == memories.length) {
           return const Center(child: CircularProgressIndicator());
         }

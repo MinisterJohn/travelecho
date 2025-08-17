@@ -47,15 +47,10 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
         ),
       );
       print("Create Memory Result: $result");
-      result.fold(
-        (error) => emit(MemoryError(error)),
-        (memory) {
-          print("Memory: $memory");
-          final Map<String, dynamic> memoryData = memory['memory'];
-          print("Memory Data: $memoryData");
-          emit(MemoryCreated(memoryData));
-        },
-      );
+      result.fold((error) => emit(MemoryError(error)), (memoryJson) {
+        final memoryModel = MemoryModel.fromJson(memoryJson);
+        emit(MemoryCreated(memoryModel));
+      });
     } catch (e) {
       emit(MemoryError(e.toString()));
     }
@@ -90,11 +85,9 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
       final totalImages = event.imagePaths.length;
 
       // Emit initial progress
-      emit(UploadProgress(
-        progress: 0,
-        currentImage: 0,
-        totalImages: totalImages,
-      ));
+      emit(
+        UploadProgress(progress: 0, currentImage: 0, totalImages: totalImages),
+      );
 
       final result = await _uploadMultipleMemoryImagesUseCase(
         UploadMultipleMemoryImagesParams(
@@ -103,18 +96,17 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
         ),
       );
 
-      result.fold(
-        (error) => emit(MemoryError(error)),
-        (_) {
-          // Update progress to 100% when complete
-          emit(UploadProgress(
+      result.fold((error) => emit(MemoryError(error)), (_) {
+        // Update progress to 100% when complete
+        emit(
+          UploadProgress(
             progress: 1.0,
             currentImage: totalImages,
             totalImages: totalImages,
-          ));
-          emit(MultipleMemoryImagesUploaded());
-        },
-      );
+          ),
+        );
+        emit(MultipleMemoryImagesUploaded());
+      });
     } catch (e) {
       emit(MemoryError(e.toString()));
     }
@@ -146,30 +138,34 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
           emit(MemoryError(error));
         },
         (memories) {
-          print(
-              'Fetched memories: ${memories.length}'); // Log the number of fetched memories
-          final currentMemories = currentState is MemoriesLoaded
-              ? currentState.memories
-              : <MemoryModel>[];
+          // print(
+          //     'Fetched memories: ${memories.length}'); // Log the number of fetched memories
+          final currentMemories =
+              currentState is MemoriesLoaded
+                  ? currentState.memories
+                  : <MemoryModel>[];
 
-          print(
-              'Current memories before append: ${currentMemories.length}'); // Log the current memories count
+          // print(
+          //     'Current memories before append: ${currentMemories.length}'); // Log the current memories count
 
-          final allMemories = event.append
-              ? [...currentMemories, ...memories] // Append new memories
-              : memories; // Replace the list if not appending
+          final allMemories =
+              event.append
+                  ? [...currentMemories, ...memories] // Append new memories
+                  : memories; // Replace the list if not appending
 
-          print(
-              'All memories after append: ${allMemories.length}'); // Log the total memories count
+          // print(
+          //     'All memories after append: ${allMemories.length}'); // Log the total memories count
 
           final hasMore = memories.length == event.limit;
-          emit(MemoriesLoaded(
-            memories: allMemories,
-            hasMore: hasMore,
-            currentPage: event.skip ~/ event.limit + 1,
-            isSearching: event.search != null,
-            append: event.append, // Pass the append parameter
-          ));
+          emit(
+            MemoriesLoaded(
+              memories: allMemories,
+              hasMore: hasMore,
+              currentPage: event.skip ~/ event.limit + 1,
+              isSearching: event.search != null,
+              append: event.append, // Pass the append parameter
+            ),
+          );
         },
       );
     } catch (e) {
@@ -186,27 +182,32 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
       final currentState = state;
       if (currentState is MemoriesLoaded) {
         // First emit a state with the memory marked for deletion
-        emit(MemoriesLoaded(
-          memories: currentState.memories,
-          hasMore: currentState.hasMore,
-          currentPage: currentState.currentPage,
-          deletingMemoryId: event.memoryId,
-        ));
+        emit(
+          MemoriesLoaded(
+            memories: currentState.memories,
+            hasMore: currentState.hasMore,
+            currentPage: currentState.currentPage,
+            deletingMemoryId: event.memoryId,
+          ),
+        );
 
         // Wait a short moment for the animation to start
         await Future.delayed(const Duration(milliseconds: 300));
 
         // Remove the memory from the list
-        final updatedMemories = currentState.memories
-            .where((memory) => memory.id != event.memoryId)
-            .toList();
+        final updatedMemories =
+            currentState.memories
+                .where((memory) => memory.id != event.memoryId)
+                .toList();
 
         // Update UI with the memory removed
-        emit(MemoriesLoaded(
-          memories: updatedMemories,
-          hasMore: currentState.hasMore,
-          currentPage: currentState.currentPage,
-        ));
+        emit(
+          MemoriesLoaded(
+            memories: updatedMemories,
+            hasMore: currentState.hasMore,
+            currentPage: currentState.currentPage,
+          ),
+        );
 
         // Delete from backend in the background without emitting any states
         await _deleteMemoryUseCase(event.memoryId);
@@ -243,15 +244,12 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
         ),
       );
 
-      result.fold(
-        (error) => emit(MemoryError(error)),
-        (memory) {
-          final Map<String, dynamic> memoryData = memory['memory'];
-          print("Update Memory Response: $memoryData");
+      result.fold((error) => emit(MemoryError(error)), (memoryJson) {
+         final memoryModel = MemoryModel.fromJson(memoryJson);
+        // print("Update Memory Response: $memoryData");
 
-          emit(MemoryUpdated(memoryData));
-        },
-      );
+        emit(MemoryUpdated(memoryModel));
+      });
     } catch (e) {
       print("Update Memory Error: $e");
       emit(MemoryError(e.toString()));
@@ -267,27 +265,32 @@ class MemoriesBloc extends Bloc<MemoriesEvent, MemoriesState> {
       final currentState = state;
       if (currentState is MemoriesLoaded) {
         // First emit a state with the memories marked for deletion
-        emit(MemoriesLoaded(
-          memories: currentState.memories,
-          hasMore: currentState.hasMore,
-          currentPage: currentState.currentPage,
-          deletingMemoryId: event.memoryIds.first,
-        ));
+        emit(
+          MemoriesLoaded(
+            memories: currentState.memories,
+            hasMore: currentState.hasMore,
+            currentPage: currentState.currentPage,
+            deletingMemoryId: event.memoryIds.first,
+          ),
+        );
 
         // Wait a short moment for the animation to start
         await Future.delayed(const Duration(milliseconds: 300));
 
         // Remove the memories from the list
-        final updatedMemories = currentState.memories
-            .where((memory) => !event.memoryIds.contains(memory.id))
-            .toList();
+        final updatedMemories =
+            currentState.memories
+                .where((memory) => !event.memoryIds.contains(memory.id))
+                .toList();
 
         // Update UI with the memories removed
-        emit(MemoriesLoaded(
-          memories: updatedMemories,
-          hasMore: currentState.hasMore,
-          currentPage: currentState.currentPage,
-        ));
+        emit(
+          MemoriesLoaded(
+            memories: updatedMemories,
+            hasMore: currentState.hasMore,
+            currentPage: currentState.currentPage,
+          ),
+        );
 
         // Delete from backend in the background
         final result = await _deleteMultipleMemoriesUseCase(

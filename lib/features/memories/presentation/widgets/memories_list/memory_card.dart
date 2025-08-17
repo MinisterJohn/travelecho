@@ -32,7 +32,7 @@ class MemoryCard extends StatelessWidget {
           children: [
             Expanded(
               child: UserHeader(
-                username: username as String,
+                username: username ?? '',
                 location: memory.location,
                 createdAt: memory.date,
                 onView: onView,

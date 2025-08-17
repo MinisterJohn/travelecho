@@ -33,7 +33,8 @@ class UserHeader extends StatelessWidget {
               value: sl<ProfileBloc>(),
               child: BlocBuilder<ProfileBloc, ProfileState>(
                 builder: (context, profileState) {
-                  return profileState is ProfileLoaded
+                  return (profileState is ProfileLoaded &&
+                          profileState.profile.image.isNotEmpty)
                       ? Container(
                         width: 40,
                         height: 40,
@@ -49,11 +50,11 @@ class UserHeader extends StatelessWidget {
                       )
                       : const CircleAvatar(
                         radius: 20,
-                        // backgroundColor: AppColors.primaryColor,
+                        backgroundColor: AppColors.defaultColor100,
                         child: Icon(
                           Icons.person_outline_outlined,
                           size: 20,
-                          color: Colors.white,
+                          color: AppColors.defaultColor400,
                         ),
                       );
                 },

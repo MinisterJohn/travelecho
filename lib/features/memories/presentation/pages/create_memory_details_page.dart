@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:travelecho/features/memories/presentation/widgets/create_update_memory/create_memory_action_buttons.dart';
 import '../../memories_exports.dart';
 import 'dart:async';
 
@@ -24,7 +24,7 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _locationController = TextEditingController();
   final TextEditingController _tagController = TextEditingController();
-  final SharedPreferences _prefs = sl<SharedPreferences>();
+  // Removed unused _prefs
   DateTime? _selectedDate;
   bool _isPublic = true;
   List<String> _tags = [];
@@ -36,11 +36,12 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
     super.initState();
     if (widget.isEditing && widget.memory != null) {
       _titleController.text = widget.memory!.title;
-      _descriptionController.text = widget.memory!.description ?? '';
-      _locationController.text = widget.memory!.location ?? '';
+      _descriptionController.text = widget.memory!.description;
+      _locationController.text = widget.memory!.location;
       _selectedDate = widget.memory!.date;
       _isPublic = widget.memory!.isPublic;
       _tags = List<String>.from(widget.memory!.tags);
+      _memoryId = widget.memory!.id;
     }
   }
 
@@ -54,219 +55,260 @@ class _CreateMemoryDetailsPageState extends State<CreateMemoryDetailsPage> {
   }
 
   Future<void> _selectDate() async {
-    final DateTime? picked = await showDatePicker(
+    await selectDate(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
+      selectedDate: _selectedDate,
+      onDateSelected: (picked) {
+        if (mounted) {
+          setState(() {
+            _selectedDate = picked;
+          });
+        }
+      },
     );
-    if (picked != null && picked != _selectedDate) {
-      setState(() {
-        _selectedDate = picked;
-      });
-    }
   }
 
-  Future _handlePost() async {
-    if (_titleController.text.isEmpty) {
-      DisplayMessage.errorMessage('Please enter a title', context);
-      return null;
-    }
+  Future<void> _handlePost() async {
+    await handlePost(
+      context: context,
+      isEditing: widget.isEditing,
+      memory: widget.memory,
+      titleController: _titleController,
+      descriptionController: _descriptionController,
+      locationController: _locationController,
+      selectedDate: _selectedDate,
+      tags: _tags,
+      isPublic: _isPublic,
+      onLoading: () {
+        if (mounted) {
+          setState(() {
+            _isLoading = true;
+          });
+        }
+      },
+    );
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    Completer<String?> completer = Completer<String?>();
-
-    if (widget.isEditing && widget.memory != null) {
-      context.read<MemoriesBloc>().add(
-        EditMemory(
-          memoryId: widget.memory!.id,
-          title: _titleController.text,
-          description:
-              _descriptionController.text.isNotEmpty
-                  ? _descriptionController.text
-                  : null,
-          location:
-              _locationController.text.isNotEmpty
-                  ? _locationController.text
-                  : null,
-          date: _selectedDate,
-          tags: _tags.isNotEmpty ? _tags : null,
-          isPublic: _isPublic,
-        ),
-      );
-    } else {
-      context.read<MemoriesBloc>().add(
-        CreateMemory(
-          title: _titleController.text,
-          description:
-              _descriptionController.text.isNotEmpty
-                  ? _descriptionController.text
-                  : null,
-          location:
-              _locationController.text.isNotEmpty
-                  ? _locationController.text
-                  : null,
-          date: _selectedDate,
-          tags: _tags.isNotEmpty ? _tags : null,
-          isPublic: _isPublic,
-        ),
-      );
-    }
-
-    context.read<MemoriesBloc>().stream.listen((state) {
-      if (state is MemoryCreated) {
-        setState(() {
-          _isLoading = false;
-          _memoryId = state.memory['_id'] ?? state.memory['id'];
-        });
-        completer.complete(_memoryId);
-      } else if (state is MemoryUpdated) {
-        setState(() {
-          _isLoading = false;
-          _memoryId = state.memory['_id'] ?? state.memory['id'];
-        });
-        completer.complete(_memoryId);
-      } else if (state is MemoryError) {
-        setState(() {
-          _isLoading = false;
-        });
-        completer.completeError(state.message);
-      }
-    });
-
-    return completer.future;
+    // Check for badge earned and show popup
   }
 
   void _addTag() {
-    if (_tagController.text.isNotEmpty) {
-      setState(() {
-        _tags.add(_tagController.text.trim());
-        _tagController.clear();
-      });
-    }
+    addTag(
+      tagController: _tagController,
+      tags: _tags,
+      onTagsChanged: (updatedTags) {
+        if (mounted) {
+          setState(() {
+            _tags = updatedTags;
+          });
+        }
+      },
+    );
   }
 
   void _removeTag(String tag) {
-    setState(() {
-      _tags.remove(tag);
-    });
+    removeTag(
+      tag: tag,
+      tags: _tags,
+      onTagsChanged: (updatedTags) {
+        if (mounted) {
+          setState(() {
+            _tags = updatedTags;
+          });
+        }
+      },
+    );
+  }
+
+  void _resetForm() {
+    resetForm(
+      onReset: () {
+        if (mounted) {
+          setState(() {
+            _titleController.clear();
+            _descriptionController.clear();
+            _locationController.clear();
+            _tagController.clear();
+            _tags.clear();
+            _selectedDate = null;
+            _isPublic = true;
+          });
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<MemoriesBloc, MemoriesState>(
-      listener: (context, state) {
-        if (state is MemoryCreated) {
-          setState(() {
-            _isLoading = false;
-            _memoryId = state.memory['_id'] ?? state.memory['id'];
-          });
-          print("Memory Created: ${state.memory}");
-          DisplayMessage.successMessage('Memory created successfully', context);
-        } else if (state is MemoryUpdated) {
-          setState(() {
-            _isLoading = false;
-            _memoryId = state.memory['_id'] ?? state.memory['id'];
-          });
-          print("Memory Updated: ${state.memory}");
-          DisplayMessage.successMessage('Memory updated successfully', context);
-        } else if (state is MemoryError) {
-          setState(() {
-            _isLoading = false;
-          });
-          print(state.message);
-          DisplayMessage.errorMessage(state.message, context);
-        }
-      },
-      child: Scaffold(
-        appBar: setAppBar(
-          widget.isEditing ? "Edit Memory" : "Create Memory",
-          context,
-        ),
-        body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WidgetsSpacer.verticalSpacer32,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: setAppBar(
+            widget.isEditing ? "Edit Memory" : "Create Memory",
+            context,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WidgetsSpacer.verticalSpacer32,
 
-                // Memory form fields
-                MemoryFormFields(
-                  titleController: _titleController,
-                  descriptionController: _descriptionController,
-                  locationController: _locationController,
-                  selectedDate: _selectedDate,
-                  isPublic: _isPublic,
-                  onPublicChanged: (value) {
-                    setState(() {
-                      _isPublic = value ?? true;
-                    });
-                  },
-                  onDateTap: _selectDate,
-                ),
-                WidgetsSpacer.verticalSpacer16,
+                  // Memory form fields
+                  MemoryFormFields(
+                    titleController: _titleController,
+                    descriptionController: _descriptionController,
+                    locationController: _locationController,
+                    selectedDate: _selectedDate,
+                    isPublic: _isPublic,
+                    onPublicChanged: (value) {
+                      setState(() {
+                        _isPublic = value ?? true;
+                      });
+                    },
+                    onDateTap: _selectDate,
+                  ),
+                  WidgetsSpacer.verticalSpacer16,
 
-                // Tags section
-                MemoryTagsSection(
-                  tagController: _tagController,
-                  tags: _tags,
-                  onAddTag: _addTag,
-                  onRemoveTag: _removeTag,
-                ),
-                WidgetsSpacer.verticalSpacer32,
+                  // Tags section
+                  MemoryTagsSection(
+                    tagController: _tagController,
+                    tags: _tags,
+                    onAddTag: _addTag,
+                    onRemoveTag: _removeTag,
+                  ),
+                  WidgetsSpacer.verticalSpacer32,
+                  UpdatePicturesButton(
+                    memoryId: _memoryId,
+                    isEditing: widget.isEditing,
+                    existingImages:
+                        widget.isEditing && widget.memory != null
+                            ? widget.memory!.images
+                            : null,
+                  ),
+                  WidgetsSpacer.verticalSpacer32,
 
-                // Action buttons
-                MemoryActionButtons(
-                  isLoading: _isLoading,
-                  isEditing: widget.isEditing,
-                  onCreateUpdate: () async {
-                    if (_titleController.text.isEmpty) {
-                      DisplayMessage.errorMessage(
-                        'Please enter a title',
-                        context,
-                      );
-                      return;
-                    }
-                    await _handlePost();
-                    // ignore: use_build_context_synchronously
-                    AppNavigator.pop(context);
-                  },
-                  onAddUpdatePictures: () async {
-                    final response = await _handlePost();
-                    print(response);
-                    final currentState = context.read<MemoriesBloc>().state;
-                    AppNavigator.push(
-                      context,
-                      BlocProvider.value(
-                        value: sl<MemoriesBloc>(),
-                        child: AddDetailsToMemoryPage(
-                          memoryId:
-                              widget.memory != null
-                                  ? widget.memory!.id
-                                  : currentState is MemoryCreated
-                                  ? currentState.memory['_id'] ??
-                                      currentState.memory['id']
-                                  : '',
-                          isEditing: widget.isEditing,
-                          existingImages:
-                              widget.isEditing && widget.memory != null
-                                  ? widget.memory!.images
-                                  : null,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-                WidgetsSpacer.verticalSpacer32,
-              ],
+                  // Action buttons
+                  CreateMemoryActionButtons(
+                    isLoading: _isLoading,
+                    isUpdate: widget.isEditing,
+                    onCreate: _handlePost,
+                    onReset: _resetForm,
+                  ),
+                  WidgetsSpacer.verticalSpacer32,
+                ],
+              ),
             ),
           ),
         ),
-      ),
+        MemoryDetailsBlocListener(
+          isEditing: widget.isEditing,
+          memory: widget.memory,
+          onMemoryCreatedOrUpdated: (memoryData) {
+            if (mounted) {
+              setState(() {
+                _isLoading = false;
+                _memoryId = memoryData.id;
+              });
+            }
+            DisplayMessage.successMessage(
+              widget.isEditing
+                  ? 'Memory updated successfully'
+                  : 'Memory created successfully',
+              context,
+            );
+            if (memoryData.hasEarnedNewBadge && memoryData.badge != null) {
+              final badge = memoryData.badge!;
+              showDialog(
+                context: context,
+                builder:
+                    (context) => AlertDialog(
+                      title: const Text('Congratulations!'),
+                      content: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text('You have earned a new badge!'),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Badge: ${badge.name}',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text('Level: ${badge.level}'),
+                          Text('Description: ${badge.description}'),
+                        ],
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => {
+                            AppNavigator.pop(context),
+                            CreateMemoryBottomDialog.show(
+                              context: context,
+                              onAddPictures: () {
+                                    AppNavigator.pop(context);
+                                    AppNavigator.push(
+                                      context,
+                                      BlocProvider.value(
+                                        value: sl<MemoriesBloc>(),
+                                        child: AddDetailsToMemoryPage(
+                                          memoryId: _memoryId,
+                                          isEditing: widget.isEditing,
+                                          existingImages:
+                                              widget.isEditing &&
+                                                      widget.memory != null
+                                                  ? widget.memory!.images
+                                                  : null,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                  onSkip: () {
+                                    AppNavigator.pop(context);
+                                    AppNavigator.pop(context);
+                                  },
+                                ),
+                              },
+                          child: const Text('OK'),
+                        ),
+                      ],
+                    ),
+              );
+            } else {
+              CreateMemoryBottomDialog.show(
+                context: context,
+                onAddPictures: () {
+                  AppNavigator.pop(context);
+                  AppNavigator.push(
+                    context,
+                    BlocProvider.value(
+                      value: sl<MemoriesBloc>(),
+                      child: AddDetailsToMemoryPage(
+                        memoryId: _memoryId,
+                        isEditing: widget.isEditing,
+                        existingImages:
+                            widget.isEditing && widget.memory != null
+                                ? widget.memory!.images
+                                : null,
+                      ),
+                    ),
+                  );
+                },
+                onSkip: () {
+                  AppNavigator.pop(context);
+                  AppNavigator.pop(context);
+                },
+              );
+            }
+          },
+          onError: (message) {
+            if (mounted) {
+              setState(() {
+                _isLoading = false;
+              });
+            }
+            DisplayMessage.errorMessage(message, context);
+          },
+        ),
+      ],
     );
   }
 }

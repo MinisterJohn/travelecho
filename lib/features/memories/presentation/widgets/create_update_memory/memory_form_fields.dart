@@ -29,10 +29,7 @@ class MemoryFormFields extends StatelessWidget {
       children: [
         Text(
           'Add a title to describe',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: FontSize.size16,
-          ),
+          style: TextStyle(fontSize: FontSize.size16),
         ),
         WidgetsSpacer.verticalSpacer8,
         TextField(
@@ -40,38 +37,24 @@ class MemoryFormFields extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'Enter title',
             hintStyle: const TextStyle(color: AppColors.secondaryColor),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
           style: const TextStyle(fontSize: 16),
           maxLines: 1,
         ),
         WidgetsSpacer.verticalSpacer16,
-        Text(
-          'Add a description',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: FontSize.size16,
-          ),
-        ),
+        Text('Add a description', style: TextStyle(fontSize: FontSize.size16)),
         WidgetsSpacer.verticalSpacer8,
         TextField(
           controller: descriptionController,
           decoration: InputDecoration(
             hintText: 'Enter description',
             hintStyle: const TextStyle(color: AppColors.secondaryColor),
-            border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           ),
           style: const TextStyle(fontSize: 16),
           maxLines: 3,
         ),
         WidgetsSpacer.verticalSpacer16,
-        Text(
-          'Add location',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: FontSize.size16,
-          ),
-        ),
+        Text('Add location', style: TextStyle(fontSize: FontSize.size16)),
         WidgetsSpacer.verticalSpacer8,
         BlocProvider.value(
           value: sl<DataSearchBloc>(),
@@ -83,20 +66,14 @@ class MemoryFormFields extends StatelessWidget {
           ),
         ),
         WidgetsSpacer.verticalSpacer16,
-        Text(
-          'Select date',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: FontSize.size16,
-          ),
-        ),
+        Text('Select date', style: TextStyle(fontSize: FontSize.size16)),
         WidgetsSpacer.verticalSpacer8,
         InkWell(
           onTap: onDateTap,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              border: Border.all(color: AppColors.secondaryColor),
+              border: Border.all(color: AppColors.defaultColor100),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(
@@ -136,7 +113,7 @@ class MemoryFormFields extends StatelessWidget {
                 if (states.contains(WidgetState.selected)) {
                   return AppColors.primaryColor;
                 }
-                return AppColors.defaultColor;
+                return AppColors.defaultColor100;
               }),
             ),
           ),

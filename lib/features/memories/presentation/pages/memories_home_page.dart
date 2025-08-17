@@ -13,8 +13,12 @@ class _MemoriesHomePageState extends State<MemoriesHomePage> {
   @override
   void initState() {
     super.initState();
-    // Fetch memories to check if user has any
-    context.read<MemoriesBloc>().add(const FetchMemories(limit: 10));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        context.read<MemoriesBloc>().add(const FetchMemories(limit: 10));
+        context.read<LevelBloc>().add(FetchLevels());
+      }
+    });
   }
 
   void _retryFetch() {
