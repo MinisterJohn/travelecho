@@ -42,6 +42,10 @@ class CarRentalsUserDriverOptions extends StatelessWidget {
                     color: AppColors.primaryColor,
                     onTap: () {
                       // Handle driver selection
+                      AppNavigator.push(
+                        context,
+                        const BecomeDriverScreen(),
+                      );
                     },
                   ),
                 ],

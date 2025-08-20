@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../features_exports.dart';
 
 class CarRentalsLocationSelectionScreen extends StatefulWidget {
@@ -17,44 +18,6 @@ class _CarRentalsLocationSelectionScreenState
     extends State<CarRentalsLocationSelectionScreen> {
   final TextEditingController _addressController = TextEditingController();
   final FocusNode _addressFocusNode = FocusNode();
-  final List<Map<String, String>> _suggestedLocations = [
-    {
-      "title": "Central Park",
-      "subtitle": "5th Avenue, Manhattan, New York, NY, USA",
-    },
-    {
-      "title": "Victoria Island",
-      "subtitle": "Ahmadu Bello Way, Lagos, Nigeria",
-    },
-    {
-      "title": "Eiffel Tower",
-      "subtitle": "Champ de Mars, 5 Avenue Anatole, Paris, France",
-    },
-    {
-      "title": "The Dubai Mall",
-      "subtitle": "Downtown Dubai, Dubai, United Arab Emirates",
-    },
-    {"title": "Marina Bay Sands", "subtitle": "10 Bayfront Ave, Singapore"},
-    {
-      "title": "Union Square",
-      "subtitle": "333 Post St, San Francisco, CA, USA",
-    },
-    {
-      "title": "Ikeja City Mall",
-      "subtitle": "Obafemi Awolowo Way, Ikeja, Lagos, Nigeria",
-    },
-    {
-      "title": "Sydney Opera House",
-      "subtitle": "Bennelong Point, Sydney NSW, Australia",
-    },
-    {
-      "title": "Mall of Africa",
-      "subtitle": "Magwa Cres, Waterval City, Midrand, South Africa",
-    },
-    {"title": "Oxford Street", "subtitle": "West End, London, United Kingdom"},
-  ];
-
-  List<Map<String, String>> _filteredSuggestions = [];
 
   @override
   void initState() {
@@ -65,25 +28,11 @@ class _CarRentalsLocationSelectionScreenState
         FocusScope.of(context).requestFocus(_addressFocusNode);
       });
     }
-    _filteredSuggestions = [];
   }
 
   void _onAddressChanged() {
-    final query = _addressController.text.trim().toLowerCase();
-    setState(() {
-      if (query.isEmpty) {
-        _filteredSuggestions = [];
-      } else {
-        _filteredSuggestions =
-            _suggestedLocations
-                .where(
-                  (loc) =>
-                      (loc["title"]?.toLowerCase().contains(query) ?? false) ||
-                      (loc["subtitle"]?.toLowerCase().contains(query) ?? false),
-                )
-                .toList();
-      }
-    });
+    final query = _addressController.text.trim();
+    context.read<LocationSuggestionCubit>().fetchSuggestions(query);
   }
 
   @override
@@ -103,7 +52,6 @@ class _CarRentalsLocationSelectionScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Address field
               Row(
                 children: [
                   GestureDetector(
@@ -133,53 +81,42 @@ class _CarRentalsLocationSelectionScreenState
                 ],
               ),
               WidgetsSpacer.verticalSpacer32,
-              // Suggestions
-              if (_addressController.text.isNotEmpty &&
-                  _filteredSuggestions.isNotEmpty)
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _filteredSuggestions.length,
-                    itemBuilder: (context, index) {
-                      final loc = _filteredSuggestions[index];
-                      return ListTile(
-                        leading: const Icon(Icons.location_on_outlined),
-                        title: Text(loc["title"] ?? ""),
-                        subtitle: Text(loc["subtitle"] ?? ""),
-                        onTap: () {
-                          Navigator.pop(context, loc["title"] ?? "");
+              Expanded(
+                child: BlocBuilder<
+                  LocationSuggestionCubit,
+                  LocationSuggestionState
+                >(
+                  builder: (context, state) {
+                    if (state is LocationLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is LocationLoaded) {
+                      if (state.suggestions.isEmpty) {
+                        return const Center(child: Text("No locations found."));
+                      }
+                      return ListView.builder(
+                        itemCount: state.suggestions.length,
+                        itemBuilder: (context, index) {
+                          final loc = state.suggestions[index];
+                          return ListTile(
+                            leading: const Icon(Icons.location_on_outlined),
+                            title: Text(loc.name),
+                            subtitle: Text(loc.address),
+                            onTap: () {
+                              Navigator.pop(context, loc.name);
+                            },
+                          );
                         },
                       );
-                    },
-                  ),
-                )
-              else
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: _suggestedLocations.length + 1,
-                    itemBuilder: (context, index) {
-                      if (index < _suggestedLocations.length) {
-                        final loc = _suggestedLocations[index];
-                        return ListTile(
-                          leading: const Icon(Icons.location_on_outlined),
-                          title: Text(loc["title"] ?? ""),
-                          subtitle: Text(loc["subtitle"] ?? ""),
-                          onTap: () {
-                            Navigator.pop(context, loc["title"] ?? "");
-                          },
-                        );
-                      } else {
-                        // Set location on map option
-                        return ListTile(
-                          leading: const Icon(Icons.add_location_alt_outlined),
-                          title: const Text("Set location on map"),
-                          onTap: () {
-                            // Handle set location on map
-                          },
-                        );
-                      }
-                    },
-                  ),
+                    } else if (state is LocationError) {
+                      return Center(child: Text(state.message));
+                    }
+                    // Initial state or empty query
+                    return const Center(
+                      child: Text("Type to search locations"),
+                    );
+                  },
                 ),
+              ),
             ],
           ),
         ),

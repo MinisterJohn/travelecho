@@ -61,15 +61,14 @@ class _CarRentalsSelectTimeScreenState
                         ),
                         elevation: 0,
                       ),
-                      
+
                       onPressed: () {
                         Navigator.of(context).pop(); // Close dialog
                         if (widget.returnResult) {
                           // Edit flow: pop with result
-                          Navigator.of(context).pop({
-                            'date': _selectedDay,
-                            'time': _selectedTime,
-                          });
+                          Navigator.of(
+                            context,
+                          ).pop({'date': _selectedDay, 'time': _selectedTime});
                         } else {
                           // Normal flow: push next screen
                           AppNavigator.push(
@@ -212,27 +211,18 @@ class _CarRentalsSelectTimeScreenState
               ],
             ),
             const Spacer(),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.primaryColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                ),
-                onPressed: _showConfirmationDialog,
-                child: const Text(
-                  'Select',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+            AppPrimaryButton(
+              onPressed: _showConfirmationDialog,
+              child: const Text(
+                'Next',
+                style: TextStyle(
+                  color: AppColors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
+
             WidgetsSpacer.verticalSpacer32,
           ],
         ),

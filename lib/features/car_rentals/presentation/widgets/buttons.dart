@@ -13,7 +13,7 @@ class AppPrimaryButton extends StatelessWidget {
     required this.child,
     required this.onPressed,
     this.backgroundColor = AppColors.primaryColor,
-    this.borderRadius = 24,
+    this.borderRadius = 10,
     this.height = 48,
   });
 

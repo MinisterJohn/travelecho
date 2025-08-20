@@ -15,32 +15,46 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // Transparent status bar
-      statusBarIconBrightness: Brightness.dark, // Black icons
-      systemNavigationBarColor:
-          Colors.white, // Optional: Change navigation bar color
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent, // Transparent status bar
+        statusBarIconBrightness: Brightness.dark, // Black icons
+        systemNavigationBarColor:
+            Colors.white, // Optional: Change navigation bar color
+        systemNavigationBarIconBrightness: Brightness.dark,
+      ),
+    );
     return MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => SplashCubit()..appStarted(),
-          ),
-          BlocProvider(
-            create: (context) => sl<AuthBloc>()..add(CheckAuthStatus()),
-          ),
-        ],
-        child: ScreenUtilInit(
-          designSize: const Size(375, 812),
-          builder: (_, child) => MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Travel Echo',
-            theme: AppTheme.appTheme,
-            // Define routes for navigation using aliases
+      providers: [
+        BlocProvider(create: (context) => SplashCubit()..appStarted()),
+        BlocProvider(
+          create: (context) => sl<AuthBloc>()..add(CheckAuthStatus()),
+        ),
+        BlocProvider(
+          create:
+              (context) => LocationSuggestionCubit(
+                GetLocationSuggestionsUseCase(
+                  LocationSuggestionRepositoryImpl(
+                    LocationRemoteDataSource(
+                      '3917c3ebc82b4c36b8b36b0d5610a2c7',
+                    ),
+                  ),
+                ),
+              ),
+        ),
+      ],
+      child: ScreenUtilInit(
+        designSize: const Size(375, 812),
+        builder:
+            (_, child) => MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Travel Echo',
+              theme: AppTheme.appTheme,
 
-            home: const SplashScreen(), 
-          ),
-        ));
+              // Define routes for navigation using aliases
+              home: const SplashScreen(),
+            ),
+      ),
+    );
   }
 }

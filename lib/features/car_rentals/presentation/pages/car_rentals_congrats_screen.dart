@@ -62,7 +62,7 @@ class CarRentalsCongratsScreen extends StatelessWidget {
                       foregroundColor: AppColors.primaryColor,
                       side: BorderSide(color: AppColors.primaryColor, width: 2),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                     ),
                     onPressed: () {
