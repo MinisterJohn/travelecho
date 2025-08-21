@@ -38,7 +38,12 @@ class BudgetForm extends StatelessWidget {
         FormattedAmountField(
           controller: plannedAmountController,
           currencySymbol: selectedCurrencyInfo.symbol,
-          labelText: "Planned Amount"
+          labelText: "Planned Amount",
+          validator: (value) {
+            if (value == null || value.isEmpty) return "Enter planned amount";
+
+            return null;
+          },
         ),
         WidgetsSpacer.verticalSpacer20,
         CurrencySearchableDropdown(

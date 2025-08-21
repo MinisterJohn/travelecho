@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' hide CarouselController;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../milestones_exports.dart';
-import "./badge_details_sheet.dart";
 
 class BadgeTile extends StatelessWidget {
   final BadgeEntity badge;

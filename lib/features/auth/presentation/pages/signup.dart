@@ -156,7 +156,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     state is AuthLoading
                         ? null
                         : () async {
-                          print("hello");
                           if (form.currentState!.validate()) {
                             if (_passwordController.text ==
                                 _confirmPasswordController.text) {

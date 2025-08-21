@@ -17,7 +17,7 @@ Widget signInText(BuildContext context) {
             recognizer:
                 TapGestureRecognizer()
                   ..onTap = () {
-                    AppNavigator.push(
+                    AppNavigator.pushAndRemove(
                       context,
                       BlocProvider.value(
                         value: sl<AuthBloc>(),

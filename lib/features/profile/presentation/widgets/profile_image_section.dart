@@ -27,7 +27,7 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
     if (_isImageLoading) return;
 
     setState(() => _isImageLoading = true);
-    // try {
+
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(
       source: ImageSource.camera,
@@ -44,27 +44,51 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
         setState(() => _image = File(image.path));
       }
       widget.onImageSelected(image.path);
+      _showProfilePhotoAddedNotification(); // ✅ show notification
     }
-    // } catch (e) {
-    //   if (mounted) {
-    //     DisplayMessage.errorMessage(
-    //         "Failed to update profile photo: $e", context);
-    //   }
-    // } finally {
+
     if (mounted) {
       setState(() => _isImageLoading = false);
-      // }
     }
   }
 
-  void _showCameraDialog() {
+  Future<void> _pickFromGallery() async {
+    if (_isImageLoading) return;
+
+    setState(() => _isImageLoading = true);
+
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 800,
+      maxHeight: 800,
+      imageQuality: 85,
+    );
+
+    if (image != null && mounted) {
+      if (kIsWeb) {
+        final bytes = await image.readAsBytes();
+        setState(() => _image = bytes);
+      } else {
+        setState(() => _image = File(image.path));
+      }
+      widget.onImageSelected(image.path);
+      _showProfilePhotoAddedNotification(); // ✅ show notification
+    }
+
+    if (mounted) {
+      setState(() => _isImageLoading = false);
+    }
+  }
+
+  void _showImageSourceDialog() {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           backgroundColor: Colors.white,
           title: const Text(
-            "Take a real-time picture",
+            "Select Image Source",
             textAlign: TextAlign.center,
             style: TextStyle(fontSize: 16),
           ),
@@ -77,7 +101,21 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                   _takePicture();
                 },
                 child: const Text(
-                  "Open Camera",
+                  "Take Photo",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w400,
+                    color: AppColors.primaryColor,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  _pickFromGallery();
+                },
+                child: const Text(
+                  "Choose from Gallery",
                   style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w400,
@@ -149,29 +187,26 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: const Color.fromARGB(255, 156, 126, 126),
-                  image:
-                      _image != null
-                          ? DecorationImage(
-                            image:
-                                kIsWeb
-                                    ? MemoryImage(_image as Uint8List)
-                                    : FileImage(_image as File)
-                                        as ImageProvider,
-                            fit: BoxFit.cover, // or BoxFit.none
-                            alignment: Alignment.topCenter, // 👈 key part
-                          )
-                          : (widget.state is ProfileLoaded &&
+                  image: _image != null
+                      ? DecorationImage(
+                          image: kIsWeb
+                              ? MemoryImage(_image as Uint8List)
+                              : FileImage(_image as File) as ImageProvider,
+                          fit: BoxFit.cover,
+                          alignment: Alignment.topCenter,
+                        )
+                      : (widget.state is ProfileLoaded &&
                               (widget.state as ProfileLoaded)
                                   .profile
                                   .image
                                   .isNotEmpty)
                           ? DecorationImage(
-                            image: NetworkImage(
-                              (widget.state as ProfileLoaded).profile.image,
-                            ),
-                            fit: BoxFit.cover,
-                            alignment: Alignment.topCenter,
-                          )
+                              image: NetworkImage(
+                                (widget.state as ProfileLoaded).profile.image,
+                              ),
+                              fit: BoxFit.cover,
+                              alignment: Alignment.topCenter,
+                            )
                           : null,
                 ),
               ),
@@ -179,9 +214,8 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                 bottom: -15,
                 left: 15,
                 child: GestureDetector(
-                  onTap: _isImageLoading ? null : _showCameraDialog,
+                  onTap: _isImageLoading ? null : _showImageSourceDialog,
                   child: Container(
-                    // constraints: const BoxConstraints(maxWidth: 100),
                     padding: const EdgeInsets.symmetric(
                       horizontal: 8,
                       vertical: 3,
@@ -203,20 +237,19 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                       children: [
                         SizedBox(
                           width: 20,
-                          child:
-                              _isImageLoading
-                                  ? const SizedBox(
-                                    width: 16,
-                                    height: 16,
-                                    child: CircularProgressIndicator(
-                                      strokeWidth: 2,
-                                    ),
-                                  )
-                                  : const Icon(
-                                    Icons.camera_alt,
-                                    size: 20,
-                                    color: Colors.black,
+                          child: _isImageLoading
+                              ? const SizedBox(
+                                  width: 16,
+                                  height: 16,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
                                   ),
+                                )
+                              : const Icon(
+                                  Icons.camera_alt,
+                                  size: 20,
+                                  color: Colors.black,
+                                ),
                         ),
                         const SizedBox(width: 4),
                         Text(

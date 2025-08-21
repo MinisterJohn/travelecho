@@ -7,9 +7,9 @@ class ExpenseForm extends StatefulWidget {
   final TextEditingController titleController;
   final TextEditingController amountController;
   final TextEditingController noteController;
-  final String selectedCategory;
   final TextEditingController actualAmountController;
   XFile? receiptImage;
+  final String selectedCategory;
   final bool isSaving;
   final Function(String) onCategorySelected;
   final String prefixIcon;
@@ -38,6 +38,23 @@ class _ExpenseFormState extends State<ExpenseForm> {
   void initState() {
     super.initState();
     isExpenseDone = widget.actualAmountController.text.isNotEmpty;
+
+    // ✅ Listen for amount changes and rebuild when they change
+    widget.amountController.addListener(_onAmountChanged);
+    widget.actualAmountController.addListener(_onAmountChanged);
+  }
+
+  void _onAmountChanged() {
+    if (mounted) {
+      setState(() {}); // rebuilds the form when planned/actual amount changes
+    }
+  }
+
+  @override
+  void dispose() {
+    widget.amountController.removeListener(_onAmountChanged);
+    widget.actualAmountController.removeListener(_onAmountChanged);
+    super.dispose();
   }
 
   Future<void> _pickReceiptImage() async {
@@ -55,27 +72,69 @@ class _ExpenseFormState extends State<ExpenseForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextField(
+        // ✅ Title field with validation
+        TextFormField(
           controller: widget.titleController,
           enabled: !widget.isSaving,
           decoration: const InputDecoration(
             labelText: 'Title',
             border: OutlineInputBorder(),
           ),
+          validator:
+              (value) =>
+                  value == null || value.trim().isEmpty
+                      ? "Enter a title"
+                      : null,
         ),
         WidgetsSpacer.verticalSpacer16,
-        ExpenseCategorySelector(
-          categories: expenseCategories,
-          onCategorySelected: widget.onCategorySelected,
-          initialCategory: widget.selectedCategory,
+
+        // ✅ Category with validation
+        FormField<String>(
+          initialValue: widget.selectedCategory,
+          validator:
+              (value) =>
+                  value == null || value == "Select Category"
+                      ? "Select a category"
+                      : null,
+          builder:
+              (field) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ExpenseCategorySelector(
+                    categories: expenseCategories,
+                    onCategorySelected: (category) {
+                      widget.onCategorySelected(category);
+                      field.didChange(category);
+                    },
+                    initialCategory: widget.selectedCategory,
+                  ),
+                  if (field.hasError)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 5),
+                      child: Text(
+                        field.errorText!,
+                        style: const TextStyle(color: Colors.red, fontSize: 12),
+                      ),
+                    ),
+                ],
+              ),
         ),
         WidgetsSpacer.verticalSpacer16,
+
+        // ✅ Planned amount with validation
         FormattedAmountField(
           controller: widget.amountController,
           currencySymbol: widget.prefixIcon,
           labelText: "Planned Amount",
+          validator: (value) {
+            if (value == null || value.isEmpty) return "Enter planned amount";
+            return null;
+          },
         ),
+
         WidgetsSpacer.verticalSpacer16,
+
+        // Note
         TextField(
           controller: widget.noteController,
           enabled: !widget.isSaving,
@@ -86,39 +145,55 @@ class _ExpenseFormState extends State<ExpenseForm> {
           ),
         ),
         WidgetsSpacer.verticalSpacer16,
+
+        // Checkbox + conditional fields
         Row(
           children: [
-            Checkbox(
-              value: isExpenseDone,
-              onChanged: (bool? value) {
-                setState(() {
-                  isExpenseDone = value ?? false;
-                });
-              },
+            const Text('Track Expense'),
+            Transform.scale(
+              scale: 0.6,
+              child: Switch(
+                value: isExpenseDone,
+                activeColor: AppColors.primaryColor,
+                onChanged: (bool value) {
+                  setState(() {
+                    isExpenseDone = value;
+                  });
+                },
+              ),
             ),
-            const Text('Mark as Done'),
           ],
         ),
+
         if (isExpenseDone) ...[
           WidgetsSpacer.verticalSpacer16,
 
+          // ✅ Actual amount (only if expense tracking is enabled)
           FormattedAmountField(
             controller: widget.actualAmountController,
             currencySymbol: widget.prefixIcon,
             labelText: "Actual Spent Amount",
+            validator: (value) {
+              if (!isExpenseDone) return null;
+              if (value == null || value.isEmpty) return "Enter actual amount";
+              return null;
+            },
           ),
           WidgetsSpacer.verticalSpacer16,
-          ElevatedButton(
+
+          TextButton.icon(
             onPressed: _pickReceiptImage,
-            child: Text(
+            icon: const Icon(Icons.receipt_long_outlined),
+            label: Text(
               widget.receiptImage != null ? 'Upload Receipt' : 'Add Receipt',
               style: TextStyle(
                 fontSize: FontSize.size16,
                 fontWeight: FontWeight.w400,
-                color: AppColors.white,
+                color: AppColors.primaryColor,
               ),
             ),
           ),
+
           if (widget.receiptImage != null) ...[
             WidgetsSpacer.verticalSpacer16,
             Text('Receipt uploaded: ${widget.receiptImage!.name}'),
@@ -147,7 +222,7 @@ class _ExpenseFormState extends State<ExpenseForm> {
                         });
                       },
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           color: Colors.black54,
                           shape: BoxShape.circle,
                         ),
@@ -167,10 +242,5 @@ class _ExpenseFormState extends State<ExpenseForm> {
         ],
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
   }
 }

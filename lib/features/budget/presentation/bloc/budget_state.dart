@@ -30,6 +30,9 @@ class SingleBudgetLoaded extends BudgetState {
   SingleBudgetLoaded(this.budget);
 }
 
+class ExpenseSaved extends BudgetState {}
+
+
 class BudgetError extends BudgetState {
   final String message;
 

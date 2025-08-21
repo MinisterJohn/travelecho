@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../budget_exports.dart';
-// TODO: Replace the below import with the correct path if ExpenseCategoryModel is defined elsewhere
 
 class ExpenseCategorySelector extends StatefulWidget {
   final List<ExpenseCategoryModel> categories;
@@ -15,19 +14,31 @@ class ExpenseCategorySelector extends StatefulWidget {
   });
 
   @override
-  _ExpenseCategorySelectorState createState() =>
+  State<ExpenseCategorySelector> createState() =>
       _ExpenseCategorySelectorState();
 }
 
 class _ExpenseCategorySelectorState extends State<ExpenseCategorySelector> {
-  String selectedCategory = "";
+  late String selectedCategory;
 
   @override
   void initState() {
     super.initState();
-    selectedCategory = widget.initialCategory.isNotEmpty
-        ? widget.initialCategory
-        : "Select Category";
+    selectedCategory =
+        widget.initialCategory.isNotEmpty
+            ? widget.initialCategory
+            : "Select Category";
+  }
+
+  @override
+  void didUpdateWidget(covariant ExpenseCategorySelector oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // 🔑 When parent updates the category, refresh here too
+    if (widget.initialCategory != oldWidget.initialCategory) {
+      setState(() {
+        selectedCategory = widget.initialCategory;
+      });
+    }
   }
 
   @override
@@ -39,41 +50,48 @@ class _ExpenseCategorySelectorState extends State<ExpenseCategorySelector> {
           builder: (BuildContext context) {
             return SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16.0,),
+                padding: const EdgeInsets.symmetric(vertical: 16.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20.0),
                       child: Center(
-                        child: const Text(
+                        child: Text(
                           'Highlight what best fits your travel experience',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ),
                     WidgetsSpacer.verticalSpacer20,
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.8,
-                      child: ListView.builder(
-                        itemCount: widget.categories.length,
-                        itemBuilder: (context, index) {
-                          final category = widget.categories[index];
-                          return ListTile(
-                            leading: category.icon,
-                            title: Text(category.name),
-                            subtitle: Text(category.description),
-                            onTap: () {
-                              setState(() {
-                                selectedCategory = category.name;
-                              widget.onCategorySelected(category.name);
-                              });
-                              Navigator.pop(context);
-                            },
-                          );
-                        },
-                      ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: widget.categories.length,
+                      itemBuilder: (context, index) {
+                        final category = widget.categories[index];
+                        return ListTile(
+                          leading: category.icon,
+                          title: Text(category.name),
+                          subtitle: Text(category.description),
+                          trailing:
+                              selectedCategory == category.name
+                                  ? const Icon(
+                                    Icons.check,
+                                    color: Colors.purple,
+                                  )
+                                  : null,
+                          onTap: () {
+                            setState(() {
+                              selectedCategory = category.name;
+                            });
+                            widget.onCategorySelected(category.name);
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -90,7 +108,7 @@ class _ExpenseCategorySelectorState extends State<ExpenseCategorySelector> {
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
+          children: [
             Text(
               selectedCategory,
               style: TextStyle(
@@ -100,7 +118,7 @@ class _ExpenseCategorySelectorState extends State<ExpenseCategorySelector> {
                         : AppColors.defaultColor,
               ),
             ),
-            Icon(Icons.keyboard_arrow_down),
+            const Icon(Icons.keyboard_arrow_down),
           ],
         ),
       ),

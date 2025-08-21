@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart' hide CarouselController;
-import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:readmore/readmore.dart';
 import '../../../memories_exports.dart';
@@ -46,9 +45,9 @@ class MemoryCard extends StatelessWidget {
         _buildMemoryContent(),
         WidgetsSpacer.verticalSpacer16,
         if (memory.images.isNotEmpty) ...[
-          _buildImageCarousel(),
-          WidgetsSpacer.verticalSpacer8,
-          _buildCarouselDots(),
+          _buildImageGallery(context),
+          // WidgetsSpacer.verticalSpacer8,
+          // _buildCarouselDots(),
           WidgetsSpacer.verticalSpacer16,
         ],
         if (memory.location != '')
@@ -70,9 +69,7 @@ class MemoryCard extends StatelessWidget {
                     .map(
                       (tag) => Text(
                         "#$tag",
-                        style: const TextStyle(
-                          color: AppColors.primaryColor,
-                        ),
+                        style: const TextStyle(color: AppColors.primaryColor),
                       ),
                     )
                     .toList(),
@@ -83,34 +80,106 @@ class MemoryCard extends StatelessWidget {
     );
   }
 
-  Widget _buildImageCarousel() {
-    return carousel.CarouselSlider(
-      options: carousel.CarouselOptions(
-        height: 200.0,
-        enableInfiniteScroll: false,
-        viewportFraction: 0.8,
-        enlargeCenterPage: true,
-      ),
-      items:
-          memory.images.map((image) {
-            final imagePath = image['url'];
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width - 15,
-                  margin: const EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(8),
-                    image: DecorationImage(
-                      image: NetworkImage(imagePath),
+  Widget _buildImageGallery(BuildContext context) {
+    final images = memory.images;
+
+    if (images.isEmpty) return const SizedBox.shrink();
+
+    if (images.length == 1) {
+      // ✅ One image - full width
+      return _buildImage(images[0]['url'], fit: BoxFit.cover);
+    }
+
+    if (images.length == 2) {
+      // ✅ Two images - side by side
+      return Row(
+        children:
+            images.map((img) {
+              return Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: _buildImage(img['url'], fit: BoxFit.cover),
+                ),
+              );
+            }).toList(),
+      );
+    }
+
+    // ✅ Three or more images
+    return Row(
+      children: [
+        // First big image
+        Expanded(
+          flex: 1,
+          child: Padding(
+            padding: const EdgeInsets.all(2.0),
+            child: _buildImage(images[0]['url'], fit: BoxFit.cover),
+          ),
+        ),
+
+        // Right column
+        Expanded(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: _buildImage(
+                  images[1]['url'],
+                  fit: BoxFit.cover,
+                  height: 100,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: Stack(
+                  children: [
+                    _buildImage(
+                      images[2]['url'],
                       fit: BoxFit.cover,
+                      height: 100,
                     ),
-                  ),
-                );
-              },
-            );
-          }).toList(),
+                    if (images.length > 3)
+                      Positioned.fill(
+                        // <-- This makes it cover the whole image
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            "+${images.length - 2}",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildImage(
+    String url, {
+    BoxFit fit = BoxFit.cover,
+    double height = 200,
+  }) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8),
+      child: Image.network(
+        url,
+        fit: fit,
+        height: height,
+        width: double.infinity,
+      ),
     );
   }
 

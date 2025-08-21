@@ -47,6 +47,7 @@ export 'presentation/widgets/memories_list/memory_search_filter_section.dart';
 export 'presentation/widgets/memories_list/memories_list_section.dart';
 export 'presentation/widgets/memories_list/memory_card.dart';
 export 'presentation/widgets/memories_list/badge_progress.dart';
+export 'presentation/widgets/memories_list/full_screen_image_swipeable.dart';
 // export 'presentation/widgets/create_update_memory/memory_action_buttons.dart';
 export 'presentation/widgets/create_update_memory/memory_tags_section.dart';
 export 'presentation/widgets/create_update_memory/create_memory_bottom_dialog.dart';

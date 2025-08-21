@@ -54,7 +54,7 @@ Widget signUpText(BuildContext context) {
             recognizer:
                 TapGestureRecognizer()
                   ..onTap = () {
-                    AppNavigator.push(context, const SignUpPage());
+                    AppNavigator.pushAndRemove(context, const SignUpPage());
                   },
             text: 'Sign Up',
           ),

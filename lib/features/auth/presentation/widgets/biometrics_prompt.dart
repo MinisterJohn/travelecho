@@ -105,7 +105,10 @@ class BiometricsPrompt extends StatelessWidget {
                 Expanded(
                   child: TextButton(
                     onPressed: () => AppNavigator.pop(context),
-                    child: const Text('No'),
+                    child: const Text(
+                      'No',
+                      style: TextStyle(color: AppColors.primaryColor),
+                    ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -119,7 +122,10 @@ class BiometricsPrompt extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    child: const Text('Yes'),
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(color: AppColors.white),
+                    ),
                   ),
                 ),
               ],

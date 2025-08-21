@@ -70,15 +70,15 @@ class BudgetBloc extends Bloc<BudgetEvent, BudgetState> {
             expenseModel.id,
             event.expense.receiptFilePath!,
           );
-          uploadResult.fold(
-            (uploadError) {
-              // Handle upload error
-            },
-            (receiptUrl) {
-              // Handle success, maybe update the expense with the receipt URL if needed
-              add(GetBudgetWithExpensesEvent(event.expense.budgetId));
-            },
-          );
+          uploadResult.fold((uploadError) => emit(BudgetError(uploadError)), (
+            receiptUrl,
+          ) {
+            emit(ExpenseSaved()); // ✅ success even after upload
+            add(GetBudgetWithExpensesEvent(event.expense.budgetId));
+          });
+        } else {
+          emit(ExpenseSaved()); // ✅ success without upload
+          add(GetBudgetWithExpensesEvent(event.expense.budgetId));
         }
       });
     });

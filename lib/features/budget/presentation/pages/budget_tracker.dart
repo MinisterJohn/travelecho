@@ -41,6 +41,7 @@ class _BudgetTrackerState extends State<BudgetTracker> {
           RefreshIndicator(
             onRefresh: () async {
               context.read<BudgetBloc>().add(GetAllBudgetsEvent());
+              context.read<LevelBloc>().add(FetchLevels());
             },
             child: SingleChildScrollView(
               physics: const AlwaysScrollableScrollPhysics(),
@@ -65,7 +66,10 @@ class _BudgetTrackerState extends State<BudgetTracker> {
                                 nextBadge: null,
                               ),
                         );
-                        return BadgeProgressBar(level: budgetLevel, showProgress: false);
+                        return BadgeProgressBar(
+                          level: budgetLevel,
+                          showProgress: false,
+                        );
                       }
                       return const Text('No budget level data available');
                     },

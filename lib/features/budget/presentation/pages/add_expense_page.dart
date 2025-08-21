@@ -21,12 +21,14 @@ class AddExpensePage extends StatefulWidget {
 }
 
 class _AddExpensePageState extends State<AddExpensePage> {
+  final _formKey = GlobalKey<FormState>();
+
   late TextEditingController titleController;
   late TextEditingController amountController;
   late TextEditingController noteController;
   late TextEditingController actualAmountController;
   late XFile? receiptImage;
-  late String selectedCateogry;
+  String selectedCategory = "Select Category";
   bool isSaving = false;
 
   @override
@@ -34,21 +36,16 @@ class _AddExpensePageState extends State<AddExpensePage> {
     super.initState();
     titleController = TextEditingController(text: widget.expense?.title ?? '');
     amountController = TextEditingController(
-      text: widget.expense?.plannedAmount.toString() ?? '',
+      text: widget.expense?.plannedAmount?.toString() ?? '',
     );
     actualAmountController = TextEditingController(
       text: widget.expense?.amount.toString() ?? '',
     );
     receiptImage = null;
     noteController = TextEditingController(text: widget.expense?.notes ?? '');
-    selectedCateogry = widget.expense?.category ?? '';
-  }
-
-  bool isFormValid() {
-    return titleController.text.trim().isNotEmpty &&
-        selectedCateogry.trim().isNotEmpty &&
-        amountController.text.trim().isNotEmpty &&
-        double.tryParse(amountController.text.trim()) != null;
+    if (widget.expense != null) {
+      selectedCategory = widget.expense!.category; // ✅ prefill if editing
+    }
   }
 
   @override
@@ -61,72 +58,100 @@ class _AddExpensePageState extends State<AddExpensePage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: ExpenseForm(
-            titleController: titleController,
-            amountController: amountController,
-            noteController: noteController,
-            selectedCategory: selectedCateogry,
-            actualAmountController: actualAmountController,
-            receiptImage: receiptImage,
-            isSaving: isSaving,
-            onCategorySelected: (String category) {
-              setState(() {
-                selectedCateogry = category;
-              });
+          child: BlocListener<BudgetBloc, BudgetState>(
+            listener: (context, state) {
+              print(state);
+              if (state is SingleBudgetLoaded || state is ExpenseSaved) {
+                // ✅ Success
+                setState(() => isSaving = false);
+                AppNavigator.pop(context);
+              } else if (state is BudgetError) {
+                // ❌ Failed
+                setState(() => isSaving = false);
+                ScaffoldMessenger.of(
+                  context,
+                ).showSnackBar(SnackBar(content: Text(state.message)));
+              } else if (state is BudgetLoading) {
+                setState(() => isSaving = true);
+              }
             },
-            prefixIcon:
-                widget.mergedCurrencies
-                    .firstWhere(
-                      (currency) => currency.name == widget.budget.currency,
-                      orElse:
-                          () => CurrencyInfo(
-                            name: widget.budget.currency,
-                            symbol: '',
-                            key: 'unknown',
-                          ),
-                    )
-                    .symbol,
+            child: Form(
+              key: _formKey,
+              onChanged: () => setState(() {}),
+              autovalidateMode: AutovalidateMode.onUserInteraction,
+              child: ExpenseForm(
+                titleController: titleController,
+                amountController: amountController,
+                noteController: noteController,
+                actualAmountController: actualAmountController,
+                receiptImage: receiptImage,
+                selectedCategory: selectedCategory,
+                isSaving: isSaving,
+                onCategorySelected: (String category) {
+                  setState(() {
+                    selectedCategory = category;
+                  });
+                },
+                prefixIcon:
+                    widget.mergedCurrencies
+                        .firstWhere(
+                          (currency) => currency.name == widget.budget.currency,
+                          orElse:
+                              () => CurrencyInfo(
+                                name: widget.budget.currency,
+                                symbol: '',
+                                key: 'unknown',
+                              ),
+                        )
+                        .symbol,
+              ),
+            ),
           ),
         ),
       ),
       bottomNavigationBar: AddExpenseBottomBar(
         onReset: () {
+          _formKey.currentState?.reset();
           setState(() {
             titleController.clear();
             amountController.clear();
             noteController.clear();
             actualAmountController.clear();
-            selectedCateogry = "Select Category";
+            selectedCategory = "Select Category";
           });
         },
-        onSave:
-            isSaving || !isFormValid()
-                ? null
-                : () async {
-                  setState(() => isSaving = true);
-                  final expense = ExpenseParams(
-                    budgetId: widget.budget.id,
-                    title: titleController.text,
-                    plannedAmount:
-                        double.tryParse(amountController.text) ?? 0.0,
-                    actualAmount:
-                        double.tryParse(actualAmountController.text) ?? 0.0,
-                    notes: noteController.text,
-                    receiptFilePath: receiptImage,
-                    category: selectedCateogry,
-                  );
-                  if (widget.expense == null) {
-                    context.read<BudgetBloc>().add(CreateExpenseEvent(expense));
-                  } else {
-                    context.read<BudgetBloc>().add(
-                      UpdateExpenseEvent(widget.expense!.id, expense),
-                    );
-                  }
-                  setState(() => isSaving = false);
-                  AppNavigator.pop(context);
-                },
+        onSave: () {
+          if (!_formKey.currentState!.validate()) return;
+
+          final expense = ExpenseParams(
+            budgetId: widget.budget.id,
+            title: titleController.text,
+            plannedAmount:
+                double.tryParse(amountController.text.replaceAll(',', '')) ??
+                0.0,
+            actualAmount:
+                double.tryParse(
+                  actualAmountController.text.replaceAll(',', ''),
+                ) ??
+                0.0,
+            notes: noteController.text,
+            receiptFilePath: receiptImage,
+            category: selectedCategory,
+          );
+
+          if (widget.expense == null) {
+            context.read<BudgetBloc>().add(CreateExpenseEvent(expense));
+          } else {
+            context.read<BudgetBloc>().add(
+              UpdateExpenseEvent(widget.expense!.id, expense),
+            );
+          }
+        },
+
         isSaving: isSaving,
-        isFormValid: isFormValid(),
+        isFormValid:
+            _formKey.currentState?.validate() ??
+            false, // now handled by Form validators
         isEdit: widget.expense != null,
       ),
     );
@@ -137,6 +162,7 @@ class _AddExpensePageState extends State<AddExpensePage> {
     titleController.dispose();
     amountController.dispose();
     noteController.dispose();
+    actualAmountController.dispose();
     super.dispose();
   }
 }

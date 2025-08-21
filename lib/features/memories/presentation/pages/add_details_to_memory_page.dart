@@ -86,8 +86,7 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
           'Images ${widget.isEditing ? 'updated' : 'uploaded'} successfully',
           context,
         );
-        AppNavigator.pop(context);
-        AppNavigator.pop(context);
+    
       },
       onError: (message) {
         setState(() => _isUploading = false);
@@ -111,7 +110,6 @@ class _AddDetailsToMemoryPageState extends State<AddDetailsToMemoryPage> {
             context,
           );
           AppNavigator.pop(context);
-          // AppNavigator.pop(context);
         } else if (state is MemoryError) {
           setState(() => _isUploading = false);
           DisplayMessage.errorMessage(state.message, context);

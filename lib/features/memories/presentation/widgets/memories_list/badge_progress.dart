@@ -87,9 +87,6 @@ class BadgeProgressBar extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    final imageUrl =
-        'assets/images/milestones/memory/${badge.name.toLowerCase()}.png';
-
     return GestureDetector(
       onTap: () {
         showModalBottomSheet(
@@ -104,10 +101,13 @@ class BadgeProgressBar extends StatelessWidget {
                 widthFactor: 1,
                 child:
                     isEarned
-                        ? BadgeDetailsSheet(badge: badge, imageUrl: imageUrl)
+                        ? BadgeDetailsSheet(
+                          badge: badge,
+                          imageUrl: badgeAssetPath(badge),
+                        )
                         : NextBadgeProgressSheet(
                           badge: badge,
-                          imageUrl: imageUrl,
+                          imageUrl: badgeAssetPath(badge),
                           currentValue: currentValue ?? 0,
                           requiredValue: requiredValue ?? 0,
                           progress: progress ?? 0,
@@ -118,7 +118,7 @@ class BadgeProgressBar extends StatelessWidget {
       child: Row(
         children: [
           Image.asset(
-            imageUrl,
+            badgeAssetPath(badge),
             width: 30,
             height: 30,
             errorBuilder:

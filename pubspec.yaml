@@ -53,6 +53,7 @@ dependencies:
   google_maps_flutter: ^2.6.0
   geolocator: ^14.0.2
   table_calendar: ^3.0.9
+  # emoji_picker_flutter: ^4.3.0
 
 dev_dependencies:
   flutter_test:
@@ -91,6 +92,7 @@ flutter:
     - assets/images/car_rentals/
     - assets/images/memories/
     - assets/images/milestones/memory/
+    - assets/images/milestones/budget/
     - assets/images/culture_guide/
     - assets/images/profile/
     - assets/images/onboarding/

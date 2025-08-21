@@ -7,14 +7,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../memories_exports.dart';
 
 class ImageUploadHelper {
+  static bool _isPicking = false;
   static Future<XFile?> pickImageFromCamera(BuildContext context) async {
-    final ImagePicker picker = ImagePicker();
-    return await picker.pickImage(source: ImageSource.camera);
+    if (_isPicking) return null;
+    _isPicking = true;
+    try {
+      final ImagePicker picker = ImagePicker();
+      return await picker.pickImage(source: ImageSource.camera);
+    } finally {
+      _isPicking = false;
+    }
   }
 
   static Future<List<XFile>> pickImagesFromGallery(BuildContext context) async {
-    final ImagePicker picker = ImagePicker();
-    return await picker.pickMultiImage();
+     if (_isPicking) return [];
+    _isPicking = true;
+    try {
+      final ImagePicker picker = ImagePicker();
+      return await picker.pickMultiImage();
+    } finally {
+      _isPicking = false;
+    }
   }
 
   static void uploadImages({

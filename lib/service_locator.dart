@@ -72,6 +72,9 @@ void _registerApiServices() {
   sl.registerLazySingleton<LevelRemoteDataSource>(
     () => LevelRemoteDataSourceImpl(),
   );
+  sl.registerLazySingleton<CommunityRemoteDataSource>(
+    () => CommunityRemoteDataSourceImpl(),
+  );
 }
 
 /// Registers all repositories
@@ -112,8 +115,10 @@ void _registerRepositories() {
     () => TravelDocumentRepositoryImpl(),
   );
   //Milestone repositories
-  sl.registerLazySingleton<LevelRepository>(
-    () => LevelRepositoryImpl(),
+  sl.registerLazySingleton<LevelRepository>(() => LevelRepositoryImpl());
+  //Community repositories
+  sl.registerLazySingleton<CommunityRepository>(
+    () => CommunityRepositoryImpl(),
   );
 }
 
@@ -210,11 +215,36 @@ void _registerUseCases() {
   );
 
   //Milestone use cases
-  sl.registerLazySingleton<GetLevelsUseCase>(
-    () => GetLevelsUseCase(),
-  );
+  sl.registerLazySingleton<GetLevelsUseCase>(() => GetLevelsUseCase());
   sl.registerLazySingleton<GetEarnedBadgesUseCase>(
     () => GetEarnedBadgesUseCase(),
+  );
+
+  // -------------------- Community Use Cases --------------------
+  sl.registerLazySingleton<CreatePostUseCase>(() => CreatePostUseCase());
+  sl.registerLazySingleton<AddPostMediaUseCase>(() => AddPostMediaUseCase());
+  sl.registerLazySingleton<GetPostsUseCase>(() => GetPostsUseCase());
+  sl.registerLazySingleton<GetPostByIdUseCase>(() => GetPostByIdUseCase());
+  sl.registerLazySingleton<UpdatePostUseCase>(() => UpdatePostUseCase());
+  sl.registerLazySingleton<DeletePostUseCase>(() => DeletePostUseCase());
+  sl.registerLazySingleton<TogglePostLikeUseCase>(
+    () => TogglePostLikeUseCase(),
+  );
+
+  sl.registerLazySingleton<CreateCommentUseCase>(() => CreateCommentUseCase());
+
+  sl.registerLazySingleton<GetCommentsUseCase>(() => GetCommentsUseCase());
+
+  sl.registerLazySingleton<UpdateCommentUseCase>(() => UpdateCommentUseCase());
+
+  sl.registerLazySingleton<DeleteCommentUseCase>(() => DeleteCommentUseCase());
+
+  sl.registerLazySingleton<GetRepliesUseCase>(() => GetRepliesUseCase());
+
+  sl.registerLazySingleton<CreateReplyUseCase>(() => CreateReplyUseCase());
+
+  sl.registerLazySingleton<ToggleCommentLikeUseCase>(
+    () => ToggleCommentLikeUseCase(),
   );
 }
 
@@ -234,6 +264,9 @@ void _registerBlocs() {
   sl.registerLazySingleton<TravelDocumentBloc>(() => TravelDocumentBloc());
 
   sl.registerLazySingleton<LevelBloc>(() => LevelBloc());
+  sl.registerLazySingleton<PostBloc>(() => PostBloc());
+  sl.registerLazySingleton<CommentBloc>(() => CommentBloc());
+  sl.registerLazySingleton<ReplyBloc>(() => ReplyBloc());
 }
 
 /// Registers all cubits

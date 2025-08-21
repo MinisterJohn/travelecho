@@ -7,9 +7,8 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   flutter_secure_storage_windows
   gal
-  local_auth_windows
   geolocator_windows
-
+  local_auth_windows
   permission_handler_windows
 )
 

@@ -50,6 +50,9 @@ class ApiUrl {
   static String dynamicServiceProviderURL(String userId) =>
       "/users/me/driver-profile/$userId";
 
+  //community
+  static const communityPostURL = "/community/posts";
+
   // Optional helper
   static String fullUrl(String path) {
     if (path.startsWith('/')) {

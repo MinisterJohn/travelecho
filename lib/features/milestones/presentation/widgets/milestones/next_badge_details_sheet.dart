@@ -10,7 +10,7 @@ class NextBadgeProgressSheet extends StatelessWidget {
   final int requiredValue;
   final double progress;
 
-  const NextBadgeProgressSheet({
+  const NextBadgeProgressSheet({super.key, 
     required this.badge,
     required this.imageUrl,
     required this.currentValue,

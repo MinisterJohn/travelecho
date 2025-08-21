@@ -18,6 +18,8 @@ class LocationSearchField extends StatefulWidget {
 }
 
 class _LocationSearchFieldState extends State<LocationSearchField> {
+  bool _hasSelected = false;
+
   @override
   void initState() {
     super.initState();
@@ -31,6 +33,8 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
   }
 
   void _onTextChanged() {
+    if (_hasSelected) return; // 🔒 Stop triggering search if already selected
+
     if (widget.controller.text.isNotEmpty) {
       context.read<DataSearchBloc>().add(
             LocationListRequested(locationHint: widget.controller.text),
@@ -50,13 +54,17 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
           controller: widget.controller,
           decoration: const InputDecoration(
             hintText: 'Enter location',
-            prefixIcon:
-                Icon(LineIcons.mapMarker, color: AppColors.defaultColor400),
+            prefixIcon: Icon(LineIcons.mapMarker, color: AppColors.defaultColor400),
           ),
+          onChanged: (val) {
+            if (!_hasSelected) return;
+            // If user edits text manually, allow search again
+            setState(() => _hasSelected = false);
+          },
         ),
         BlocBuilder<DataSearchBloc, DataSearchState>(
           builder: (context, state) {
-            if (state is LocationListLoaded) {
+            if (!_hasSelected && state is LocationListLoaded) {
               return Container(
                 constraints: const BoxConstraints(maxHeight: 200),
                 decoration: BoxDecoration(
@@ -81,9 +89,9 @@ class _LocationSearchFieldState extends State<LocationSearchField> {
                       onTap: () {
                         widget.controller.text = location.location;
                         widget.onLocationSelected(location.location);
+                        setState(() => _hasSelected = true); // ✅ Lock list
                         context.read<DataSearchBloc>().add(
-                              const ClearSearchResults(
-                                  type: SearchType.location),
+                              const ClearSearchResults(type: SearchType.location),
                             );
                       },
                     );

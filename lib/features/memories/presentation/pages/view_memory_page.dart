@@ -41,43 +41,31 @@ class _ViewMemoryPageState extends State<ViewMemoryPage>
 
   @override
   Widget build(BuildContext context) {
-    final SharedPreferences prefs = sl<SharedPreferences>();
     final String? username = prefs.getString('name');
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: setAppBar('', context),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
-          child: Stack(
+          child: Column(
             children: [
-              Positioned(
-                top: 0,
-                left: 0,
-                right: 0,
-                child: UserHeader(
-                  username: username ?? "User",
-                  createdAt: widget.memory.createdAt,
-                  location: widget.memory.location,
-
-                  onEdit: () {
-                    handleEditMemory(context, widget.memory);
-                    // Handle edit profile action
-                  },
-                  onDelete: () {
-                    handleDeleteMemory(context, widget.memory);
-                  },
-                ),
+              /// User header pinned at top
+              UserHeader(
+                username: username ?? "User",
+                createdAt: widget.memory.createdAt,
+                location: widget.memory.location,
+                onEdit: () => handleEditMemory(context, widget.memory),
+                onDelete: () => handleDeleteMemory(context, widget.memory),
               ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  top: 50.0,
-                ), // Adjust padding to avoid overlap
-                child: SingleChildScrollView(
+              WidgetsSpacer.verticalSpacer16,
+              Expanded(
+                child: Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      WidgetsSpacer.verticalSpacer16,
+                      /// Memory title
                       Text(
                         widget.memory.title,
                         style: const TextStyle(
@@ -86,6 +74,8 @@ class _ViewMemoryPageState extends State<ViewMemoryPage>
                         ),
                       ),
                       WidgetsSpacer.verticalSpacer8,
+
+                      /// Description with ReadMore
                       ReadMoreText(
                         widget.memory.description,
                         trimLines: 5,
@@ -96,6 +86,8 @@ class _ViewMemoryPageState extends State<ViewMemoryPage>
                         style: TextStyle(fontSize: FontSize.size18),
                       ),
                       WidgetsSpacer.verticalSpacer8,
+
+                      /// Tags
                       if (widget.memory.tags.isNotEmpty)
                         Wrap(
                           spacing: 8.0,
@@ -109,27 +101,34 @@ class _ViewMemoryPageState extends State<ViewMemoryPage>
                                 );
                               }).toList(),
                         ),
-                      WidgetsSpacer.verticalSpacer32,
+                      WidgetsSpacer.verticalSpacer16,
 
+                      /// TabBar
                       TabBar(
                         controller: _tabController,
-                        isScrollable: false, // ⬅️ Allows custom tab width
                         indicatorColor: Colors.transparent,
                         dividerHeight: 0,
-                        // indicatorSize: TabBarIndicatorSize.tab,
-                        padding: EdgeInsets.zero,
+                        labelPadding: const EdgeInsets.symmetric(horizontal: 4),
                         tabs: [
                           _buildTab(0, LineIcons.image, 'Images'),
                           _buildTab(1, LineIcons.infoCircle, 'Details'),
                         ],
                       ),
                       WidgetsSpacer.verticalSpacer16,
-                      IndexedStack(
-                        index: _tabController.index,
-                        children: [
-                          _buildImagesTab(widget.memory),
-                          _buildDetailsTab(widget.memory),
-                        ],
+
+                      /// TabBarView fills remaining space
+                      Expanded(
+                        child: TabBarView(
+                          controller: _tabController,
+                          children: [
+                            SingleChildScrollView(
+                              child: _buildImagesTab(widget.memory),
+                            ),
+                            SingleChildScrollView(
+                              child: _buildDetailsTab(widget.memory),
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
@@ -142,49 +141,40 @@ class _ViewMemoryPageState extends State<ViewMemoryPage>
     );
   }
 
+  /// Build custom tab
   Widget _buildTab(int index, IconData icon, String label) {
     final bool isSelected = _tabController.index == index;
 
-    return Tab(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width * 0.4, // ~40% of screen width
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-          decoration: BoxDecoration(
-            color: isSelected ? AppColors.primaryColor : Colors.transparent,
-            borderRadius: BorderRadius.circular(8),
-            border:
-                isSelected
-                    ? null
-                    : Border.all(color: AppColors.defaultColor400),
+    return Container(
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.primaryColor : Colors.transparent,
+        borderRadius: BorderRadius.circular(8),
+        border:
+            isSelected ? null : Border.all(color: AppColors.defaultColor400),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: isSelected ? Colors.white : Colors.black, size: 16),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: TextStyle(color: isSelected ? Colors.white : Colors.black),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                icon,
-                color: isSelected ? Colors.white : Colors.black,
-                size: 16,
-              ),
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: TextStyle(
-                  color: isSelected ? Colors.white : Colors.black,
-                ),
-              ),
-            ],
-          ),
-        ),
+        ],
       ),
     );
   }
 
+  /// Images tab
   Widget _buildImagesTab(MemoryModel memory) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text("Memory Images", style: TextStyle(fontSize: 20)),
+        const Text("Memory Images", style: TextStyle(fontSize: 20)),
         WidgetsSpacer.verticalSpacer16,
         memory.images.isNotEmpty
             ? Wrap(
@@ -212,13 +202,32 @@ class _ViewMemoryPageState extends State<ViewMemoryPage>
                         } else if (snapshot.hasError) {
                           return const Icon(Icons.error, color: Colors.red);
                         } else {
-                          return ClipRRect(
-                            borderRadius: BorderRadius.circular(8.0),
-                            child: Image.network(
-                              image["url"],
-                              width: 100,
-                              height: 100,
-                              fit: BoxFit.cover,
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder:
+                                      (_) => FullscreenImageViewer(
+                                        images:
+                                            memory.images
+                                                .map((e) => e["url"])
+                                                .toList(),
+                                        initialIndex: memory.images.indexOf(
+                                          image,
+                                        ),
+                                      ),
+                                ),
+                              );
+                            },
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8.0),
+                              child: Image.network(
+                                image["url"],
+                                width: 100,
+                                height: 100,
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           );
                         }
@@ -231,6 +240,7 @@ class _ViewMemoryPageState extends State<ViewMemoryPage>
     );
   }
 
+  /// Details tab
   Widget _buildDetailsTab(MemoryModel memory) {
     return DetailsTab(memory: memory);
   }

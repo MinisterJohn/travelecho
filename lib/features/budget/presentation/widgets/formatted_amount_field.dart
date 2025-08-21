@@ -1,60 +1,96 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
 import '../../budget_exports.dart';
+
+class CurrencyInputFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    if (newValue.text.isEmpty) {
+      return newValue.copyWith(text: '');
+    }
+
+    // remove commas before parsing
+    final int? value = int.tryParse(newValue.text.replaceAll(',', ''));
+    if (value == null) return oldValue;
+
+    final formatted = NumberFormat('#,###').format(value);
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+
 
 class FormattedAmountField extends StatefulWidget {
   final TextEditingController controller;
   final dynamic currencySymbol;
   final String labelText;
+  final String? Function(String?) validator;
 
-  const FormattedAmountField({super.key, 
+  const FormattedAmountField({
+    super.key,
     required this.controller,
     required this.currencySymbol,
     required this.labelText,
+    required this.validator,
   });
 
   @override
-  State<FormattedAmountField> createState() => FormattedAmountFieldState();
+  State<FormattedAmountField> createState() => _FormattedAmountFieldState();
 }
 
-class FormattedAmountFieldState extends State<FormattedAmountField> {
+class _FormattedAmountFieldState extends State<FormattedAmountField> {
   String _badge = '';
 
   @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(_formatAndBadge);
-    _formatAndBadge();
-  }
-
-  @override
-  void dispose() {
-    widget.controller.removeListener(_formatAndBadge);
-    super.dispose();
-  }
-
-  void _formatAndBadge() {
-    String text = widget.controller.text.replaceAll(',', '');
-    if (text.isEmpty) {
-      setState(() => _badge = '');
-      return;
-    }
-    // Format with commas
-    final number = int.tryParse(text);
-    if (number == null) {
-      setState(() => _badge = '');
-      return;
-    }
-    final formatted = NumberFormat('#,###').format(number);
-    if (widget.controller.text != formatted) {
-      widget.controller.value = TextEditingValue(
-        text: formatted,
-        selection: TextSelection.collapsed(offset: formatted.length),
-      );
-    }
-    // Set badge
-    setState(() => _badge = _getMagnitudeBadge(number));
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextFormField(
+          controller: widget.controller,
+          keyboardType: TextInputType.number,
+          validator: widget.validator,
+          inputFormatters: [
+            FilteringTextInputFormatter.digitsOnly,
+            CurrencyInputFormatter(),
+          ],
+          decoration: InputDecoration(
+            labelText: widget.labelText,
+            prefixText: widget.currencySymbol?.toString() ?? '',
+          ),
+          onChanged: (value) {
+            final number = int.tryParse(value.replaceAll(',', ''));
+            if (number != null) {
+              setState(() => _badge = _getMagnitudeBadge(number));
+            } else {
+              setState(() => _badge = '');
+            }
+          },
+        ),
+        if (_badge.isNotEmpty)
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+            decoration: BoxDecoration(
+              color: AppColors.primaryColor300,
+              border: Border.all(color: Colors.transparent),
+            ),
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 6),
+            child: Text(
+              _badge,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+              ).copyWith(color: AppColors.primaryColor),
+            ),
+          ),
+      ],
+    );
   }
 
   String _getMagnitudeBadge(int value) {
@@ -65,55 +101,5 @@ class FormattedAmountFieldState extends State<FormattedAmountField> {
     if (value >= 1000) return "Thousands";
     if (value >= 100) return "Hundreds";
     return "Tens";
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: widget.controller,
-          decoration: InputDecoration(
-            prefixIcon:
-                widget.currencySymbol.isNotEmpty
-                    ? Padding(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 8.0,
-                        horizontal: 16.0,
-                      ),
-                      child: Text(
-                        widget.currencySymbol,
-                        style: const TextStyle(fontSize: 28),
-                      ),
-                    )
-                    : const Icon(Icons.attach_money),
-            labelText: widget.labelText,
-            border: const OutlineInputBorder(),
-          ),
-          keyboardType: TextInputType.number,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        ),
-        if (_badge.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 6.0, left: 8.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.primaryColor100,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              child: Text(
-                _badge,
-                style: const TextStyle(
-                  color: AppColors.primaryColor,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 13,
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
   }
 }

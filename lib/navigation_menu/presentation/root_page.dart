@@ -44,7 +44,7 @@ class _RootPageState extends State<RootPage> {
         return const MemoriesHomePage(); // bloc is provided above now
 
       case 4:
-        return const CommunityPage();
+        return const CommunityHomeScreen();
 
       case 5:
         return const ProfilePage(); // bloc is provided above now
@@ -73,11 +73,15 @@ class _RootPageState extends State<RootPage> {
         BlocProvider(create: (_) => sl<MemoriesBloc>()),
         BlocProvider(create: (_) => sl<DataSearchBloc>()),
         BlocProvider(create: (_) => sl<ProfileBloc>()),
-       BlocProvider(create: (_) => sl<LevelBloc>()..add(FetchLevels())),
+        BlocProvider(create: (_) => sl<LevelBloc>()..add(FetchLevels())),
 
         // Profile page
         BlocProvider(create: (_) => sl<TravelDocumentBloc>()),
         BlocProvider(create: (_) => sl<AuthBloc>()),
+
+         BlocProvider<PostBloc>(create: (_) => PostBloc()),
+    BlocProvider<CommentBloc>(create: (_) => CommentBloc()),
+    BlocProvider<ReplyBloc>(create: (_) => ReplyBloc()),
       ],
       child: Scaffold(
         body: SafeArea(
@@ -98,10 +102,22 @@ class _RootPageState extends State<RootPage> {
           destinations: const [
             NavigationDestination(icon: Icon(LineIcons.home), label: "Explore"),
             NavigationDestination(icon: Icon(LineIcons.plane), label: "Trip"),
-            NavigationDestination(icon: Icon(LineIcons.piggyBank), label: "Budget"),
-            NavigationDestination(icon: Icon(LineIcons.image), label: "Memories"),
-            NavigationDestination(icon: Icon(LineIcons.users), label: "Community"),
-            NavigationDestination(icon: Icon(LineIcons.userCircle), label: "Profile"),
+            NavigationDestination(
+              icon: Icon(LineIcons.piggyBank),
+              label: "Budget",
+            ),
+            NavigationDestination(
+              icon: Icon(LineIcons.image),
+              label: "Memories",
+            ),
+            NavigationDestination(
+              icon: Icon(LineIcons.users),
+              label: "Community",
+            ),
+            NavigationDestination(
+              icon: Icon(LineIcons.userCircle),
+              label: "Profile",
+            ),
           ],
           onDestinationSelected: (index) {
             _pageController.jumpToPage(index);

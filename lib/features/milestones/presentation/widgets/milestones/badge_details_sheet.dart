@@ -7,7 +7,7 @@ class BadgeDetailsSheet extends StatelessWidget {
   final BadgeEntity badge;
   final String imageUrl;
 
-  const BadgeDetailsSheet({required this.badge, required this.imageUrl});
+  const BadgeDetailsSheet({super.key, required this.badge, required this.imageUrl});
 
   @override
   Widget build(BuildContext context) {
