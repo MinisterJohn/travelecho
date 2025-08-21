@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart' hide CarouselController;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import "../../community_exports.dart";
 
-class CommunityPage extends StatelessWidget {
-  const CommunityPage({super.key});
+class CommunityHomeScreen extends StatelessWidget {
+  const CommunityHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +69,17 @@ class CommunityPage extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: ElevatedButton(
               onPressed: () {
-                AppNavigator.push(context, const ProfileIDPage());
+                AppNavigator.push(
+                  context,
+                  MultiBlocProvider(
+                    providers: [
+                      BlocProvider.value(value: sl<PostBloc>()),
+                      BlocProvider.value(value: sl<CommentBloc>()),
+                      BlocProvider.value(value: sl<ReplyBloc>()),
+                    ],
+                    child: const CommunityPage(),
+                  ),
+                );
               },
               style: mergeWithThemeButtonStyle(
                 context,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart' hide CarouselController;
+import 'package:flutter_bloc/flutter_bloc.dart';
 import "../../community_exports.dart";
 
 class UserProfilePage extends StatelessWidget {
@@ -7,7 +8,13 @@ class UserProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.delayed(const Duration(seconds: 2), () {
-      AppNavigator.pushReplacement(context, const UserDashboard());
+      AppNavigator.pushReplacement(
+        context,
+        BlocProvider.value(
+          value: sl<PostBloc>(),
+          child: const CommunityPage(),
+        ),
+      );
     });
 
     return Scaffold(

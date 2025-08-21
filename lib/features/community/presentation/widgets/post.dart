@@ -1,191 +1,108 @@
 import 'package:flutter/material.dart' hide CarouselController;
-import 'package:line_icons/line_icons.dart';
-import "../../community_exports.dart";
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../community_exports.dart';
 
 class Post extends StatefulWidget {
-  const Post({super.key});
+  final PostModel post;
+
+  const Post({super.key, required this.post});
 
   @override
   State<Post> createState() => _PostState();
 }
 
 class _PostState extends State<Post> {
-  bool _isLiked = false;
-  bool _showComments = false;
-  bool _wantsToShare = false;
-  bool _userIsFollowing = false;
+  bool _showCommentsPreview = false;
 
-  final List<String> _comments = [
-    "Amazing places!",
-    "Wow! I love your travel stories.",
-    "Where is this place?",
-    "Looks like a dream destination!",
-  ];
+  /// Local cache for comments per post
+  final Map<String, List<CommentModel>> _cachedComments = {};
+
+  /// Toggle comment preview visibility
+  void _toggleCommentsPreview() {
+    final commentBloc = context.read<CommentBloc>();
+
+    if (!_showCommentsPreview) {
+      // Fetch comments for this post before showing
+      commentBloc.add(GetCommentsEvent(widget.post.id, limit: 5));
+    }
+
+    setState(() {
+      _showCommentsPreview = !_showCommentsPreview;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final post = widget.post;
+
     return Container(
+      margin: const EdgeInsets.only(bottom: 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start, // Align to the edge
-            children: [
-              const CircleAvatar(
-                radius: 30, // Reduced size of the image
-                backgroundImage: AssetImage(
-                  'assets/images/community/profile_pic2.jpeg',
-                ),
-              ),
-              const SizedBox(width: 10),
-              const Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Megan Kelly',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 3),
-                  // WidgetsSpacer.verticalSpacer8,
-                  Text('Travelled 5 countries', style: TextStyle(fontSize: 10)),
-                  SizedBox(height: 3),
+          /// 🔹 Post Header
+          PostHeader(post: post),
 
-                  // WidgetsSpacer.verticalSpacer8,
-                  Text(
-                    '5 d',
-                    style: TextStyle(fontSize: 10, color: Colors.grey),
-                  ),
-                ],
-              ),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _userIsFollowing = !_userIsFollowing;
-                  });
-                },
-                child: Text(
-                  _userIsFollowing ? 'Following' : 'Follow',
-                  style: TextStyle(
-                    fontSize: FontSize.size16,
-                    color:
-                        _userIsFollowing
-                            ? AppColors.primaryColor300
-                            : AppColors.primaryColor,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              // WidgetsSpacer.verticalSpacer16,
-              // Icon(Icons.add, color: Colors.purple, size: 20),
-            ],
-          ),
-          WidgetsSpacer.verticalSpacer20,
-          const Text(
-            'Two of my favorites, this is going to....',
-            style: TextStyle(fontSize: 16),
-          ),
           const SizedBox(height: 10),
-          Row(
-            children: [
-              Expanded(
-                child: Image.asset(
-                  'assets/images/community/posted_img1.jpeg',
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Image.asset(
-                  'assets/images/community/posted_img2.jpeg',
-                  height: 150,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ],
-          ),
-          WidgetsSpacer.verticalSpacer20,
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _isLiked = !_isLiked;
-                  });
-                },
-                child: Column(
-                  children: [
-                    Icon(
-                      _isLiked ? Icons.favorite : LineIcons.heart,
-                      color:
-                          _isLiked
-                              ? AppColors.primaryColor
-                              : AppColors.defaultColor400,
-                    ),
-                    const Text('Like'),
+
+          /// 🔹 Post Content
+          GestureDetector(
+            onTap: () {
+              AppNavigator.push(
+                context,
+                MultiBlocProvider(
+                  providers: [
+                    BlocProvider.value(value: sl<PostBloc>()),
+                    BlocProvider.value(value: sl<CommentBloc>()),
+                    BlocProvider.value(value: sl<ReplyBloc>()),
                   ],
+                  child: PostDetailPage(postId: post.id),
                 ),
-              ),
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        _showComments = !_showComments;
-                        _wantsToShare = false;
-                      });
-                    },
-                    child: const Icon(
-                      LineIcons.comment,
-                      color: AppColors.defaultColor400,
-                    ),
-                  ),
-                  const Text('Comment'),
-                ],
-              ),
-              GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _showComments = false;
-                    _wantsToShare = !_wantsToShare;
-                  });
-                },
-                child: const Column(
-                  children: [
-                    Icon(
-                      LineIcons.shareSquare,
-                      color: AppColors.defaultColor400,
-                    ),
-                    Text('Share'),
-                  ],
-                ),
-              ),
-            ],
+              );
+            },
+            child: PostContent(post: post),
           ),
-          if (_wantsToShare) const SharePost(),
-          if (_showComments)
-            Column(
-              children: [
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Column(
-                    children: [
-                      for (var comment in _comments)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4.0),
-                          child: Row(children: [PostComment(comment: comment)]),
-                        ),
-                    ],
-                  ),
-                ),
-              ],
+
+          const SizedBox(height: 10),
+
+          /// 🔹 Post Actions
+          PostActions(
+            post: post,
+            isPreview: true,
+            onCommentTap: _toggleCommentsPreview,
+          ),
+
+          const SizedBox(height: 10),
+
+          /// 🔹 Comments Preview
+          if (_showCommentsPreview)
+            BlocBuilder<CommentBloc, CommentState>(
+              builder: (context, state) {
+                List<CommentModel> postComments = _cachedComments[post.id] ?? [];
+
+                // Update cache if the state matches this post
+                if (state is CommentsLoaded && state.postId == post.id) {
+                  postComments = state.comments;
+                  _cachedComments[post.id] = state.comments;
+                }
+
+                // Show loading indicator if this post is currently loading
+                if (state is CommentLoading && state.postId == post.id) {
+                  return const Center(
+                    child: Text(
+                      "Loading...",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: AppColors.defaultColor400),
+                    ),
+                  );
+                }
+
+                // Show comments preview with cached or loaded comments
+                return PostCommentsPreview(
+                  post: post.copyWith(comments: postComments),
+                  isPreview: true,
+                );
+              },
             ),
         ],
       ),
