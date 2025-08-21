@@ -1,178 +1,137 @@
-import 'package:flutter/material.dart' hide CarouselController;
-import 'package:image_picker/image_picker.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:typed_data';
-import '../../profile_exports.dart';
 import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:dio/dio.dart';
+import '../../profile_exports.dart';
 
 class ProfileImageSection extends StatefulWidget {
   final ProfileState state;
-  final Function(dynamic) onImageSelected;
+  final UpdateProfileImageUseCase updateProfileImageUseCase =
+      sl<UpdateProfileImageUseCase>();
 
-  const ProfileImageSection({
-    super.key,
-    required this.state,
-    required this.onImageSelected,
-  });
+  ProfileImageSection({super.key, required this.state});
 
   @override
   State<ProfileImageSection> createState() => _ProfileImageSectionState();
 }
 
 class _ProfileImageSectionState extends State<ProfileImageSection> {
-  dynamic _image;
+  File? _image;
   bool _isImageLoading = false;
 
-  Future<void> _takePicture() async {
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> _pickImage(ImageSource source) async {
     if (_isImageLoading) return;
 
     setState(() => _isImageLoading = true);
 
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
-      source: ImageSource.camera,
+    final XFile? picked = await _picker.pickImage(
+      source: source,
       maxWidth: 800,
       maxHeight: 800,
       imageQuality: 85,
     );
 
-    if (image != null && mounted) {
-      if (kIsWeb) {
-        final bytes = await image.readAsBytes();
-        setState(() => _image = bytes);
-      } else {
-        setState(() => _image = File(image.path));
-      }
-      widget.onImageSelected(image.path);
-      _showProfilePhotoAddedNotification(); // ✅ show notification
+    if (picked != null && mounted) {
+      final file = File(picked.path);
+      setState(() => _image = file);
+
+      // Automatically upload
+      await _uploadImage(file);
     }
 
-    if (mounted) {
-      setState(() => _isImageLoading = false);
-    }
+    if (mounted) setState(() => _isImageLoading = false);
   }
 
-  Future<void> _pickFromGallery() async {
-    if (_isImageLoading) return;
+  Future<void> _uploadImage(File file) async {
+    final formData = FormData.fromMap({
+      'image': await MultipartFile.fromFile(
+        file.path,
+        filename: file.path.split('/').last,
+      ),
+    });
 
-    setState(() => _isImageLoading = true);
+    final result = await widget.updateProfileImageUseCase.call(formData);
+    result.fold(
+      (failure) {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Upload failed: $failure')));
+        }
+      },
+      (response) {
+        if (response != null &&
+            response.containsKey('image') &&
+            response['image'] != null &&
+            response['image'].containsKey('url')) {
+          final imageUrl = response['image']['url'] as String;
 
-    final ImagePicker picker = ImagePicker();
-    final XFile? image = await picker.pickImage(
-      source: ImageSource.gallery,
-      maxWidth: 800,
-      maxHeight: 800,
-      imageQuality: 85,
-    );
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Profile photo updated')),
+            );
 
-    if (image != null && mounted) {
-      if (kIsWeb) {
-        final bytes = await image.readAsBytes();
-        setState(() => _image = bytes);
-      } else {
-        setState(() => _image = File(image.path));
-      }
-      widget.onImageSelected(image.path);
-      _showProfilePhotoAddedNotification(); // ✅ show notification
-    }
+            setState(() {
+              _image = file; // local preview
+            });
 
-    if (mounted) {
-      setState(() => _isImageLoading = false);
-    }
-  }
-
-  void _showImageSourceDialog() {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.white,
-          title: const Text(
-            "Select Image Source",
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16),
-          ),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _takePicture();
-                },
-                child: const Text(
-                  "Take Photo",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                  _pickFromGallery();
-                },
-                child: const Text(
-                  "Choose from Gallery",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.primaryColor,
-                  ),
-                ),
-              ),
-              if (_isImageLoading)
-                const Padding(
-                  padding: EdgeInsets.only(top: 8.0),
-                  child: CircularProgressIndicator(),
-                ),
-            ],
-          ),
-        );
+            // Optionally, emit updated ProfileLoaded via Bloc here
+            // context.read<ProfileBloc>().add(ProfileImageUpdated(imageUrl));
+          }
+        } else {
+          if (mounted) {
+            DisplayMessage.errorMessage(
+              'Upload failed: invalid response',
+              context,
+            );
+          }
+        }
       },
     );
   }
 
-  void _showProfilePhotoAddedNotification() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(3),
-            border: Border.all(color: AppColors.primaryColor),
-          ),
-          child: const Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  void _showImageSourceDialog() {
+    showModalBottomSheet(
+      context: context,
+      builder:
+          (ctx) => Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                "Profile Photo Added",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Take Photo'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Choose from Gallery'),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _pickImage(ImageSource.gallery);
+                },
+              ),
+              if (_isImageLoading)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: CircularProgressIndicator(),
                 ),
-              ),
-              CircleAvatar(
-                radius: 12,
-                backgroundColor: AppColors.primaryColor,
-                child: Icon(Icons.check, size: 16, color: Colors.white),
-              ),
             ],
           ),
-        ),
-        behavior: SnackBarBehavior.floating,
-        margin: const EdgeInsets.only(top: 16, left: 16, right: 16),
-        duration: const Duration(seconds: 3),
-      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final profileImage =
+        widget.state is ProfileLoaded
+            ? (widget.state as ProfileLoaded).profile.image
+            : null;
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0),
       child: Row(
@@ -187,26 +146,17 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: const Color.fromARGB(255, 156, 126, 126),
-                  image: _image != null
-                      ? DecorationImage(
-                          image: kIsWeb
-                              ? MemoryImage(_image as Uint8List)
-                              : FileImage(_image as File) as ImageProvider,
-                          fit: BoxFit.cover,
-                          alignment: Alignment.topCenter,
-                        )
-                      : (widget.state is ProfileLoaded &&
-                              (widget.state as ProfileLoaded)
-                                  .profile
-                                  .image
-                                  .isNotEmpty)
+                  image:
+                      _image != null
                           ? DecorationImage(
-                              image: NetworkImage(
-                                (widget.state as ProfileLoaded).profile.image,
-                              ),
-                              fit: BoxFit.cover,
-                              alignment: Alignment.topCenter,
-                            )
+                            image: FileImage(_image!),
+                            fit: BoxFit.cover,
+                          )
+                          : (profileImage != null && profileImage.isNotEmpty)
+                          ? DecorationImage(
+                            image: NetworkImage(profileImage),
+                            fit: BoxFit.cover,
+                          )
                           : null,
                 ),
               ),
@@ -237,19 +187,20 @@ class _ProfileImageSectionState extends State<ProfileImageSection> {
                       children: [
                         SizedBox(
                           width: 20,
-                          child: _isImageLoading
-                              ? const SizedBox(
-                                  width: 16,
-                                  height: 16,
-                                  child: CircularProgressIndicator(
-                                    strokeWidth: 2,
+                          child:
+                              _isImageLoading
+                                  ? const SizedBox(
+                                    width: 16,
+                                    height: 16,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                    ),
+                                  )
+                                  : const Icon(
+                                    Icons.camera_alt,
+                                    size: 20,
+                                    color: Colors.black,
                                   ),
-                                )
-                              : const Icon(
-                                  Icons.camera_alt,
-                                  size: 20,
-                                  color: Colors.black,
-                                ),
                         ),
                         const SizedBox(width: 4),
                         Text(

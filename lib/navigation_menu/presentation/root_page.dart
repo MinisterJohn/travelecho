@@ -68,7 +68,18 @@ class _RootPageState extends State<RootPage> {
         // Budget tracker
         BlocProvider(create: (_) => sl<BudgetBloc>()),
         BlocProvider(create: (_) => sl<CurrencyBloc>()),
-
+        BlocProvider(
+          create:
+              (context) => LocationSuggestionCubit(
+                GetLocationSuggestionsUseCase(
+                  LocationSuggestionRepositoryImpl(
+                    LocationRemoteDataSource(
+                      '3917c3ebc82b4c36b8b36b0d5610a2c7',
+                    ),
+                  ),
+                ),
+              ),
+        ),
         // Memories page
         BlocProvider(create: (_) => sl<MemoriesBloc>()),
         BlocProvider(create: (_) => sl<DataSearchBloc>()),
@@ -79,9 +90,9 @@ class _RootPageState extends State<RootPage> {
         BlocProvider(create: (_) => sl<TravelDocumentBloc>()),
         BlocProvider(create: (_) => sl<AuthBloc>()),
 
-         BlocProvider<PostBloc>(create: (_) => PostBloc()),
-    BlocProvider<CommentBloc>(create: (_) => CommentBloc()),
-    BlocProvider<ReplyBloc>(create: (_) => ReplyBloc()),
+        BlocProvider<PostBloc>(create: (_) => PostBloc()),
+        BlocProvider<CommentBloc>(create: (_) => CommentBloc()),
+        BlocProvider<ReplyBloc>(create: (_) => ReplyBloc()),
       ],
       child: Scaffold(
         body: SafeArea(

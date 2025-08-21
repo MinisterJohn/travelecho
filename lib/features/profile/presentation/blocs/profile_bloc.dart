@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../profile_exports.dart';
@@ -42,12 +43,25 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       emit(ProfileImageUploading(currentProfile));
 
       try {
-        final result = await _updateProfileImage(event.imageFile);
+        // Pass the FormData directly
+        final result = await _updateProfileImage(event.formData);
         result.fold(
           (failure) => emit(ProfileFailure(failure, currentProfile)),
           (response) {
-            final imageUrl = response['imageUrl'] as String;
-            emit(ProfileImageUploaded(currentProfile, imageUrl));
+            // The API now returns the image object
+            final imageUrl = response['image']['url'] as String;
+
+            // Emit ProfileLoaded with updated profile
+            final updatedProfile = currentProfile.copyWith(
+              image: imageUrl,
+              location: currentProfile.location,
+              dateOfBirth: currentProfile.dateOfBirth!,
+              school: currentProfile.school,
+              occupation: currentProfile.occupation,
+              interests: currentProfile.interests,
+              languages: currentProfile.languages,
+            );
+            emit(ProfileLoaded(updatedProfile));
           },
         );
       } catch (e) {

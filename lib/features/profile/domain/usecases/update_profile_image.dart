@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import '../../profile_exports.dart';
 
 class UpdateProfileImageUseCase {
@@ -6,7 +7,8 @@ class UpdateProfileImageUseCase {
 
   UpdateProfileImageUseCase();
 
-  Future<Either<String, Map<String, dynamic>>> call(dynamic imageFile) async {
-    return await _repository.updateProfileImage(imageFile);
+  /// Accepts FormData instead of dynamic
+  Future<Either<String, Map<String, dynamic>>> call(FormData formData) async {
+    return await _repository.updateProfileImage(formData);
   }
 }

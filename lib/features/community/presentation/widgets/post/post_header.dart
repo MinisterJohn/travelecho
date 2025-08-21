@@ -23,13 +23,16 @@ class _PostHeaderState extends State<PostHeader> {
               (post.authorImage?.isNotEmpty ?? false)
                   ? NetworkImage(post.authorImage!)
                   : null,
-          child: Text(
-            getInitials(post.author),
-            style: TextStyle(
-              color: getRandomRgbaColor(post.author),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+          child:
+              post.authorImage!.isEmpty
+                  ? Text(
+                    getInitials(post.author),
+                    style: TextStyle(
+                      color: getRandomRgbaColor(post.author),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  )
+                  : null,
         ),
         const SizedBox(width: 10),
         Column(

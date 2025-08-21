@@ -29,10 +29,10 @@ class ProfileUpdateRequested extends ProfileEvent {
 }
 
 class ProfileImageUpdateRequested extends ProfileEvent {
-  final dynamic imageFile;
+  final FormData formData;
 
-  const ProfileImageUpdateRequested(this.imageFile);
+  const ProfileImageUpdateRequested(this.formData);
 
   @override
-  List<Object?> get props => [imageFile];
+  List<Object?> get props => [formData];
 }

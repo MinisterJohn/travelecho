@@ -6,8 +6,8 @@ import '../../profile_exports.dart';
 abstract class ProfileApiService {
   Future<Either<String, Profile>> getUserProfile();
   Future<Either<String, Profile>> updateUserProfile(Map<String, dynamic> data);
-  Future<Either<String, Map<String, dynamic>>> updateProfileImage(
-      dynamic imageFile);
+Future<Either<String, Map<String, dynamic>>> updateProfileImage(
+    FormData formData);
 }
 
 class ProfileApiServiceImpl implements ProfileApiService {
@@ -92,14 +92,31 @@ class ProfileApiServiceImpl implements ProfileApiService {
     }
   }
 
-  @override
-  Future<Either<String, Map<String, dynamic>>> updateProfileImage(
-      dynamic imageFile) async {
-    return _imageHandler.uploadImage(
-      url: ApiUrl.fullUrl(ApiUrl.userProfileImageURL),
-      imageFile: imageFile,
-      fieldName: 'image',
-      // additionalFields: {'profileId': profileId},
+@override
+Future<Either<String, Map<String, dynamic>>> updateProfileImage(
+    FormData formData) async {
+    final token = _prefs.getString('token');
+
+  try {
+    final response = await Dio().put(
+      ApiUrl.fullUrl(ApiUrl.userProfileImageURL),
+      data: formData,
+      options: Options(
+        headers: {
+          "Content-Type": "multipart/form-data",
+          // Add auth header if needed
+          "Authorization": "Bearer $token",
+        },
+      ),
     );
+
+    if (response.statusCode == 200 && response.data['success'] == true) {
+      return Right(response.data['image'] as Map<String, dynamic>);
+    } else {
+      return Left("Failed to upload image");
+    }
+  } catch (e) {
+    return Left(e.toString());
   }
+}
 }

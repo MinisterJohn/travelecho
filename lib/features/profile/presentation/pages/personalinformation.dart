@@ -104,7 +104,7 @@ class _EditPersonalInformationState extends State<EditPersonalInformation> {
                       WidgetsSpacer.verticalSpacer16,
                       ProfileImageSection(
                         state: state,
-                        onImageSelected: _handleImageSelected,
+                        // onImageSelected: _handleImageSelected,
                       ),
                       const SizedBox(height: 32),
                       MultiBlocProvider(
