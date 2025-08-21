@@ -230,7 +230,7 @@ class CarRentalsDriverDetailsScreen extends StatelessWidget {
                         width: 2,
                       ),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       minimumSize: const Size(0, 44),
                     ),
@@ -246,7 +246,7 @@ class CarRentalsDriverDetailsScreen extends StatelessWidget {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.primaryColor,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(24),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       minimumSize: const Size(0, 44),
                     ),

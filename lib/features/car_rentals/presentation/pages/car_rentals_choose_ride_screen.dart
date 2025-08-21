@@ -32,7 +32,7 @@ class _CarRentalsChooseRideScreenState
     {
       "name": "Business",
       "price": "\$49.99",
-      "image": "assets/images/car_rentals/car_retals.png",
+      "image": "assets/images/car_rentals/car_rentals.png",
       "color": Colors.grey[200],
     },
   ];

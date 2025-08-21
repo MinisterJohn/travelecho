@@ -20,6 +20,18 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => sl<AuthBloc>()..add(CheckAuthStatus()),
         ),
+        BlocProvider(
+          create:
+              (context) => LocationSuggestionCubit(
+                GetLocationSuggestionsUseCase(
+                  LocationSuggestionRepositoryImpl(
+                    LocationRemoteDataSource(
+                      '3917c3ebc82b4c36b8b36b0d5610a2c7',
+                    ),
+                  ),
+                ),
+              ),
+        ),
       ],
       child: ScreenUtilInit(
         designSize: const Size(375, 812),

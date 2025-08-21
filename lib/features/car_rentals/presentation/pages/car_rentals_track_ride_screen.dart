@@ -202,7 +202,7 @@ class CarRentalsTrackRideScreen extends StatelessWidget {
                             width: 2,
                           ),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           minimumSize: const Size(0, 44),
                         ),
@@ -225,7 +225,7 @@ class CarRentalsTrackRideScreen extends StatelessWidget {
                           backgroundColor: AppColors.primaryColor,
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(24),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           minimumSize: const Size(0, 44),
                         ),
